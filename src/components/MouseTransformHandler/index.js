@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { styled } from "@material-ui/core/styles"
 import useEventCallback from "use-event-callback"
 import Matrix from "immutable-transform-matrix"
 import Wave from "../Wave"
+import useRafState from "react-use/lib/useRafState"
 
 import range from "lodash/range"
 
@@ -22,11 +23,42 @@ const Container = styled("div")({
   backgroundColor: "#eee",
 })
 
-export const MouseTransformHandler = ({ content }) => {
-  const [matrix, setMatrix] = useState(new Matrix())
+export const MouseTransformHandler = ({
+  children,
+  initialMatrix,
+  onChangeMatrix,
+}) => {
+  const [matrix, setMatrixState] = useRafState(initialMatrix)
   const mousePosition = useRef({ x: 0, y: 0 })
+  const [shiftKeyDown, setShiftKeyDown] = useState(false)
   const [middleMouseDown, setMiddleMouseDown] = useState(false)
   const containerRef = useRef()
+
+  const setMatrix = useEventCallback((newMatrix) => {
+    onChangeMatrix(newMatrix)
+    setMatrixState(newMatrix)
+  })
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Shift") {
+        setShiftKeyDown(true)
+      }
+    }
+    const onKeyUp = (e) => {
+      if (e.key === "Shift") {
+        setShiftKeyDown(false)
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown)
+    window.addEventListener("keyup", onKeyUp)
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown)
+      window.removeEventListener("keyup", onKeyUp)
+    }
+  }, [])
 
   const projectMouse = useEventCallback((e) => {
     const { clientX, clientY } = e
@@ -49,8 +81,11 @@ export const MouseTransformHandler = ({ content }) => {
         x: clientX - mousePosition.current.x,
         y: clientY - mousePosition.current.y,
       }
-      const scaleFac = matrix.get("a")
-      setMatrix(matrix.translate(delta.x / scaleFac, delta.y / scaleFac))
+      const scaleFac = {
+        x: matrix.get("a"),
+        y: matrix.get("d"),
+      }
+      setMatrix(matrix.translate(delta.x / scaleFac.x, delta.y / scaleFac.y))
     }
 
     mousePosition.current = {
@@ -81,12 +116,12 @@ export const MouseTransformHandler = ({ content }) => {
   const onWheel = useEventCallback((e) => {
     const { deltaY } = e
     const scroll = -deltaY / 1000
-
     const { px, py } = mousePosition.current
+
     setMatrix(
       matrix
         .translate(px, py)
-        .scale(1 + scroll)
+        .scale(1 + (shiftKeyDown ? scroll : 0), 1 + (shiftKeyDown ? 0 : scroll))
         .translate(-px, -py)
     )
   })
@@ -100,12 +135,7 @@ export const MouseTransformHandler = ({ content }) => {
       onMouseUp={onMouseUp}
       onWheel={onWheel}
     >
-      <Wave
-        curves={[curve1, curve2]}
-        width={500}
-        height={200}
-        transformMatrix={matrix}
-      />
+      {children}
     </Container>
   )
 }

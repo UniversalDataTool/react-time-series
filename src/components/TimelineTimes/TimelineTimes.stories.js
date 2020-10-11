@@ -10,11 +10,10 @@ export default {
 export const Primary = () => {
   return (
     <TimelineTimes
-      timeFormat="none"
+      timeFormat="timecolons"
       width={500}
       visibleTimeStart={0}
-      visibleTimeEnd={1000}
-      visibleDuration={1000}
+      visibleTimeEnd={60000 * 80}
     />
   )
 }

@@ -11,6 +11,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
+    "react-use": "^15.3.4",
     "recoil": "^0.0.13",
     "transformation-matrix-js": "^2.7.6",
     "use-event-callback": "^0.1.0"
