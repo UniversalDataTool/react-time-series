@@ -2,11 +2,12 @@ import React from "react"
 import range from "lodash/range"
 import { styled } from "@material-ui/core/styles"
 import moment from "moment"
+import LocationOnIcon from "@material-ui/icons/LocationOn"
 
 const Container = styled("div")(({ width }) => ({
   width,
   position: "relative",
-  height: 32,
+  height: 48,
   borderBottom: "1px solid #888",
 }))
 
@@ -24,6 +25,20 @@ const Tick = styled("div")(({ x, big }) => ({
   width: 1,
   height: 8 + (big ? 4 : 0),
   backgroundColor: "#333",
+}))
+
+const TimeStamp = styled(LocationOnIcon)(({ left, color }) => ({
+  position: "absolute",
+  bottom: 0,
+  width: 24,
+  height: 24,
+  left: left - 12,
+  color,
+  transition: "transform 150ms",
+  cursor: "pointer",
+  "&:hover": {
+    transform: "scale(1.2,1.2)",
+  },
 }))
 
 const formatTime = (time, format) => {
@@ -46,6 +61,7 @@ export const TimelineTimes = ({
   visibleTimeStart,
   visibleTimeEnd,
   width,
+  timestamps = [],
 }) => {
   const visibleDuration = visibleTimeEnd - visibleTimeStart
   // TODO compute tick count using width
@@ -66,6 +82,11 @@ export const TimelineTimes = ({
       {range(tickCount).map((tickIndex) => (
         <Tick big={tickIndex % 5 === 0} x={(tickIndex / tickCount) * width} />
       ))}
+      {timestamps.map((timestamp, i) => {
+        const left =
+          ((timestamp.time - visibleTimeStart) / visibleDuration) * width
+        return <TimeStamp key={i} left={left} color={timestamp.color} />
+      })}
     </Container>
   )
 }

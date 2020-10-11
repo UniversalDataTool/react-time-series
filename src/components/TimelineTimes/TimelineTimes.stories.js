@@ -28,3 +28,18 @@ export const Dates = () => {
     />
   )
 }
+
+export const TimeWithTimestamps = () => {
+  return (
+    <TimelineTimes
+      timeFormat="timecolons"
+      width={500}
+      visibleTimeStart={0}
+      visibleTimeEnd={60000 * 80}
+      timestamps={[
+        { time: 10 * 60000, color: "#f00" },
+        { time: 50 * 60000, color: "#00f" },
+      ]}
+    />
+  )
+}
