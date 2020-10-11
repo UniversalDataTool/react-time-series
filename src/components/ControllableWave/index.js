@@ -6,11 +6,21 @@ import useEventCallback from "use-event-callback"
 import useRafState from "react-use/lib/useRafState"
 
 export const ControllableWave = ({
-  curve,
+  curves,
   topLevelMatrix,
   setTopLevelMatrix,
+  height,
 }) => {
-  const [matrix, setMatrix] = useRafState(new Matrix())
+  const [matrix, setMatrix] = useRafState(() => {
+    const mat = new Matrix()
+    const maxY = Math.max(...curves[0].data.map(([, y]) => y))
+    const minY = Math.min(...curves[0].data.map(([, y]) => y))
+
+    return mat
+      .scale(1, height)
+      .scale(1, 1 / (maxY - minY))
+      .translate(0, -minY)
+  })
 
   const onChangeMatrix = useEventCallback((newMatrix) => {
     setMatrix(newMatrix)
@@ -38,9 +48,9 @@ export const ControllableWave = ({
       onChangeMatrix={onChangeMatrix}
     >
       <Wave
-        curves={[curve]}
+        curves={curves}
         width={500}
-        height={200}
+        height={height}
         transformMatrix={matrix}
       />
     </MouseTransformHandler>

@@ -15,37 +15,42 @@ const Container = styled("div")({
   backgroundColor: "#ddd",
 })
 
-const curve1 = {
-  color: "#f00",
-  data: range(500).map((i) => [i, Math.sin(i / 20) * 100]),
-}
+export const MainLayout = ({ curveGroups }) => {
+  const width = 500
 
-const curve2 = {
-  color: "#00f",
-  data: range(500).map((i) => [i, Math.sin(i / 20) * 20]),
-}
+  const [topLevelMatrix, setTopLevelMatrix] = useRafState(() => {
+    const mat = new Matrix()
 
-export const MainLayout = () => {
-  const [topLevelMatrix, setTopLevelMatrix] = useRafState(new Matrix())
+    const allTimes = curveGroups
+      .flatMap((curveGroup) => curveGroup)
+      .flatMap((curve) => curve.data.map(([t]) => t))
+    const minT = Math.min(...allTimes)
+    const maxT = Math.max(...allTimes)
+
+    return mat
+      .scale(width, 1)
+      .scale(1 / (maxT - minT), 1)
+      .translate(-minT, 0)
+  })
   const { visibleTimeStart, visibleTimeEnd } = useTimeRange(topLevelMatrix, 500)
 
   return (
     <Container>
       <TimelineTimes
-        width={500}
+        width={width}
         visibleTimeStart={visibleTimeStart}
         visibleTimeEnd={visibleTimeEnd}
       />
-      <ControllableWave
-        curve={curve1}
-        topLevelMatrix={topLevelMatrix}
-        setTopLevelMatrix={setTopLevelMatrix}
-      />
-      <ControllableWave
-        curve={curve2}
-        topLevelMatrix={topLevelMatrix}
-        setTopLevelMatrix={setTopLevelMatrix}
-      />
+      {curveGroups.map((curves, i) => (
+        <ControllableWave
+          key={i}
+          curves={curves}
+          width={width}
+          height={200}
+          topLevelMatrix={topLevelMatrix}
+          setTopLevelMatrix={setTopLevelMatrix}
+        />
+      ))}
     </Container>
   )
 }
