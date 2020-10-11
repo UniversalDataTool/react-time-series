@@ -12,7 +12,8 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
     "recoil": "^0.0.13",
-    "transformation-matrix-js": "^2.7.6"
+    "transformation-matrix-js": "^2.7.6",
+    "use-event-callback": "^0.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
