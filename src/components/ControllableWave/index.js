@@ -43,10 +43,7 @@ export const ControllableWave = ({
   }, [topLevelMatrix, matrix, setMatrix])
 
   return (
-    <MouseTransformHandler
-      initialMatrix={matrix}
-      onChangeMatrix={onChangeMatrix}
-    >
+    <MouseTransformHandler matrix={matrix} onChangeMatrix={onChangeMatrix}>
       <Wave
         curves={curves}
         width={500}

@@ -23,21 +23,11 @@ const Container = styled("div")({
   backgroundColor: "#eee",
 })
 
-export const MouseTransformHandler = ({
-  children,
-  initialMatrix,
-  onChangeMatrix,
-}) => {
-  const [matrix, setMatrixState] = useRafState(initialMatrix)
+export const MouseTransformHandler = ({ children, matrix, onChangeMatrix }) => {
   const mousePosition = useRef({ x: 0, y: 0 })
   const [shiftKeyDown, setShiftKeyDown] = useState(false)
   const [middleMouseDown, setMiddleMouseDown] = useState(false)
   const containerRef = useRef()
-
-  const setMatrix = useEventCallback((newMatrix) => {
-    onChangeMatrix(newMatrix)
-    setMatrixState(newMatrix)
-  })
 
   useEffect(() => {
     const onKeyDown = (e) => {
@@ -85,7 +75,9 @@ export const MouseTransformHandler = ({
         x: matrix.get("a"),
         y: matrix.get("d"),
       }
-      setMatrix(matrix.translate(delta.x / scaleFac.x, delta.y / scaleFac.y))
+      onChangeMatrix(
+        matrix.translate(delta.x / scaleFac.x, delta.y / scaleFac.y)
+      )
     }
 
     mousePosition.current = {
@@ -118,7 +110,7 @@ export const MouseTransformHandler = ({
     const scroll = -deltaY / 1000
     const { px, py } = mousePosition.current
 
-    setMatrix(
+    onChangeMatrix(
       matrix
         .translate(px, py)
         .scale(1 + (shiftKeyDown ? scroll : 0), 1 + (shiftKeyDown ? 0 : scroll))
