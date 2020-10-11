@@ -113,7 +113,7 @@ export const MouseTransformHandler = ({ children, matrix, onChangeMatrix }) => {
     onChangeMatrix(
       matrix
         .translate(px, py)
-        .scale(1 + (shiftKeyDown ? scroll : 0), 1 + (shiftKeyDown ? 0 : scroll))
+        .scale(1 + (shiftKeyDown ? 0 : scroll), 1 + (shiftKeyDown ? scroll : 0))
         .translate(-px, -py)
     )
   })

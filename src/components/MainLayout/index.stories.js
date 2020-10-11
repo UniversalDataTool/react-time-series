@@ -18,5 +18,16 @@ export const Primary = () => (
         { data: tesla.curve2017, color: "#00f" },
       ],
     ]}
+    durationGroups={[
+      {
+        color: "#f00",
+        durations: [
+          {
+            start: 1537416000000,
+            end: 1539316800000,
+          },
+        ],
+      },
+    ]}
   />
 )

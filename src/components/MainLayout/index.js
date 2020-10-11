@@ -6,6 +6,7 @@ import Matrix from "immutable-transform-matrix"
 import useTimeRange from "../../hooks/use-time-range.js"
 import ControllableWave from "../ControllableWave"
 import useRafState from "react-use/lib/useRafState"
+import DurationBox from "../DurationBox"
 
 const Container = styled("div")({
   width: "80vw",
@@ -15,7 +16,7 @@ const Container = styled("div")({
   backgroundColor: "#ddd",
 })
 
-export const MainLayout = ({ curveGroups, timeFormat }) => {
+export const MainLayout = ({ curveGroups, timeFormat, durationGroups }) => {
   const width = 500
 
   const [topLevelMatrix, setTopLevelMatrix] = useRafState(() => {
@@ -52,6 +53,18 @@ export const MainLayout = ({ curveGroups, timeFormat }) => {
           setTopLevelMatrix={setTopLevelMatrix}
         />
       ))}
+      {durationGroups.map((dg, i) => {
+        return (
+          <DurationBox
+            key={i}
+            color={dg.color}
+            width={width}
+            durations={dg.durations}
+            visibleTimeStart={visibleTimeStart}
+            visibleTimeEnd={visibleTimeEnd}
+          />
+        )
+      })}
     </Container>
   )
 }
