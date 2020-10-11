@@ -7,6 +7,8 @@ import useTimeRange from "../../hooks/use-time-range.js"
 import ControllableWave from "../ControllableWave"
 import useRafState from "react-use/lib/useRafState"
 import DurationBox from "../DurationBox"
+import useEventCallback from "use-event-callback"
+import { setIn } from "seamless-immutable"
 
 const Container = styled("div")({
   width: "80vw",
@@ -16,8 +18,15 @@ const Container = styled("div")({
   backgroundColor: "#ddd",
 })
 
-export const MainLayout = ({ curveGroups, timeFormat, durationGroups }) => {
+export const MainLayout = ({
+  curveGroups,
+  timeFormat,
+  durationGroups,
+  onChangeDurationGroups,
+}) => {
   const width = 500
+  const [activeDurationGroup, setActiveDurationGroup] = useState(0)
+  const [draggedDurationIndex, setDraggedDurationIndex] = useState(0)
 
   const [topLevelMatrix, setTopLevelMatrix] = useRafState(() => {
     const mat = new Matrix()
@@ -35,6 +44,34 @@ export const MainLayout = ({ curveGroups, timeFormat, durationGroups }) => {
   })
   const { visibleTimeStart, visibleTimeEnd } = useTimeRange(topLevelMatrix, 500)
 
+  const onDragDuration = useEventCallback((startTime, endTime) => {
+    ;[startTime, endTime] =
+      startTime < endTime ? [startTime, endTime] : [endTime, startTime]
+    onChangeDurationGroups(
+      setIn(
+        durationGroups,
+        [activeDurationGroup, "durations", draggedDurationIndex],
+        {
+          start: startTime,
+          end: endTime,
+        }
+      )
+    )
+  })
+  const onDragDurationStart = useEventCallback((startTime) => {
+    const lastIndex = durationGroups[activeDurationGroup].durations.length
+    setDraggedDurationIndex(lastIndex)
+    onChangeDurationGroups(
+      setIn(durationGroups, [activeDurationGroup, "durations", lastIndex], {
+        start: startTime,
+        end: startTime,
+      })
+    )
+  })
+  const onDragDurationEnd = useEventCallback(() => {
+    setDraggedDurationIndex(null)
+  })
+
   return (
     <Container>
       <TimelineTimes
@@ -43,16 +80,6 @@ export const MainLayout = ({ curveGroups, timeFormat, durationGroups }) => {
         visibleTimeStart={visibleTimeStart}
         visibleTimeEnd={visibleTimeEnd}
       />
-      {curveGroups.map((curves, i) => (
-        <ControllableWave
-          key={i}
-          curves={curves}
-          width={width}
-          height={200}
-          topLevelMatrix={topLevelMatrix}
-          setTopLevelMatrix={setTopLevelMatrix}
-        />
-      ))}
       {durationGroups.map((dg, i) => {
         return (
           <DurationBox
@@ -65,6 +92,19 @@ export const MainLayout = ({ curveGroups, timeFormat, durationGroups }) => {
           />
         )
       })}
+      {curveGroups.map((curves, i) => (
+        <ControllableWave
+          key={i}
+          onDragDuration={onDragDuration}
+          onDragDurationStart={onDragDurationStart}
+          onDragDurationEnd={onDragDurationEnd}
+          curves={curves}
+          width={width}
+          height={200}
+          topLevelMatrix={topLevelMatrix}
+          setTopLevelMatrix={setTopLevelMatrix}
+        />
+      ))}
     </Container>
   )
 }

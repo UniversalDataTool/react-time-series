@@ -23,8 +23,17 @@ const Container = styled("div")({
   backgroundColor: "#eee",
 })
 
-export const MouseTransformHandler = ({ children, matrix, onChangeMatrix }) => {
+export const MouseTransformHandler = ({
+  children,
+  matrix,
+  onChangeMatrix,
+  onDragDuration,
+  onDragDurationStart,
+  onDragDurationEnd,
+}) => {
   const mousePosition = useRef({ x: 0, y: 0 })
+  const [dragStartTime, setDragStartTime] = useState(null)
+  const [primaryDrag, setPrimaryDrag] = useState(false)
   const [shiftKeyDown, setShiftKeyDown] = useState(false)
   const [middleMouseDown, setMiddleMouseDown] = useState(false)
   const containerRef = useRef()
@@ -80,6 +89,10 @@ export const MouseTransformHandler = ({ children, matrix, onChangeMatrix }) => {
       )
     }
 
+    if (primaryDrag) {
+      onDragDuration(dragStartTime, projectedMouse.x)
+    }
+
     mousePosition.current = {
       x: clientX,
       y: clientY,
@@ -87,6 +100,7 @@ export const MouseTransformHandler = ({ children, matrix, onChangeMatrix }) => {
       py: projectedMouse.y,
     }
   })
+
   const onMouseDown = useEventCallback((e) => {
     const { clientX, clientY, button } = e
     const projectedMouse = projectMouse(e)
@@ -96,15 +110,24 @@ export const MouseTransformHandler = ({ children, matrix, onChangeMatrix }) => {
       px: projectedMouse.x,
       py: projectedMouse.y,
     }
+    setDragStartTime(projectedMouse.x)
     if (button === 1) {
       setMiddleMouseDown(true)
+    } else if (button === 0) {
+      onDragDurationStart(projectMouse.x)
+      setPrimaryDrag(true)
     }
   })
+
   const onMouseUp = useEventCallback((e) => {
     if (e.button === 1) {
       setMiddleMouseDown(false)
+    } else if (e.button === 0) {
+      setPrimaryDrag(false)
+      onDragDurationEnd()
     }
   })
+
   const onWheel = useEventCallback((e) => {
     const { deltaY } = e
     const scroll = -deltaY / 1000
