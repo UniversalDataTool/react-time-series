@@ -13,6 +13,7 @@ export const ControllableWave = ({
   onDragDuration,
   onDragDurationStart,
   onDragDurationEnd,
+  durationGroups,
 }) => {
   const [matrix, setMatrix] = useRafState(() => {
     const mat = new Matrix()
@@ -58,6 +59,7 @@ export const ControllableWave = ({
         width={500}
         height={height}
         transformMatrix={matrix}
+        durationGroups={durationGroups}
       />
     </MouseTransformHandler>
   )

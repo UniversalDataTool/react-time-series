@@ -83,7 +83,9 @@ export const MainLayout = ({
       {durationGroups.map((dg, i) => {
         return (
           <DurationBox
+            onClick={() => setActiveDurationGroup(i)}
             key={i}
+            active={i === activeDurationGroup}
             color={dg.color}
             width={width}
             durations={dg.durations}
@@ -95,9 +97,11 @@ export const MainLayout = ({
       {curveGroups.map((curves, i) => (
         <ControllableWave
           key={i}
+          durations={durationGroups[activeDurationGroup]}
           onDragDuration={onDragDuration}
           onDragDurationStart={onDragDurationStart}
           onDragDurationEnd={onDragDurationEnd}
+          durationGroups={durationGroups}
           curves={curves}
           width={width}
           height={200}

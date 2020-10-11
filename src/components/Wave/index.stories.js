@@ -37,3 +37,18 @@ export const DoubleCurve = () => (
     transformMatrix={new Matrix().translate(0, 100)}
   />
 )
+
+export const DoubleCurveWithDuration = () => (
+  <Wave
+    curves={[curve1, curve2]}
+    width={500}
+    height={200}
+    transformMatrix={new Matrix().translate(0, 100)}
+    durationGroups={[
+      {
+        color: "#f00",
+        durations: [{ start: 100, end: 400 }],
+      },
+    ]}
+  />
+)

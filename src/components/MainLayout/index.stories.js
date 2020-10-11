@@ -20,6 +20,10 @@ export const Primary = () => {
         },
       ],
     },
+    {
+      color: "#00f",
+      durations: [],
+    },
   ])
 
   return (
