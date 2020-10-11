@@ -7,13 +7,24 @@ export default {
   component: TimelineTimes,
 }
 
-export const Primary = () => {
+export const TimeWithColons = () => {
   return (
     <TimelineTimes
       timeFormat="timecolons"
       width={500}
       visibleTimeStart={0}
       visibleTimeEnd={60000 * 80}
+    />
+  )
+}
+
+export const Dates = () => {
+  return (
+    <TimelineTimes
+      timeFormat="dates"
+      width={500}
+      visibleTimeStart={0}
+      visibleTimeEnd={60000 * 60 * 24 * 400}
     />
   )
 }

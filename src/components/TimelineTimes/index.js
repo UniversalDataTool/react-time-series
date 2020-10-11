@@ -1,6 +1,7 @@
 import React from "react"
 import range from "lodash/range"
 import { styled } from "@material-ui/core/styles"
+import moment from "moment"
 
 const Container = styled("div")(({ width }) => ({
   width,
@@ -27,6 +28,9 @@ const Tick = styled("div")(({ x, big }) => ({
 
 const formatTime = (time, format) => {
   if (format === "none") return time
+  if (format === "dates") {
+    return moment(time).format("L")
+  }
   if (time < 0) return ""
   const deciSecs = Math.floor((time % 1000) / 10)
   const secs = Math.floor((time / 1000) % 60)

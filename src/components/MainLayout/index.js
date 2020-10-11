@@ -15,7 +15,7 @@ const Container = styled("div")({
   backgroundColor: "#ddd",
 })
 
-export const MainLayout = ({ curveGroups }) => {
+export const MainLayout = ({ curveGroups, timeFormat }) => {
   const width = 500
 
   const [topLevelMatrix, setTopLevelMatrix] = useRafState(() => {
@@ -37,6 +37,7 @@ export const MainLayout = ({ curveGroups }) => {
   return (
     <Container>
       <TimelineTimes
+        timeFormat={timeFormat}
         width={width}
         visibleTimeStart={visibleTimeStart}
         visibleTimeEnd={visibleTimeEnd}

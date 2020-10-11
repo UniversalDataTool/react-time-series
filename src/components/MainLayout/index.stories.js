@@ -11,6 +11,7 @@ export default {
 
 export const Primary = () => (
   <MainLayout
+    timeFormat="dates"
     curveGroups={[
       [
         { data: tesla.curve2018, color: "#f00" },

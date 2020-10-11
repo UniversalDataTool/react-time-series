@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import MouseTransformHandler from "../MouseTransformHandler"
 import Matrix from "immutable-transform-matrix"
 import Wave from "../Wave"
@@ -40,7 +40,7 @@ export const ControllableWave = ({
           .set("e", topLevelMatrix.get("e"))
       )
     }
-  }, [topLevelMatrix, matrix])
+  }, [topLevelMatrix, matrix, setMatrix])
 
   return (
     <MouseTransformHandler

@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "immutable-transform-matrix": "^0.6.0",
     "lodash": "^4.17.20",
+    "moment": "^2.29.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
