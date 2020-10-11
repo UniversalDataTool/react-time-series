@@ -30,6 +30,7 @@ export const MouseTransformHandler = ({
   onDragDuration,
   onDragDurationStart,
   onDragDurationEnd,
+  onCreateTimestamp,
 }) => {
   const mousePosition = useRef({ x: 0, y: 0 })
   const [dragStartTime, setDragStartTime] = useState(null)
@@ -120,9 +121,13 @@ export const MouseTransformHandler = ({
   })
 
   const onMouseUp = useEventCallback((e) => {
+    const projectedMouse = projectMouse(e)
     if (e.button === 1) {
       setMiddleMouseDown(false)
     } else if (e.button === 0) {
+      if (Math.abs(dragStartTime - projectedMouse.x) === 0) {
+        onCreateTimestamp(projectedMouse.x)
+      }
       setPrimaryDrag(false)
       onDragDurationEnd()
     }

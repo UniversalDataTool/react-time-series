@@ -23,6 +23,8 @@ export const MainLayout = ({
   timeFormat,
   durationGroups,
   onChangeDurationGroups,
+  timestamps,
+  onChangeTimestamps,
 }) => {
   const width = 500
   const [activeDurationGroup, setActiveDurationGroup] = useState(0)
@@ -71,6 +73,16 @@ export const MainLayout = ({
   const onDragDurationEnd = useEventCallback(() => {
     setDraggedDurationIndex(null)
   })
+  const onCreateTimestamp = useEventCallback((time) => {
+    onChangeTimestamps(
+      timestamps.concat([
+        {
+          time,
+          color: "#f00",
+        },
+      ])
+    )
+  })
 
   return (
     <Container>
@@ -79,6 +91,7 @@ export const MainLayout = ({
         width={width}
         visibleTimeStart={visibleTimeStart}
         visibleTimeEnd={visibleTimeEnd}
+        timestamps={timestamps}
       />
       {durationGroups.map((dg, i) => {
         return (
@@ -101,7 +114,9 @@ export const MainLayout = ({
           onDragDuration={onDragDuration}
           onDragDurationStart={onDragDurationStart}
           onDragDurationEnd={onDragDurationEnd}
+          onCreateTimestamp={onCreateTimestamp}
           durationGroups={durationGroups}
+          timestamps={timestamps}
           curves={curves}
           width={width}
           height={200}

@@ -11,6 +11,7 @@ export const Wave = ({
   height,
   transformMatrix,
   durationGroups = [],
+  timestamps = [],
 }) => {
   return (
     <Container style={{ curves, width, height }}>
@@ -46,6 +47,20 @@ export const Wave = ({
               .join(" ")}
           />
         ))}
+        {timestamps.map((ts, i) => {
+          const { x } = transformMatrix.applyToPoint(ts.time, 0)
+          return (
+            <line
+              key={i}
+              x1={x}
+              x2={x}
+              y1={0}
+              y2={height}
+              stroke={ts.color}
+              strokeWidth={1}
+            />
+          )
+        })}
       </svg>
     </Container>
   )

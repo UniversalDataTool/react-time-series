@@ -26,6 +26,13 @@ export const Primary = () => {
     },
   ])
 
+  const [timestamps, setTimestamps] = useState([
+    {
+      color: "#0f0",
+      time: 1520398800000,
+    },
+  ])
+
   return (
     <MainLayout
       timeFormat="dates"
@@ -36,6 +43,8 @@ export const Primary = () => {
         ],
       ]}
       durationGroups={durationGroups}
+      timestamps={timestamps}
+      onChangeTimestamps={setTimestamps}
       onChangeDurationGroups={setDurationGroups}
     />
   )

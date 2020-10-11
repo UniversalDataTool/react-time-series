@@ -52,3 +52,18 @@ export const DoubleCurveWithDuration = () => (
     ]}
   />
 )
+
+export const DoubleCurveWithTimestamp = () => (
+  <Wave
+    curves={[curve1, curve2]}
+    width={500}
+    height={200}
+    transformMatrix={new Matrix().translate(0, 100)}
+    timestamps={[
+      {
+        time: 250,
+        color: "#f00",
+      },
+    ]}
+  />
+)
