@@ -1,5 +1,6 @@
 import React from "react"
 import { RecoilRoot } from "recoil"
+import "../src/index.css"
 
 export const decorators = [
   (Story) => (

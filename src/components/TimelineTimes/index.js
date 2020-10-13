@@ -14,6 +14,8 @@ const Container = styled("div")(({ width }) => ({
 const TimeText = styled("div")(({ x }) => ({
   display: "inline-block",
   width: 80,
+  fontSize: 12,
+  fontVariantNumeric: "tabular-nums",
   position: "absolute",
   left: x,
 }))
