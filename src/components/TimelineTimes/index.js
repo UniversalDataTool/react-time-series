@@ -3,12 +3,14 @@ import range from "lodash/range"
 import { styled } from "@material-ui/core/styles"
 import moment from "moment"
 import LocationOnIcon from "@material-ui/icons/LocationOn"
+import useColors from "../../hooks/use-colors"
 
-const Container = styled("div")(({ width }) => ({
+const Container = styled("div")(({ width, themeColors }) => ({
   width,
   position: "relative",
   height: 48,
-  borderBottom: "1px solid #888",
+  borderBottom: `1px solid ${themeColors.Selection}`,
+  color: themeColors.fg,
 }))
 
 const TimeText = styled("div")(({ x }) => ({
@@ -20,13 +22,13 @@ const TimeText = styled("div")(({ x }) => ({
   left: x,
 }))
 
-const Tick = styled("div")(({ x, big }) => ({
+const Tick = styled("div")(({ x, big, themeColors }) => ({
   position: "absolute",
   left: x,
   bottom: 0,
   width: 1,
   height: 8 + (big ? 4 : 0),
-  backgroundColor: "#333",
+  backgroundColor: themeColors["Current Line"],
 }))
 
 const TimeStamp = styled(LocationOnIcon)(({ left, color }) => ({
@@ -65,6 +67,7 @@ export const TimelineTimes = ({
   width,
   timestamps = [],
 }) => {
+  const themeColors = useColors()
   const visibleDuration = visibleTimeEnd - visibleTimeStart
   // TODO compute tick count using width
   const timeTextCount = Math.ceil(width / 100)
@@ -75,14 +78,18 @@ export const TimelineTimes = ({
   const tickCount = Math.ceil(width / 20)
 
   return (
-    <Container width={width}>
+    <Container themeColors={themeColors} width={width}>
       {range(timeTextCount).map((timeTextIndex) => (
         <TimeText x={(timeTextIndex / timeTextCount) * width}>
           {formatTime(timeTextTimes[timeTextIndex], timeFormat)}
         </TimeText>
       ))}
       {range(tickCount).map((tickIndex) => (
-        <Tick big={tickIndex % 5 === 0} x={(tickIndex / tickCount) * width} />
+        <Tick
+          big={tickIndex % 5 === 0}
+          x={(tickIndex / tickCount) * width}
+          themeColors={themeColors}
+        />
       ))}
       {timestamps.map((timestamp, i) => {
         const left =

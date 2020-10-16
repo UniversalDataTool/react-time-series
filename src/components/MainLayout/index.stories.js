@@ -41,6 +41,15 @@ export const Primary = () => {
           { data: tesla.curve2018, color: "#f00" },
           { data: tesla.curve2017, color: "#00f" },
         ],
+        [
+          {
+            data: tesla.curve2017
+              .concat(tesla.curve2018)
+              .filter((_, i) => i % 10 === 0)
+              .sort((a, b) => a[0] - b[0]),
+            color: "#0f0",
+          },
+        ],
       ]}
       durationGroups={durationGroups}
       timestamps={timestamps}
