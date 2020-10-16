@@ -1,8 +1,9 @@
-import React from "react"
+import React, { Fragment } from "react"
 import range from "lodash/range"
 import { styled } from "@material-ui/core/styles"
 import colorAlpha from "color-alpha"
 import useColors from "../../hooks/use-colors"
+import { formatTime } from "../TimelineTimes"
 
 const Container = styled("div")({})
 
@@ -12,15 +13,23 @@ const days = 24 * hours
 const weeks = 7 * days
 const months = 30 * days
 const years = 12 * months
-console.log({
+const timeIntervals = [
+  1,
+  5,
+  50,
+  500,
+  1000,
+  10000,
   mins,
+  30 * mins,
   hours,
+  8 * hours,
   days,
   weeks,
   months,
+  months * 3,
   years,
-})
-const timeIntervals = [100, 1000, mins, hours, days, weeks, months, years]
+]
 
 const findReasonableGridDuration = (duration) => {
   let bestFittingIntervalIndex = 0
@@ -32,7 +41,10 @@ const findReasonableGridDuration = (duration) => {
       bestFittingIntervalScore = timeIntervalScore
     }
   }
-  return timeIntervals[bestFittingIntervalIndex]
+  return [
+    timeIntervals[bestFittingIntervalIndex],
+    timeIntervals[bestFittingIntervalIndex - 1],
+  ]
 }
 
 export const Wave = ({
@@ -48,26 +60,68 @@ export const Wave = ({
   const { x: startTimeOnGraph } = transformMatrix.inverse().applyToPoint(0, 0)
   const { x: endTimeOnGraph } = transformMatrix.inverse().applyToPoint(500, 0)
 
-  const gridDuration = findReasonableGridDuration(
+  const [majorDuration, minorDuration] = findReasonableGridDuration(
     endTimeOnGraph - startTimeOnGraph
   )
-  const numberOfGridLines = Math.ceil(
-    (endTimeOnGraph - startTimeOnGraph) / gridDuration
+
+  const numberOfMajorGridLines = Math.ceil(
+    (endTimeOnGraph - startTimeOnGraph) / majorDuration
+  )
+
+  const numberOfMinorGridLines = Math.ceil(
+    (endTimeOnGraph - startTimeOnGraph) / minorDuration
   )
 
   return (
     <Container style={{ curves, width, height }}>
       <svg width={width} height={height}>
-        {range(numberOfGridLines + 1).map((i) => {
+        {range(-5, numberOfMajorGridLines + 1).map((i) => {
+          const timeAtLine =
+            Math.floor(startTimeOnGraph / majorDuration) * majorDuration +
+            majorDuration * i
+
+          const { x: lineX } = transformMatrix.applyToPoint(timeAtLine, 0)
+
+          const globalTimelineIndex = Math.floor(timeAtLine / majorDuration)
+
+          let textElm = null
+          if (
+            globalTimelineIndex % Math.floor(numberOfMajorGridLines / 2) ===
+            0
+          ) {
+            textElm = (
+              <text x={lineX + 5} y={12} fill={colors.Selection} fontSize={12}>
+                {formatTime(timeAtLine, "dates")}
+              </text>
+            )
+          }
+
+          return (
+            <Fragment key={i}>
+              {i >= 0 && (
+                <line
+                  stroke={colors.Selection}
+                  x1={lineX}
+                  x2={lineX}
+                  y1={0}
+                  y2={height}
+                />
+              )}
+              {textElm}
+            </Fragment>
+          )
+        })}
+        {range(numberOfMinorGridLines).map((i) => {
           const { x: lineX } = transformMatrix.applyToPoint(
-            Math.floor(startTimeOnGraph / gridDuration) * gridDuration +
-              gridDuration * i,
+            Math.floor(startTimeOnGraph / minorDuration) * minorDuration +
+              minorDuration * i,
             0
           )
 
           return (
             <line
               key={i}
+              opacity={0.25}
               stroke={colors.Selection}
               x1={lineX}
               x2={lineX}

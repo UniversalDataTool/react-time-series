@@ -45,7 +45,7 @@ const TimeStamp = styled(LocationOnIcon)(({ left, color }) => ({
   },
 }))
 
-const formatTime = (time, format) => {
+export const formatTime = (time, format) => {
   if (format === "none") return time
   if (format === "dates") {
     return moment(time).format("L")
