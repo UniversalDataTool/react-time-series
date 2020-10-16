@@ -20,7 +20,6 @@ const curve2 = {
 const Container = styled("div")({
   width: 500,
   height: 200,
-  backgroundColor: "#eee",
 })
 
 export const MouseTransformHandler = ({

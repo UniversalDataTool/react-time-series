@@ -9,14 +9,15 @@ import useRafState from "react-use/lib/useRafState"
 import DurationBox from "../DurationBox"
 import useEventCallback from "use-event-callback"
 import { setIn } from "seamless-immutable"
+import useColors from "../../hooks/use-colors"
 
-const Container = styled("div")({
+const Container = styled("div")(({ themeColors }) => ({
   width: "80vw",
   height: "80vh",
   display: "flex",
   flexDirection: "column",
-  backgroundColor: "#ddd",
-})
+  backgroundColor: themeColors.bg,
+}))
 
 export const MainLayout = ({
   curveGroups,
@@ -26,6 +27,7 @@ export const MainLayout = ({
   timestamps,
   onChangeTimestamps,
 }) => {
+  const themeColors = useColors()
   const width = 500
   const [activeDurationGroup, setActiveDurationGroup] = useState(0)
   const [draggedDurationIndex, setDraggedDurationIndex] = useState(0)
@@ -85,7 +87,7 @@ export const MainLayout = ({
   })
 
   return (
-    <Container>
+    <Container themeColors={themeColors}>
       <TimelineTimes
         timeFormat={timeFormat}
         width={width}

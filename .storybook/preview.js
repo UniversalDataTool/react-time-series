@@ -10,8 +10,8 @@ export const decorators = [
         style={{
           padding: 16,
           backgroundColor: "#282a36",
-          width: "100vw",
-          height: "100vh",
+          minWidth: 600,
+          minHeight: 500,
         }}
       >
         <Story />

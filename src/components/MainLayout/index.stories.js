@@ -2,6 +2,7 @@ import React, { useState } from "react"
 
 import MainLayout from "./"
 import tesla from "./tesla.json"
+import { draculaTheme } from "../../hooks/use-colors"
 
 export default {
   title: "MainLayout",
@@ -12,7 +13,7 @@ export default {
 export const Primary = () => {
   const [durationGroups, setDurationGroups] = useState([
     {
-      color: "#f00",
+      color: draculaTheme.Cyan,
       durations: [
         {
           start: 1537416000000,
@@ -21,14 +22,14 @@ export const Primary = () => {
       ],
     },
     {
-      color: "#00f",
+      color: draculaTheme.Pink,
       durations: [],
     },
   ])
 
   const [timestamps, setTimestamps] = useState([
     {
-      color: "#0f0",
+      color: draculaTheme.Red,
       time: 1520398800000,
     },
   ])
@@ -38,8 +39,8 @@ export const Primary = () => {
       timeFormat="dates"
       curveGroups={[
         [
-          { data: tesla.curve2018, color: "#f00" },
-          { data: tesla.curve2017, color: "#00f" },
+          { data: tesla.curve2018, color: draculaTheme.Yellow },
+          { data: tesla.curve2017, color: draculaTheme.Green },
         ],
         [
           {
@@ -47,7 +48,7 @@ export const Primary = () => {
               .concat(tesla.curve2018)
               .filter((_, i) => i % 10 === 0)
               .sort((a, b) => a[0] - b[0]),
-            color: "#0f0",
+            color: draculaTheme.Green,
           },
         ],
       ]}
