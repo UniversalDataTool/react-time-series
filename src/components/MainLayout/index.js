@@ -33,7 +33,7 @@ export const MainLayout = ({
   const [activeDurationGroup, setActiveDurationGroup] = useState(0)
   const [draggedDurationIndex, setDraggedDurationIndex] = useState(0)
 
-  const [topLevelMatrix, setTopLevelMatrix] = useRafState(() =>
+  const [topLevelMatrix, setTopLevelMatrix] = useState(() =>
     initTopLevelMatrix({ curveGroups, width })
   )
   const { visibleTimeStart, visibleTimeEnd } = useTimeRange(topLevelMatrix, 500)
@@ -88,7 +88,7 @@ export const MainLayout = ({
         timestamps={timestamps}
         gridLineMetrics={gridLineMetrics}
       />
-      {/* {durationGroups.map((dg, i) => {
+      {durationGroups.map((dg, i) => {
         return (
           <DurationBox
             onClick={() => setActiveDurationGroup(i)}
@@ -101,7 +101,7 @@ export const MainLayout = ({
             visibleTimeEnd={visibleTimeEnd}
           />
         )
-      })} */}
+      })}
       {curveGroups.map((curves, i) => (
         <ControllableWave
           key={i}

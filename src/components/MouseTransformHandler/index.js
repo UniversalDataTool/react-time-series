@@ -1,21 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import { styled } from "@material-ui/core/styles"
 import useEventCallback from "use-event-callback"
-import Matrix from "immutable-transform-matrix"
-import Wave from "../Wave"
-import useRafState from "react-use/lib/useRafState"
-
-import range from "lodash/range"
-
-const curve1 = {
-  color: "#f00",
-  data: range(500).map((i) => [i, Math.sin(i / 20) * 100]),
-}
-
-const curve2 = {
-  color: "#00f",
-  data: range(500).map((i) => [i, Math.cos(i / 40) * 100]),
-}
 
 const Container = styled("div")({
   width: 500,

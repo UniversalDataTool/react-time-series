@@ -22,6 +22,12 @@ const TimeText = styled("div")(({ x }) => ({
   left: x,
 }))
 
+const Svg = styled("svg")({
+  position: "absolute",
+  left: 0,
+  bottom: 0,
+})
+
 const Tick = styled("div")(({ x, big, themeColors }) => ({
   position: "absolute",
   left: x,
@@ -81,14 +87,28 @@ export const Timeline = ({
           {formatTime(timeTextTimes[timeTextIndex], timeFormat)}
         </TimeText>
       ))}
-      {range(numberOfMajorGridLines).map((tickIndex) => (
-        <Tick
-          key={tickIndex}
-          big={true}
-          x={majorGridLinePixelOffset + majorGridLinePixelDistance * tickIndex}
-          themeColors={themeColors}
-        />
-      ))}
+      <Svg width={width} height={12}>
+        {range(numberOfMajorGridLines).map((tickIndex) => {
+          const x =
+            majorGridLinePixelOffset + majorGridLinePixelDistance * tickIndex
+          return (
+            <line
+              key={tickIndex}
+              x1={x}
+              x2={x}
+              y1={0}
+              y2={12}
+              stroke={themeColors["Current Line"]}
+            />
+            // <Tick
+            //   key={tickIndex}
+            //   big={true}
+            //   x={majorGridLinePixelOffset + majorGridLinePixelDistance * tickIndex}
+            //   themeColors={themeColors}
+            // />
+          )
+        })}
+      </Svg>
       {/* {range(numberOfMinorGridLines).map((tickIndex) => (
         <Tick
           key={tickIndex}
