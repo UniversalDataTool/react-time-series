@@ -17,7 +17,7 @@ export const ControllableWave = ({
   durationGroups,
   timestamps,
 }) => {
-  const [matrix, setMatrix] = useRafState(() => {
+  let [matrix, setMatrix] = useRafState(() => {
     const mat = new Matrix()
     const maxY = Math.max(...curves[0].data.map(([, y]) => y))
     const minY = Math.min(...curves[0].data.map(([, y]) => y))
@@ -28,25 +28,16 @@ export const ControllableWave = ({
       .translate(0, -minY)
   })
 
+  matrix = matrix
+    .set("a", topLevelMatrix.get("a"))
+    .set("e", topLevelMatrix.get("e"))
+
   const onChangeMatrix = useEventCallback((newMatrix) => {
     setMatrix(newMatrix)
     setTopLevelMatrix(
       topLevelMatrix.set("a", newMatrix.get("a")).set("e", newMatrix.get("e"))
     )
   })
-
-  useEffect(() => {
-    if (
-      topLevelMatrix.get("a") !== matrix.get("a") ||
-      topLevelMatrix.get("e") !== matrix.get("e")
-    ) {
-      setMatrix(
-        matrix
-          .set("a", topLevelMatrix.get("a"))
-          .set("e", topLevelMatrix.get("e"))
-      )
-    }
-  }, [topLevelMatrix, matrix, setMatrix])
 
   return (
     <MouseTransformHandler

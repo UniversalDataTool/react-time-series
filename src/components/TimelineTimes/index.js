@@ -2,8 +2,8 @@ import React from "react"
 import range from "lodash/range"
 import { styled } from "@material-ui/core/styles"
 import moment from "moment"
-import LocationOnIcon from "@material-ui/icons/LocationOn"
 import useColors from "../../hooks/use-colors"
+import TimeStamp from "../TimeStamp"
 
 const Container = styled("div")(({ width, themeColors }) => ({
   width,
@@ -29,20 +29,6 @@ const Tick = styled("div")(({ x, big, themeColors }) => ({
   width: 1,
   height: 8 + (big ? 4 : 0),
   backgroundColor: themeColors["Current Line"],
-}))
-
-const TimeStamp = styled(LocationOnIcon)(({ left, color }) => ({
-  position: "absolute",
-  bottom: 0,
-  width: 24,
-  height: 24,
-  left: left - 12,
-  color,
-  transition: "transform 150ms",
-  cursor: "pointer",
-  "&:hover": {
-    transform: "scale(1.2,1.2)",
-  },
 }))
 
 export const formatTime = (time, format) => {
@@ -94,7 +80,7 @@ export const TimelineTimes = ({
       {timestamps.map((timestamp, i) => {
         const left =
           ((timestamp.time - visibleTimeStart) / visibleDuration) * width
-        return <TimeStamp key={i} left={left} color={timestamp.color} />
+        return <TimeStamp key={i} left={left} {...timestamp} />
       })}
     </Container>
   )
