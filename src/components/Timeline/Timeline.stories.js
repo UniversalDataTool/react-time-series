@@ -2,6 +2,8 @@ import React from "react"
 
 import useColors from "../../hooks/use-colors"
 import Timeline from "./"
+import getMinorMajorDurationLines from "../../utils/get-minor-major-duration-lines"
+import Matrix from "immutable-transform-matrix"
 
 export default {
   title: "Timeline",
@@ -15,6 +17,7 @@ export const TimeWithColons = () => {
       width={500}
       visibleTimeStart={0}
       visibleTimeEnd={60000 * 80}
+      gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />
   )
 }
@@ -26,6 +29,7 @@ export const Dates = () => {
       width={500}
       visibleTimeStart={0}
       visibleTimeEnd={60000 * 60 * 24 * 400}
+      gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />
   )
 }
@@ -42,6 +46,7 @@ export const TimeWithTimestamps = () => {
         { time: 10 * 60000, color: colors.Cyan },
         { time: 50 * 60000, color: colors.Red },
       ]}
+      gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />
   )
 }
@@ -58,6 +63,7 @@ export const TimeWithTextMarkers = () => {
         { time: 10 * 60000, color: colors.Cyan, label: "Timestamp 1" },
         { time: 50 * 60000, color: colors.Red, label: "Another Timestamp" },
       ]}
+      gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />
   )
 }

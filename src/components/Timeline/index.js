@@ -7,6 +7,7 @@ import TimeStamp from "../TimeStamp"
 
 const Container = styled("div")(({ width, themeColors }) => ({
   width,
+  overflow: "hidden",
   position: "relative",
   height: 48,
   borderBottom: `1px solid ${themeColors.Selection}`,
@@ -27,15 +28,6 @@ const Svg = styled("svg")({
   left: 0,
   bottom: 0,
 })
-
-const Tick = styled("div")(({ x, big, themeColors }) => ({
-  position: "absolute",
-  left: x,
-  bottom: 0,
-  width: 1,
-  height: 8 + (big ? 4 : 0),
-  backgroundColor: themeColors["Current Line"],
-}))
 
 export const formatTime = (time, format) => {
   if (format === "none") return time
@@ -100,23 +92,9 @@ export const Timeline = ({
               y2={12}
               stroke={themeColors["Current Line"]}
             />
-            // <Tick
-            //   key={tickIndex}
-            //   big={true}
-            //   x={majorGridLinePixelOffset + majorGridLinePixelDistance * tickIndex}
-            //   themeColors={themeColors}
-            // />
           )
         })}
       </Svg>
-      {/* {range(numberOfMinorGridLines).map((tickIndex) => (
-        <Tick
-          key={tickIndex}
-          big={false}
-          x={minorGridLinePixelOffset + minorGridLinePixelDistance * tickIndex}
-          themeColors={themeColors}
-        />
-      ))} */}
       {timestamps.map((timestamp, i) => {
         const left =
           ((timestamp.time - visibleTimeStart) / visibleDuration) * width

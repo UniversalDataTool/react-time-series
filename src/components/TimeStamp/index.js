@@ -7,7 +7,7 @@ import useColors from "../../hooks/use-colors"
 export const Container = styled("div")(
   ({ left, color, textColor, hasIcon }) => ({
     position: "absolute",
-    bottom: 0,
+    bottom: 2,
     fontSize: 11,
     fontWeight: 600,
     ...(hasIcon
@@ -30,6 +30,15 @@ export const Container = styled("div")(
       width: 12,
       height: 12,
     },
+    borderLeft: `1px solid ${color}`,
+    "& .stem": {
+      position: "absolute",
+      left: -1,
+      bottom: -2,
+      width: 1,
+      height: 2,
+      backgroundColor: color,
+    },
   })
 )
 
@@ -37,6 +46,7 @@ export const TimeStamp = ({ left, color, label }) => {
   const themeColors = useColors()
   return (
     <Container left={left} color={color} hasIcon={!Boolean(label)}>
+      <div className="stem" />
       {label ? <span>{label}</span> : <LocationOnIcon className="icon" />}
     </Container>
   )
