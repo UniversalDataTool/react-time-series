@@ -3,49 +3,9 @@ import range from "lodash/range"
 import { styled } from "@material-ui/core/styles"
 import colorAlpha from "color-alpha"
 import useColors from "../../hooks/use-colors"
-import { formatTime } from "../TimelineTimes"
+import { formatTime } from "../Timeline"
 
 const Container = styled("div")({})
-
-const mins = 1000 * 60
-const hours = 60 * mins
-const days = 24 * hours
-const weeks = 7 * days
-const months = 30 * days
-const years = 12 * months
-const timeIntervals = [
-  1,
-  5,
-  50,
-  500,
-  1000,
-  10000,
-  mins,
-  30 * mins,
-  hours,
-  8 * hours,
-  days,
-  weeks,
-  months,
-  months * 3,
-  years,
-]
-
-const findReasonableGridDuration = (duration) => {
-  let bestFittingIntervalIndex = 0
-  let bestFittingIntervalScore = -Infinity
-  for (const [i, timeInterval] of Object.entries(timeIntervals)) {
-    const timeIntervalScore = -1 * Math.abs(duration / timeInterval - 20)
-    if (timeIntervalScore > bestFittingIntervalScore) {
-      bestFittingIntervalIndex = i
-      bestFittingIntervalScore = timeIntervalScore
-    }
-  }
-  return [
-    timeIntervals[bestFittingIntervalIndex],
-    timeIntervals[bestFittingIntervalIndex - 1],
-  ]
-}
 
 export const Wave = ({
   curves,
@@ -54,23 +14,21 @@ export const Wave = ({
   transformMatrix,
   durationGroups = [],
   timestamps = [],
+  gridLineMetrics,
 }) => {
   const colors = useColors()
 
-  const { x: startTimeOnGraph } = transformMatrix.inverse().applyToPoint(0, 0)
-  const { x: endTimeOnGraph } = transformMatrix.inverse().applyToPoint(500, 0)
-
-  const [majorDuration, minorDuration] = findReasonableGridDuration(
-    endTimeOnGraph - startTimeOnGraph
-  )
-
-  const numberOfMajorGridLines = Math.ceil(
-    (endTimeOnGraph - startTimeOnGraph) / majorDuration
-  )
-
-  const numberOfMinorGridLines = Math.ceil(
-    (endTimeOnGraph - startTimeOnGraph) / minorDuration
-  )
+  const {
+    startTimeOnGraph,
+    majorDuration,
+    minorDuration,
+    numberOfMajorGridLines,
+    numberOfMinorGridLines,
+    majorGridLinePixelOffset,
+    minorGridLinePixelOffset,
+    majorGridLinePixelDistance,
+    minorGridLinePixelDistance,
+  } = gridLineMetrics
 
   return (
     <Container style={{ curves, width, height }}>
@@ -80,15 +38,13 @@ export const Wave = ({
             Math.floor(startTimeOnGraph / majorDuration) * majorDuration +
             majorDuration * i
 
-          const { x: lineX } = transformMatrix.applyToPoint(timeAtLine, 0)
+          const lineX =
+            majorGridLinePixelOffset + majorGridLinePixelDistance * i
 
           const globalTimelineIndex = Math.floor(timeAtLine / majorDuration)
 
           let textElm = null
-          if (
-            globalTimelineIndex % Math.floor(numberOfMajorGridLines / 2) ===
-            0
-          ) {
+          if (globalTimelineIndex % 7 === 0) {
             textElm = (
               <text x={lineX + 5} y={12} fill={colors.Selection} fontSize={12}>
                 {formatTime(timeAtLine, "dates")}
@@ -112,12 +68,8 @@ export const Wave = ({
           )
         })}
         {range(numberOfMinorGridLines).map((i) => {
-          const { x: lineX } = transformMatrix.applyToPoint(
-            Math.floor(startTimeOnGraph / minorDuration) * minorDuration +
-              minorDuration * i,
-            0
-          )
-
+          const lineX =
+            minorGridLinePixelOffset + minorGridLinePixelDistance * i
           return (
             <line
               key={i}

@@ -1,7 +1,5 @@
 import React, { useState } from "react"
-import TimelineTimes from "../TimelineTimes"
 import { styled } from "@material-ui/core/styles"
-import range from "lodash/range"
 import Matrix from "immutable-transform-matrix"
 import useTimeRange from "../../hooks/use-time-range.js"
 import ControllableWave from "../ControllableWave"
@@ -10,6 +8,9 @@ import DurationBox from "../DurationBox"
 import useEventCallback from "use-event-callback"
 import { setIn } from "seamless-immutable"
 import useColors from "../../hooks/use-colors"
+import Timeline from "../Timeline"
+import getMinorMajorDurationLines from "../../utils/get-minor-major-duration-lines"
+import initTopLevelMatrix from "../../utils/init-top-level-matrix"
 
 const Container = styled("div")(({ themeColors }) => ({
   width: "80vw",
@@ -32,20 +33,9 @@ export const MainLayout = ({
   const [activeDurationGroup, setActiveDurationGroup] = useState(0)
   const [draggedDurationIndex, setDraggedDurationIndex] = useState(0)
 
-  const [topLevelMatrix, setTopLevelMatrix] = useRafState(() => {
-    const mat = new Matrix()
-
-    const allTimes = curveGroups
-      .flatMap((curveGroup) => curveGroup)
-      .flatMap((curve) => curve.data.map(([t]) => t))
-    const minT = Math.min(...allTimes)
-    const maxT = Math.max(...allTimes)
-
-    return mat
-      .scale(width, 1)
-      .scale(1 / (maxT - minT), 1)
-      .translate(-minT, 0)
-  })
+  const [topLevelMatrix, setTopLevelMatrix] = useRafState(() =>
+    initTopLevelMatrix({ curveGroups, width })
+  )
   const { visibleTimeStart, visibleTimeEnd } = useTimeRange(topLevelMatrix, 500)
 
   const onDragDuration = useEventCallback((startTime, endTime) => {
@@ -86,16 +76,19 @@ export const MainLayout = ({
     )
   })
 
+  const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, 500)
+
   return (
     <Container themeColors={themeColors}>
-      <TimelineTimes
+      <Timeline
         timeFormat={timeFormat}
         width={width}
         visibleTimeStart={visibleTimeStart}
         visibleTimeEnd={visibleTimeEnd}
         timestamps={timestamps}
+        gridLineMetrics={gridLineMetrics}
       />
-      {durationGroups.map((dg, i) => {
+      {/* {durationGroups.map((dg, i) => {
         return (
           <DurationBox
             onClick={() => setActiveDurationGroup(i)}
@@ -108,7 +101,7 @@ export const MainLayout = ({
             visibleTimeEnd={visibleTimeEnd}
           />
         )
-      })}
+      })} */}
       {curveGroups.map((curves, i) => (
         <ControllableWave
           key={i}
@@ -122,6 +115,7 @@ export const MainLayout = ({
           curves={curves}
           width={width}
           height={200}
+          gridLineMetrics={gridLineMetrics}
           topLevelMatrix={topLevelMatrix}
           setTopLevelMatrix={setTopLevelMatrix}
         />
