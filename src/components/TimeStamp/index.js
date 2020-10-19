@@ -11,14 +11,16 @@ export const Container = styled("div")(
     fontSize: 11,
     fontWeight: 600,
     ...(hasIcon
-      ? {}
+      ? {
+          left,
+        }
       : {
+          left: left - 6,
           padding: 4,
           paddingLeft: 6,
           paddingRight: 6,
           backgroundColor: Color(color).darken(0.5).string(),
         }),
-    left: left - 6,
     color: "#fff",
     cursor: "pointer",
     transition: "transform 150ms",
