@@ -22,6 +22,13 @@ const Box = styled("div")(({ x, width, color }) => ({
   backgroundColor: color,
   height: 20,
 }))
+const Label = styled("div")({
+  position: "absolute",
+  left: 4,
+  top: 0,
+  color: "#fff",
+  mixBlendMode: "overlay",
+})
 
 export const DurationBox = ({
   width,
@@ -31,18 +38,38 @@ export const DurationBox = ({
   visibleTimeStart,
   visibleTimeEnd,
   onClick,
+  onRemoveBox,
+  label = "testing label",
 }) => {
   const visibleDuration = visibleTimeEnd - visibleTimeStart
 
   return (
     <Container onClick={onClick} width={width} color={color} active={active}>
-      {durations.map(({ start: startTime, end: endTime }) => {
+      {durations.map(({ start: startTime, end: endTime }, i) => {
         const startX =
           ((startTime - visibleTimeStart) / visibleDuration) * width
         const endX = ((endTime - visibleTimeStart) / visibleDuration) * width
 
-        return <Box color={color} x={startX} width={endX - startX} />
+        if (endX < 0) return null
+        if (isNaN(startX) || isNaN(endX)) return null
+
+        return (
+          <Box
+            color={color}
+            x={startX}
+            width={endX - startX}
+            onMouseUp={(e) => {
+              if (e.button === 2) {
+                onRemoveBox(i)
+              }
+            }}
+            onContextMenu={(e) => {
+              e.preventDefault()
+            }}
+          />
+        )
       })}
+      {label && <Label key="label">{label}</Label>}
     </Container>
   )
 }

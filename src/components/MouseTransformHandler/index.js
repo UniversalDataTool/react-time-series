@@ -96,8 +96,9 @@ export const MouseTransformHandler = ({
       py: projectedMouse.y,
     }
     setDragStartTime(projectedMouse.x)
-    if (button === 1) {
+    if (button === 1 || e.button === 2) {
       setMiddleMouseDown(true)
+      e.preventDefault()
     } else if (button === 0) {
       onDragDurationStart(projectMouse.x)
       setPrimaryDrag(true)
@@ -106,7 +107,7 @@ export const MouseTransformHandler = ({
 
   const onMouseUp = useEventCallback((e) => {
     const projectedMouse = projectMouse(e)
-    if (e.button === 1) {
+    if (e.button === 1 || e.button === 2) {
       setMiddleMouseDown(false)
     } else if (e.button === 0) {
       if (Math.abs(dragStartTime - projectedMouse.x) === 0) {
@@ -130,6 +131,10 @@ export const MouseTransformHandler = ({
     )
   })
 
+  const onContextMenu = useEventCallback((e) => {
+    e.preventDefault()
+  })
+
   // TODO
   return (
     <Container
@@ -138,6 +143,7 @@ export const MouseTransformHandler = ({
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
       onWheel={onWheel}
+      onContextMenu={onContextMenu}
     >
       {children}
     </Container>

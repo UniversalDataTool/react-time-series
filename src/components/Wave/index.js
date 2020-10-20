@@ -21,7 +21,6 @@ export const Wave = ({
   const {
     startTimeOnGraph,
     majorDuration,
-    minorDuration,
     numberOfMajorGridLines,
     numberOfMinorGridLines,
     majorGridLinePixelOffset,
@@ -82,15 +81,17 @@ export const Wave = ({
             />
           )
         })}
-        {durationGroups.flatMap(({ durations, color }) => {
-          return durations.map((duration) => {
+        {durationGroups.flatMap(({ durations, color }, dgi) => {
+          return durations.map((duration, di) => {
             const { x: startX } = transformMatrix.applyToPoint(
               duration.start,
               0
             )
             const { x: endX } = transformMatrix.applyToPoint(duration.end, 0)
+            if (isNaN(startX) || isNaN(endX)) return null
             return (
               <rect
+                key={`${dgi},${di}`}
                 fill={colorAlpha(color, 0.2)}
                 x={startX}
                 y={0}

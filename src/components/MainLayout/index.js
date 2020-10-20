@@ -76,6 +76,17 @@ export const MainLayout = ({
     )
   })
 
+  const onRemoveDurationBox = useEventCallback((dgi, boxIndex) => {
+    const durations = durationGroups[dgi].durations
+    onChangeDurationGroups(
+      setIn(
+        durationGroups,
+        [dgi, "durations"],
+        [...durations.slice(0, boxIndex), ...durations.slice(boxIndex + 1)]
+      )
+    )
+  })
+
   const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, 500)
 
   return (
@@ -92,6 +103,7 @@ export const MainLayout = ({
         return (
           <DurationBox
             onClick={() => setActiveDurationGroup(i)}
+            onRemoveBox={(boxIndex) => onRemoveDurationBox(i, boxIndex)}
             key={i}
             active={i === activeDurationGroup}
             color={dg.color}
