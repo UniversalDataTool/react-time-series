@@ -70,15 +70,32 @@ const iconStyle = {
 }
 
 export const Toolbar = ({
-  timestamps,
+  timestamps = [],
   selectedTimestampIndex,
-  durationGroups,
+  durationGroups = [],
   selectedDurationGroupIndex,
   selectedDurationIndex,
 }) => {
   const themeColors = useColors()
   const [mode, setToolMode] = useToolMode()
   const setTheme = useSetRecoilState(themeAtom)
+
+  const labels = useMemo(() => {
+    const labelSet = new Set()
+    for (const timestamp of timestamps) {
+      if (!timestamp.label) continue
+      labelSet.add(timestamp.label)
+    }
+    for (const dg of durationGroups) {
+      for (const duration of dg.durations) {
+        if (!duration.label) continue
+        labelSet.add(duration.label)
+      }
+      if (!dg.label) continue
+      labelSet.add(dg.label)
+    }
+    return labelSet
+  }, [timestamps, durationGroups])
 
   const onSelectCreateTool = useEventCallback(() => setToolMode("create"))
   const onSelectPanTool = useEventCallback(() => setToolMode("pan"))
@@ -91,6 +108,14 @@ export const Toolbar = ({
     [themeColors, selectedTimestampIndex]
   )
   const formatCreateLabel = useEventCallback((s) => `Add "${s}"`)
+  const onChangeSelectedLabel = useEventCallback(({ value }) => {
+    // TODO
+    console.log("label selected", value)
+  })
+  const creatableSelectOptions = useMemo(
+    () => Array.from(labels).map((label) => ({ label, value: label })),
+    [labels]
+  )
 
   const selectedTimestamp =
     typeof selectedTimestampIndex === "number"
@@ -122,8 +147,8 @@ export const Toolbar = ({
           isClearable
           formatCreateLabel={formatCreateLabel}
           styles={selectFieldStyles}
-          onChange={console.log}
-          options={[{ label: "bird", value: "bird" }]}
+          onChange={onChangeSelectedLabel}
+          options={creatableSelectOptions}
         />
       </Box>
       <ButtonGroup size="small">

@@ -120,7 +120,7 @@ export const MouseTransformHandler = ({
 
   const onWheel = useEventCallback((e) => {
     const { deltaY } = e
-    const scroll = -deltaY / 1000
+    const scroll = -Math.sign(deltaY) / 10
     const { px, py } = mousePosition.current
 
     onChangeMatrix(

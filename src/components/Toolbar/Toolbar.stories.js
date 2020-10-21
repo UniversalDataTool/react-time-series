@@ -14,6 +14,12 @@ export const Primary = () => {
         {
           color: solarized.red,
           time: 100,
+          label: "bird",
+        },
+        {
+          color: solarized.blue,
+          time: 200,
+          label: "mouse",
         },
       ]}
       selectedTimestampIndex={null}
