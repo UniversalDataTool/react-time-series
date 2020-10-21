@@ -90,7 +90,7 @@ export const Timeline = ({
               x2={x}
               y1={0}
               y2={12}
-              stroke={themeColors["Current Line"]}
+              stroke={themeColors.base01}
             />
           )
         })}

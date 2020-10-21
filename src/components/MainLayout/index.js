@@ -11,13 +11,14 @@ import useColors from "../../hooks/use-colors"
 import Timeline from "../Timeline"
 import getMinorMajorDurationLines from "../../utils/get-minor-major-duration-lines"
 import initTopLevelMatrix from "../../utils/init-top-level-matrix"
+import Toolbar from "../Toolbar"
 
-const Container = styled("div")(({ themeColors }) => ({
-  width: "80vw",
-  height: "80vh",
+const Container = styled("div")(({ themeColors, width }) => ({
+  width: width,
   display: "flex",
   flexDirection: "column",
   backgroundColor: themeColors.bg,
+  padding: 16,
 }))
 
 export const MainLayout = ({
@@ -90,7 +91,8 @@ export const MainLayout = ({
   const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, 500)
 
   return (
-    <Container themeColors={themeColors}>
+    <Container width={width} themeColors={themeColors}>
+      <Toolbar />
       <Timeline
         timeFormat={timeFormat}
         width={width}
@@ -108,6 +110,7 @@ export const MainLayout = ({
             active={i === activeDurationGroup}
             color={dg.color}
             width={width}
+            label={dg.label}
             durations={dg.durations}
             visibleTimeStart={visibleTimeStart}
             visibleTimeEnd={visibleTimeEnd}

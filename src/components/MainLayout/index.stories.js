@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 import MainLayout from "./"
 import tesla from "./tesla.json"
-import { draculaTheme } from "../../hooks/use-colors"
+import { solarized } from "../../hooks/use-colors"
 
 export default {
   title: "MainLayout",
@@ -13,7 +13,8 @@ export default {
 export const Primary = () => {
   const [durationGroups, setDurationGroups] = useState([
     {
-      color: draculaTheme.Cyan,
+      label: "buy here",
+      color: solarized.cyan,
       durations: [
         {
           start: 1537416000000,
@@ -22,14 +23,15 @@ export const Primary = () => {
       ],
     },
     {
-      color: draculaTheme.Pink,
+      label: "sell here",
+      color: solarized.magenta,
       durations: [],
     },
   ])
 
   const [timestamps, setTimestamps] = useState([
     {
-      color: draculaTheme.Red,
+      color: solarized.red,
       time: 1520398800000,
     },
   ])
@@ -39,8 +41,8 @@ export const Primary = () => {
       timeFormat="dates"
       curveGroups={[
         [
-          { data: tesla.curve2018, color: draculaTheme.Yellow },
-          { data: tesla.curve2017, color: draculaTheme.Green },
+          { data: tesla.curve2018, color: solarized.yellow },
+          { data: tesla.curve2017, color: solarized.blue },
         ],
         [
           {
@@ -48,7 +50,7 @@ export const Primary = () => {
               .concat(tesla.curve2018)
               .filter((_, i) => i % 10 === 0)
               .sort((a, b) => a[0] - b[0]),
-            color: draculaTheme.Green,
+            color: solarized.green,
           },
         ],
       ]}

@@ -5,6 +5,8 @@ import colorAlpha from "color-alpha"
 import useColors from "../../hooks/use-colors"
 import { formatTime } from "../Timeline"
 
+const userSelectOffStyle = { userSelect: "none" }
+
 const Container = styled("div")({})
 
 export const Wave = ({
@@ -45,7 +47,14 @@ export const Wave = ({
           let textElm = null
           if (globalTimelineIndex % 7 === 0) {
             textElm = (
-              <text x={lineX + 5} y={12} fill={colors.Selection} fontSize={12}>
+              <text
+                x={lineX + 5}
+                y={12}
+                fill={colors.base0}
+                fontSize={12}
+                pointerEvents="none"
+                style={userSelectOffStyle}
+              >
                 {formatTime(timeAtLine, "dates")}
               </text>
             )
@@ -55,7 +64,8 @@ export const Wave = ({
             <Fragment key={i}>
               {i >= 0 && (
                 <line
-                  stroke={colors.Selection}
+                  opacity={0.5}
+                  stroke={colors.base01}
                   x1={lineX}
                   x2={lineX}
                   y1={0}
@@ -73,7 +83,7 @@ export const Wave = ({
             <line
               key={i}
               opacity={0.25}
-              stroke={colors.Selection}
+              stroke={colors.base01}
               x1={lineX}
               x2={lineX}
               y1={0}

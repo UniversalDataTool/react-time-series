@@ -15,6 +15,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
+    "react-select": "^3.1.0",
     "react-use": "^15.3.4",
     "recoil": "^0.0.13",
     "seamless-immutable": "^7.1.4",

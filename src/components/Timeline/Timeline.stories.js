@@ -43,8 +43,8 @@ export const TimeWithTimestamps = () => {
       visibleTimeStart={0}
       visibleTimeEnd={60000 * 80}
       timestamps={[
-        { time: 10 * 60000, color: colors.Cyan },
-        { time: 50 * 60000, color: colors.Red },
+        { time: 10 * 60000, color: colors.cyan },
+        { time: 50 * 60000, color: colors.red },
       ]}
       gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />

@@ -1,6 +1,7 @@
 import React from "react"
 import { styled } from "@material-ui/core/styles"
 import colorAlpha from "color-alpha"
+import useColors from "../../hooks/use-colors"
 
 const Container = styled("div")(({ width, active, color }) => ({
   width,
@@ -22,13 +23,17 @@ const Box = styled("div")(({ x, width, color }) => ({
   backgroundColor: color,
   height: 20,
 }))
-const Label = styled("div")({
+const Label = styled("div")(({ colors }) => ({
   position: "absolute",
   left: 4,
   top: 0,
-  color: "#fff",
-  mixBlendMode: "overlay",
-})
+  ...(colors.dark
+    ? { mixBlendMode: "overlay", color: "#fff" }
+    : {
+        mixBlendMode: "multiply",
+        color: "#888",
+      }),
+}))
 
 export const DurationBox = ({
   width,
@@ -41,6 +46,7 @@ export const DurationBox = ({
   onRemoveBox,
   label = "testing label",
 }) => {
+  const colors = useColors()
   const visibleDuration = visibleTimeEnd - visibleTimeStart
 
   return (
@@ -69,7 +75,11 @@ export const DurationBox = ({
           />
         )
       })}
-      {label && <Label key="label">{label}</Label>}
+      {label && (
+        <Label colors={colors} key="label">
+          {label}
+        </Label>
+      )}
     </Container>
   )
 }

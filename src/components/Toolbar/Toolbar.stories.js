@@ -1,5 +1,6 @@
 import React from "react"
 import Toolbar from "./"
+import { solarized } from "../../hooks/use-colors"
 
 export default {
   title: "Toolbar",
@@ -7,5 +8,15 @@ export default {
 }
 
 export const Primary = () => {
-  return <Toolbar />
+  return (
+    <Toolbar
+      timestamps={[
+        {
+          color: solarized.red,
+          time: 100,
+        },
+      ]}
+      selectedTimestampIndex={null}
+    />
+  )
 }
