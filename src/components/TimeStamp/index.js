@@ -11,10 +11,12 @@ export const Container = styled("div")(
     fontWeight: 600,
     ...(hasIcon
       ? {
-          left,
+          left: left - 14,
+          bottom: -8,
           padding: 4,
         }
       : {
+          borderLeft: `1px solid ${color}`,
           left: left,
           padding: 4,
           paddingLeft: 6,
@@ -32,18 +34,19 @@ export const Container = styled("div")(
         },
     "& .icon": {
       color: color,
-      width: 16,
-      height: 16,
+      width: 20,
+      height: 20,
     },
-    borderLeft: `1px solid ${color}`,
-    "& .stem": {
-      position: "absolute",
-      left: -1,
-      bottom: -2,
-      width: 1,
-      height: 2,
-      backgroundColor: color,
-    },
+    "& .stem": hasIcon
+      ? {}
+      : {
+          position: "absolute",
+          left: -1,
+          bottom: -2,
+          width: 1,
+          height: 2,
+          backgroundColor: color,
+        },
   })
 )
 
