@@ -1,9 +1,7 @@
 import React, { useState } from "react"
 import { styled } from "@material-ui/core/styles"
-import Matrix from "immutable-transform-matrix"
 import useTimeRange from "../../hooks/use-time-range.js"
 import ControllableWave from "../ControllableWave"
-import useRafState from "react-use/lib/useRafState"
 import DurationBox from "../DurationBox"
 import useEventCallback from "use-event-callback"
 import { setIn } from "seamless-immutable"
@@ -32,9 +30,9 @@ export const MainLayout = ({
 }) => {
   const themeColors = useColors()
   const width = 500
-  const [activeDurationGroup, setActiveDurationGroup] = useState(0)
-  const [draggedDurationIndex, setDraggedDurationIndex] = useState(0)
-  const [selectedTimestampIndex, setSelectedTimestampIndex] = useState(0)
+  const [activeDurationGroup, setActiveDurationGroup] = useState(null)
+  const [draggedDurationIndex, setDraggedDurationIndex] = useState(null)
+  const [selectedTimestampIndex, setSelectedTimestampIndex] = useState(null)
 
   const [topLevelMatrix, setTopLevelMatrix] = useState(() =>
     initTopLevelMatrix({ curveGroups, width })
@@ -77,6 +75,7 @@ export const MainLayout = ({
         },
       ])
     )
+    setSelectedTimestampIndex(timestamps.length)
   })
 
   const onRemoveDurationBox = useEventCallback((dgi, boxIndex) => {

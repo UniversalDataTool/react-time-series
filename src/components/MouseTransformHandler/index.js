@@ -129,6 +129,7 @@ export const MouseTransformHandler = ({
         .scale(1 + (shiftKeyDown ? 0 : scroll), 1 + (shiftKeyDown ? scroll : 0))
         .translate(-px, -py)
     )
+    e.preventDefault()
   })
 
   const onContextMenu = useEventCallback((e) => {

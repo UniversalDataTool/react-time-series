@@ -2,9 +2,9 @@ import useColors from "./use-colors"
 import useEventCallback from "use-event-callback"
 
 const colorsToCycle = [
+  "red",
   "yellow",
   "orange",
-  "red",
   "magenta",
   "violet",
   "blue",
@@ -15,6 +15,7 @@ const colorsToCycle = [
 export default () => {
   const themeColors = useColors()
   return useEventCallback((label) => {
+    if (!label) return colorsToCycle[0]
     let hashNumber = 0
     for (let i = 0; i < label.length; i++) {
       hashNumber += label.charCodeAt(i)

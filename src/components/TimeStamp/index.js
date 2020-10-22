@@ -2,7 +2,6 @@ import React from "react"
 import { styled } from "@material-ui/core/styles"
 import LocationOnIcon from "@material-ui/icons/LocationOn"
 import Color from "color"
-import useColors from "../../hooks/use-colors"
 
 export const Container = styled("div")(
   ({ left, color, textColor, hasIcon }) => ({
@@ -15,7 +14,7 @@ export const Container = styled("div")(
           left,
         }
       : {
-          left: left - 6,
+          left: left,
           padding: 4,
           paddingLeft: 6,
           paddingRight: 6,
@@ -23,10 +22,13 @@ export const Container = styled("div")(
         }),
     color: "#fff",
     cursor: "pointer",
-    transition: "transform 150ms",
-    "&:hover": {
-      transform: "translate(0px, -1px)",
-    },
+    "&:hover": hasIcon
+      ? {
+          backgroundColor: Color(color).darken(0.5).string(),
+        }
+      : {
+          backgroundColor: Color(color).darken(0.6).string(),
+        },
     "& .icon": {
       color: color,
       width: 12,

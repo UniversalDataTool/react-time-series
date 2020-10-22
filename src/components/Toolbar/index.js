@@ -113,8 +113,12 @@ export const Toolbar = ({
     [themeColors, selectedTimestampIndex]
   )
   const formatCreateLabel = useEventCallback((s) => `Add "${s}"`)
-  const onChangeSelectedLabel = useEventCallback(({ label }) => {
-    onChangeSelectedItemLabel({ label, color: labelColorMap[label] })
+  const onChangeSelectedLabel = useEventCallback((newValue) => {
+    const { label } = newValue || {}
+    onChangeSelectedItemLabel({
+      label,
+      color: labelColorMap[label],
+    })
   })
   const creatableSelectOptions = useMemo(
     () => Array.from(labelSet).map((label) => ({ label, value: label })),
@@ -162,14 +166,16 @@ export const Toolbar = ({
         ) : null}
       </Box>
       <Box display="block" flexGrow={1} paddingRight={2}>
-        <CreatableSelect
-          isClearable
-          value={selectedItemValue}
-          formatCreateLabel={formatCreateLabel}
-          styles={selectFieldStyles}
-          onChange={onChangeSelectedLabel}
-          options={creatableSelectOptions}
-        />
+        {(selectedTimestamp || selectedDuration) && (
+          <CreatableSelect
+            isClearable
+            value={selectedItemValue}
+            formatCreateLabel={formatCreateLabel}
+            styles={selectFieldStyles}
+            onChange={onChangeSelectedLabel}
+            options={creatableSelectOptions}
+          />
+        )}
       </Box>
       <ButtonGroup size="small">
         <Button

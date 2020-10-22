@@ -101,10 +101,7 @@ export const Timeline = ({
             key={i}
             left={left}
             {...timestamp}
-            onClick={() => {
-              console.log(timestamp, i)
-              onClickTimestamp(timestamp, i)
-            }}
+            onClick={() => onClickTimestamp(timestamp, i)}
           />
         )
       })}
