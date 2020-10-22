@@ -7,11 +7,12 @@ export const Container = styled("div")(
   ({ left, color, textColor, hasIcon }) => ({
     position: "absolute",
     bottom: 2,
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: 600,
     ...(hasIcon
       ? {
           left,
+          padding: 4,
         }
       : {
           left: left,
@@ -24,15 +25,15 @@ export const Container = styled("div")(
     cursor: "pointer",
     "&:hover": hasIcon
       ? {
-          backgroundColor: Color(color).darken(0.5).string(),
+          backgroundColor: Color(color).fade(0.5).string(),
         }
       : {
           backgroundColor: Color(color).darken(0.6).string(),
         },
     "& .icon": {
       color: color,
-      width: 12,
-      height: 12,
+      width: 16,
+      height: 16,
     },
     borderLeft: `1px solid ${color}`,
     "& .stem": {
