@@ -75,26 +75,31 @@ export const Toolbar = ({
   durationGroups = [],
   selectedDurationGroupIndex,
   selectedDurationIndex,
+  onChangeSelectedItemLabel,
 }) => {
   const themeColors = useColors()
   const [mode, setToolMode] = useToolMode()
   const setTheme = useSetRecoilState(themeAtom)
 
-  const labels = useMemo(() => {
+  const [labelSet, labelColorMap] = useMemo(() => {
     const labelSet = new Set()
+    const labelColorMap = {}
     for (const timestamp of timestamps) {
       if (!timestamp.label) continue
       labelSet.add(timestamp.label)
+      labelColorMap[timestamp.label] = timestamp.color
     }
     for (const dg of durationGroups) {
       for (const duration of dg.durations) {
         if (!duration.label) continue
         labelSet.add(duration.label)
+        labelColorMap[duration.label] = duration.color || dg.color
       }
       if (!dg.label) continue
       labelSet.add(dg.label)
+      labelColorMap[dg.label] = dg.color
     }
-    return labelSet
+    return [labelSet, labelColorMap]
   }, [timestamps, durationGroups])
 
   const onSelectCreateTool = useEventCallback(() => setToolMode("create"))
@@ -108,13 +113,12 @@ export const Toolbar = ({
     [themeColors, selectedTimestampIndex]
   )
   const formatCreateLabel = useEventCallback((s) => `Add "${s}"`)
-  const onChangeSelectedLabel = useEventCallback(({ value }) => {
-    // TODO
-    console.log("label selected", value)
+  const onChangeSelectedLabel = useEventCallback(({ label }) => {
+    onChangeSelectedItemLabel({ label, color: labelColorMap[label] })
   })
   const creatableSelectOptions = useMemo(
-    () => Array.from(labels).map((label) => ({ label, value: label })),
-    [labels]
+    () => Array.from(labelSet).map((label) => ({ label, value: label })),
+    [labelSet]
   )
 
   const selectedTimestamp =
@@ -127,6 +131,11 @@ export const Toolbar = ({
       ? durationGroups[selectedDurationGroupIndex][selectedDurationIndex]
       : null
 
+  const selectedItemValue = useMemo(() => {
+    const label = selectedTimestamp?.label || selectedDuration?.label
+    return { label, value: label }
+  }, [selectedTimestamp, selectedDuration])
+
   return (
     <Container themeColors={themeColors}>
       <Box
@@ -137,14 +146,25 @@ export const Toolbar = ({
         paddingRight={1}
       >
         {selectedTimestamp ? (
-          <LocationOnIcon style={iconStyle} />
+          <LocationOnIcon
+            style={{
+              ...iconStyle,
+              color: selectedTimestamp.color || themeColors.fg,
+            }}
+          />
         ) : selectedDuration ? (
-          <TimelapseIcon style={iconStyle} />
+          <TimelapseIcon
+            style={{
+              ...iconStyle,
+              color: selectedDuration.color || themeColors.fg,
+            }}
+          />
         ) : null}
       </Box>
       <Box display="block" flexGrow={1} paddingRight={2}>
         <CreatableSelect
           isClearable
+          value={selectedItemValue}
           formatCreateLabel={formatCreateLabel}
           styles={selectFieldStyles}
           onChange={onChangeSelectedLabel}
