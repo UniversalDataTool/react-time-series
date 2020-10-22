@@ -12,6 +12,7 @@ import Timeline from "../Timeline"
 import getMinorMajorDurationLines from "../../utils/get-minor-major-duration-lines"
 import initTopLevelMatrix from "../../utils/init-top-level-matrix"
 import Toolbar from "../Toolbar"
+import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash"
 
 const Container = styled("div")(({ themeColors, width }) => ({
   width: width,
@@ -33,6 +34,7 @@ export const MainLayout = ({
   const width = 500
   const [activeDurationGroup, setActiveDurationGroup] = useState(0)
   const [draggedDurationIndex, setDraggedDurationIndex] = useState(0)
+  const [selectedTimestampIndex, setSelectedTimestampIndex] = useState(0)
 
   const [topLevelMatrix, setTopLevelMatrix] = useState(() =>
     initTopLevelMatrix({ curveGroups, width })
@@ -88,11 +90,30 @@ export const MainLayout = ({
     )
   })
 
+  const onClickTimestamp = useEventCallback((ts, tsi) => {
+    setSelectedTimestampIndex(tsi)
+    setDraggedDurationIndex(null)
+  })
+
+  const getRandomColorUsingHash = useGetRandomColorUsingHash()
+  const onChangeSelectedItemLabel = useEventCallback(({ label, color }) => {
+    onChangeTimestamps(
+      setIn(timestamps, [selectedTimestampIndex, "label"], label).setIn(
+        [selectedTimestampIndex, "color"],
+        color || getRandomColorUsingHash(label)
+      )
+    )
+  })
+
   const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, 500)
 
   return (
     <Container width={width} themeColors={themeColors}>
-      <Toolbar />
+      <Toolbar
+        timestamps={timestamps}
+        selectedTimestampIndex={selectedTimestampIndex}
+        onChangeSelectedItemLabel={onChangeSelectedItemLabel}
+      />
       <Timeline
         timeFormat={timeFormat}
         width={width}
@@ -100,6 +121,7 @@ export const MainLayout = ({
         visibleTimeEnd={visibleTimeEnd}
         timestamps={timestamps}
         gridLineMetrics={gridLineMetrics}
+        onClickTimestamp={onClickTimestamp}
       />
       {durationGroups.map((dg, i) => {
         return (

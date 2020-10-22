@@ -51,6 +51,7 @@ export const Timeline = ({
   width,
   timestamps = [],
   gridLineMetrics,
+  onClickTimestamp,
 }) => {
   const themeColors = useColors()
   const visibleDuration = visibleTimeEnd - visibleTimeStart
@@ -61,9 +62,6 @@ export const Timeline = ({
   )
 
   const {
-    // numberOfMinorGridLines,
-    // minorGridLinePixelOffset,
-    // minorGridLinePixelDistance,
     numberOfMajorGridLines,
     majorGridLinePixelOffset,
     majorGridLinePixelDistance,
@@ -98,7 +96,17 @@ export const Timeline = ({
       {timestamps.map((timestamp, i) => {
         const left =
           ((timestamp.time - visibleTimeStart) / visibleDuration) * width
-        return <TimeStamp key={i} left={left} {...timestamp} />
+        return (
+          <TimeStamp
+            key={i}
+            left={left}
+            {...timestamp}
+            onClick={() => {
+              console.log(timestamp, i)
+              onClickTimestamp(timestamp, i)
+            }}
+          />
+        )
       })}
     </Container>
   )

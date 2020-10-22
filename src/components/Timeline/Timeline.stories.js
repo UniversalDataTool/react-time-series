@@ -8,11 +8,16 @@ import Matrix from "immutable-transform-matrix"
 export default {
   title: "Timeline",
   component: Timeline,
+  argTypes: {
+    width: "number",
+    onClickTimestamp: { action: "onClickTimestamp" },
+  },
 }
 
-export const TimeWithColons = () => {
+export const TimeWithColons = (args) => {
   return (
     <Timeline
+      {...args}
       timeFormat="timecolons"
       width={500}
       visibleTimeStart={0}
@@ -22,9 +27,10 @@ export const TimeWithColons = () => {
   )
 }
 
-export const Dates = () => {
+export const Dates = (args) => {
   return (
     <Timeline
+      {...args}
       timeFormat="dates"
       width={500}
       visibleTimeStart={0}
@@ -34,10 +40,11 @@ export const Dates = () => {
   )
 }
 
-export const TimeWithTimestamps = () => {
+export const TimeWithTimestamps = (args) => {
   const colors = useColors()
   return (
     <Timeline
+      {...args}
       timeFormat="timecolons"
       width={500}
       visibleTimeStart={0}
@@ -51,17 +58,18 @@ export const TimeWithTimestamps = () => {
   )
 }
 
-export const TimeWithTextMarkers = () => {
+export const TimeWithTextMarkers = (args) => {
   const colors = useColors()
   return (
     <Timeline
+      {...args}
       timeFormat="timecolons"
       width={500}
       visibleTimeStart={0}
       visibleTimeEnd={60000 * 80}
       timestamps={[
-        { time: 10 * 60000, color: colors.Cyan, label: "Timestamp 1" },
-        { time: 50 * 60000, color: colors.Red, label: "Another Timestamp" },
+        { time: 10 * 60000, color: colors.cyan, label: "Timestamp 1" },
+        { time: 50 * 60000, color: colors.red, label: "Another Timestamp" },
       ]}
       gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />

@@ -44,10 +44,14 @@ export const Container = styled("div")(
   })
 )
 
-export const TimeStamp = ({ left, color, label }) => {
-  const themeColors = useColors()
+export const TimeStamp = ({ left, color, label, onClick }) => {
   return (
-    <Container left={left} color={color} hasIcon={!Boolean(label)}>
+    <Container
+      onClick={onClick}
+      left={left}
+      color={color}
+      hasIcon={!Boolean(label)}
+    >
       <div className="stem" />
       {label ? <span>{label}</span> : <LocationOnIcon className="icon" />}
     </Container>
