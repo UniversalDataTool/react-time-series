@@ -1,5 +1,7 @@
 # React Timeseries Editor
 
+React component for labeling time series data with durations and timestamps.
+
 > If you just want to edit timeseries data, it's easier to just use the [Universal Data Tool (MIT)](https://github.com/UniversalDataTool/universal-data-tool). This library is a module of the Universal Data Tool for use in custom react applications.
 
 ![](https://user-images.githubusercontent.com/1910070/97049709-28ba6700-154a-11eb-9624-22b380ab4833.png)
