@@ -24,9 +24,10 @@ const Box = styled("div")(({ x, width, color }) => ({
   opacity: 0.8,
   backgroundColor: color,
   height: 20,
-  "& span": {
+  "& div": {
     paddingLeft: 4,
     mixBlendMode: "hardlight",
+    whiteSpace: "pre",
     color: "#fff",
   },
 }))
@@ -84,7 +85,7 @@ export const DurationBox = ({
                 e.preventDefault()
               }}
             >
-              <span>{durationLabel}</span>
+              <div>{durationLabel}</div>
             </Box>
           )
         }

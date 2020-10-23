@@ -21,6 +21,7 @@ export const Wave = ({
   const colors = useColors()
 
   const {
+    visibleDuration,
     startTimeOnGraph,
     majorDuration,
     numberOfMajorGridLines,
@@ -46,18 +47,24 @@ export const Wave = ({
 
           let textElm = null
           if (globalTimelineIndex % 7 === 0) {
-            textElm = (
+            const timeLines = formatTime(
+              timeAtLine,
+              "dates",
+              visibleDuration
+            ).split("\n")
+            textElm = timeLines.map((tl, i) => (
               <text
+                key={i}
                 x={lineX + 5}
-                y={12}
+                y={12 + i * 12}
                 fill={colors.base0}
                 fontSize={12}
                 pointerEvents="none"
                 style={userSelectOffStyle}
               >
-                {formatTime(timeAtLine, "dates")}
+                {tl}
               </text>
-            )
+            ))
           }
 
           return (

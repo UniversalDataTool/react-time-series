@@ -44,14 +44,16 @@ const Container = styled("div")(({ themeColors }) => ({
 const getSelectFieldStyles = (themeColors, timestamp) => ({
   control: (styles, state) => ({
     ...styles,
+    border: `1px solid ${
+      themeColors.dark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)"
+    }`,
+    boxShadow: "none",
     backgroundColor: themeColors.bg,
     borderColor: themeColors.base1,
     userSelect: "none",
     "&:hover": {
       backgroundColor: Color(themeColors.bg).darken(0.2).string(),
-      border: state.isFocused ? 0 : 0,
     },
-    boxShadow: state.isFocused ? 0 : 0,
   }),
   input: (styles) => ({
     ...styles,

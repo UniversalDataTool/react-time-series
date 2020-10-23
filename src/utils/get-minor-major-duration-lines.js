@@ -44,6 +44,8 @@ export default (transformMatrix, graphWidth) => {
     .inverse()
     .applyToPoint(graphWidth, 0)
 
+  const visibleDuration = endTimeOnGraph - startTimeOnGraph
+
   const [
     [majorDurationLabel, majorDuration],
     [minorDurationLabel, minorDuration],
@@ -80,6 +82,7 @@ export default (transformMatrix, graphWidth) => {
     transformMatrix.applyToPoint(0, 0).x
 
   return {
+    visibleDuration,
     startTimeOnGraph,
     endTimeOnGraph,
     majorDuration,

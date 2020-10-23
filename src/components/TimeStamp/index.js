@@ -11,7 +11,7 @@ export const Container = styled("div")(
     bottom: 2,
     fontSize: 14,
     fontWeight: 600,
-    whiteSpace: "nowrap",
+    whiteSpace: "pre",
     ...(hasIcon
       ? {
           left: left - 14,

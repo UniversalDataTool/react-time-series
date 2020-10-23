@@ -9,6 +9,8 @@ export const ControllableWave = ({
   curves,
   topLevelMatrix,
   setTopLevelMatrix,
+  wave,
+  width,
   height,
   onDragDuration,
   onDragDurationStart,
@@ -51,7 +53,7 @@ export const ControllableWave = ({
     >
       <Wave
         curves={curves}
-        width={500}
+        width={width}
         height={height}
         transformMatrix={matrix}
         gridLineMetrics={gridLineMetrics}

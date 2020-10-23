@@ -9,7 +9,7 @@ const Container = styled("div")(({ width, themeColors }) => ({
   width,
   overflow: "hidden",
   position: "relative",
-  height: 48,
+  height: 64,
   borderBottom: `1px solid ${themeColors.Selection}`,
   color: themeColors.fg,
 }))
@@ -23,6 +23,7 @@ const TimeText = styled("div")(({ x }) => ({
   left: x,
   borderLeft: "1px solid rgba(255,255,255,0.5)",
   paddingLeft: 4,
+  whiteSpace: "wrap",
 }))
 
 const Svg = styled("svg")({
@@ -31,10 +32,14 @@ const Svg = styled("svg")({
   bottom: 0,
 })
 
-export const formatTime = (time, format) => {
+export const formatTime = (time, format, visibleDuration) => {
+  const lessThan3DaysShown = visibleDuration < 1000 * 60 * 60 * 24 * 3
   if (format === "none") return time
   if (format === "dates") {
-    return moment(time).format("L")
+    return (
+      moment(time).format("L") +
+      (!lessThan3DaysShown ? "" : "\n" + moment(time).format("h:mm:ss a"))
+    )
   }
   if (time < 0) return ""
   const deciSecs = Math.floor((time % 1000) / 10)
@@ -77,7 +82,11 @@ export const Timeline = ({
           key={timeTextIndex}
           x={(timeTextIndex / timeTextCount) * width}
         >
-          {formatTime(timeTextTimes[timeTextIndex], timeFormat)}
+          {formatTime(
+            timeTextTimes[timeTextIndex],
+            timeFormat,
+            visibleDuration
+          )}
         </TimeText>
       ))}
       <Svg width={width} height={12}>
