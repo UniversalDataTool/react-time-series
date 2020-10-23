@@ -3,6 +3,7 @@ import { styled } from "@material-ui/core/styles"
 import LocationOnIcon from "@material-ui/icons/LocationOn"
 import Color from "color"
 import useEventCallback from "use-event-callback"
+import useToolMode from "../../hooks/use-tool-mode"
 
 export const Container = styled("div")(
   ({ left, color, textColor, hasIcon }) => ({
@@ -10,6 +11,7 @@ export const Container = styled("div")(
     bottom: 2,
     fontSize: 14,
     fontWeight: 600,
+    whiteSpace: "nowrap",
     ...(hasIcon
       ? {
           left: left - 14,
@@ -22,7 +24,7 @@ export const Container = styled("div")(
           padding: 4,
           paddingLeft: 6,
           paddingRight: 6,
-          backgroundColor: Color(color).darken(0.5).string(),
+          backgroundColor: Color(color).darken(0.5).fade(0.2).string(),
         }),
     color: "#fff",
     cursor: "pointer",
@@ -52,8 +54,9 @@ export const Container = styled("div")(
 )
 
 export const TimeStamp = ({ left, color, label, onClick, onRemove }) => {
+  const [toolMode] = useToolMode()
   const onMouseUp = useEventCallback((e) => {
-    if (e.button === 2 || e.button === 1) {
+    if (toolMode === "delete" || e.button === 2 || e.button === 1) {
       onRemove()
     }
   })
@@ -67,7 +70,7 @@ export const TimeStamp = ({ left, color, label, onClick, onRemove }) => {
       onContextMenu={onContextMenu}
       left={left}
       color={color}
-      hasIcon={!Boolean(label)}
+      hasIcon={!label}
     >
       <div className="stem" />
       {label ? <span>{label}</span> : <LocationOnIcon className="icon" />}

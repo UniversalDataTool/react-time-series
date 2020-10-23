@@ -2,6 +2,7 @@ import React from "react"
 import { styled } from "@material-ui/core/styles"
 import colorAlpha from "color-alpha"
 import useColors from "../../hooks/use-colors"
+import useToolMode from "../../hooks/use-tool-mode"
 
 const Container = styled("div")(({ width, active, color }) => ({
   width,
@@ -53,6 +54,7 @@ export const DurationBox = ({
   onClickBox,
   label = "testing label",
 }) => {
+  const [toolMode] = useToolMode()
   const colors = useColors()
   const visibleDuration = visibleTimeEnd - visibleTimeStart
 
@@ -74,7 +76,7 @@ export const DurationBox = ({
               width={endX - startX}
               onClick={() => onClickBox(i)}
               onMouseUp={(e) => {
-                if (e.button === 2 || e.button === 1) {
+                if (toolMode === "delete" || e.button === 2 || e.button === 1) {
                   onRemoveBox(i)
                 }
               }}

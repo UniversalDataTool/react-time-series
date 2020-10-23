@@ -41,8 +41,13 @@ export const MainLayout = ({
   const { visibleTimeStart, visibleTimeEnd } = useTimeRange(topLevelMatrix, 500)
 
   const onDragDuration = useEventCallback((startTime, endTime) => {
+    if (activeDurationGroup === null) return
     ;[startTime, endTime] =
       startTime < endTime ? [startTime, endTime] : [endTime, startTime]
+
+    if (selectedDurationIndex !== draggedDurationIndex)
+      setSelectedDurationIndex(selectedDurationIndex)
+
     onChangeDurationGroups(
       setIn(
         durationGroups,
@@ -55,6 +60,7 @@ export const MainLayout = ({
     )
   })
   const onDragDurationStart = useEventCallback((startTime) => {
+    if (activeDurationGroup === null) return
     const lastIndex = durationGroups[activeDurationGroup].durations.length
     setDraggedDurationIndex(lastIndex)
     onChangeDurationGroups(
@@ -88,11 +94,13 @@ export const MainLayout = ({
         [...durations.slice(0, boxIndex), ...durations.slice(boxIndex + 1)]
       )
     )
+    if (selectedTimestampIndex !== null) setSelectedTimestampIndex(null)
+    if (selectedDurationIndex !== null) setSelectedDurationIndex(null)
   })
 
   const onClickTimestamp = useEventCallback((ts, tsi) => {
     setSelectedTimestampIndex(tsi)
-    setDraggedDurationIndex(null)
+    if (selectedDurationIndex !== null) setSelectedDurationIndex(null)
   })
 
   const getRandomColorUsingHash = useGetRandomColorUsingHash()

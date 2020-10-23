@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import { styled } from "@material-ui/core/styles"
 import useEventCallback from "use-event-callback"
+import useToolMode from "../../hooks/use-tool-mode"
 
 const Container = styled("div")({
   width: 500,
@@ -21,6 +22,7 @@ export const MouseTransformHandler = ({
   const [primaryDrag, setPrimaryDrag] = useState(false)
   const [shiftKeyDown, setShiftKeyDown] = useState(false)
   const [middleMouseDown, setMiddleMouseDown] = useState(false)
+  const [toolMode] = useToolMode()
   const containerRef = useRef()
 
   useEffect(() => {
@@ -55,6 +57,20 @@ export const MouseTransformHandler = ({
     return matrix.inverse().applyToPoint(xRelToElm, yRelToElm)
   })
 
+  const onWheel = useEventCallback((e) => {
+    const { deltaY } = e
+    const scroll = -Math.sign(deltaY) / 10
+    const { px, py } = mousePosition.current
+
+    onChangeMatrix(
+      matrix
+        .translate(px, py)
+        .scale(1 + (shiftKeyDown ? 0 : scroll), 1 + (shiftKeyDown ? scroll : 0))
+        .translate(-px, -py)
+    )
+    e.preventDefault()
+  })
+
   const onMouseMove = useEventCallback((e) => {
     const { clientX, clientY } = e
 
@@ -87,6 +103,7 @@ export const MouseTransformHandler = ({
   })
 
   const onMouseDown = useEventCallback((e) => {
+    if (toolMode === "zoom" && e.button !== 1) return
     const { clientX, clientY, button } = e
     const projectedMouse = projectMouse(e)
     mousePosition.current = {
@@ -96,7 +113,7 @@ export const MouseTransformHandler = ({
       py: projectedMouse.y,
     }
     setDragStartTime(projectedMouse.x)
-    if (button === 1 || e.button === 2) {
+    if (toolMode === "pan" || button === 1 || e.button === 2) {
       setMiddleMouseDown(true)
       e.preventDefault()
     } else if (button === 0) {
@@ -106,8 +123,16 @@ export const MouseTransformHandler = ({
   })
 
   const onMouseUp = useEventCallback((e) => {
+    if (toolMode === "zoom" && e.button !== 1) {
+      if (e.button === 2) {
+        onWheel({ ...e, deltaY: 100 })
+      } else if (e.button === 0) {
+        onWheel({ ...e, deltaY: -100 })
+      }
+      return
+    }
     const projectedMouse = projectMouse(e)
-    if (e.button === 1 || e.button === 2) {
+    if (toolMode === "pan" || e.button === 1 || e.button === 2) {
       setMiddleMouseDown(false)
     } else if (e.button === 0) {
       if (Math.abs(dragStartTime - projectedMouse.x) === 0) {
@@ -116,20 +141,6 @@ export const MouseTransformHandler = ({
       setPrimaryDrag(false)
       onDragDurationEnd()
     }
-  })
-
-  const onWheel = useEventCallback((e) => {
-    const { deltaY } = e
-    const scroll = -Math.sign(deltaY) / 10
-    const { px, py } = mousePosition.current
-
-    onChangeMatrix(
-      matrix
-        .translate(px, py)
-        .scale(1 + (shiftKeyDown ? 0 : scroll), 1 + (shiftKeyDown ? scroll : 0))
-        .translate(-px, -py)
-    )
-    e.preventDefault()
   })
 
   const onContextMenu = useEventCallback((e) => {

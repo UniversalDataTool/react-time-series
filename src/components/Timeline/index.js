@@ -21,6 +21,8 @@ const TimeText = styled("div")(({ x }) => ({
   fontVariantNumeric: "tabular-nums",
   position: "absolute",
   left: x,
+  borderLeft: "1px solid rgba(255,255,255,0.5)",
+  paddingLeft: 4,
 }))
 
 const Svg = styled("svg")({

@@ -16,6 +16,8 @@ import { themeAtom } from "../../hooks/use-colors"
 import CreatableSelect from "react-select/creatable"
 import LocationOnIcon from "@material-ui/icons/LocationOn"
 import TimelapseIcon from "@material-ui/icons/Timelapse"
+import ZoomInIcon from "@material-ui/icons/ZoomIn"
+import Color from "color"
 
 const Container = styled("div")(({ themeColors }) => ({
   display: "flex",
@@ -40,10 +42,16 @@ const Container = styled("div")(({ themeColors }) => ({
 }))
 
 const getSelectFieldStyles = (themeColors, timestamp) => ({
-  control: (styles) => ({
+  control: (styles, state) => ({
     ...styles,
     backgroundColor: themeColors.bg,
     borderColor: themeColors.base1,
+    userSelect: "none",
+    "&:hover": {
+      backgroundColor: Color(themeColors.bg).darken(0.2).string(),
+      border: state.isFocused ? 0 : 0,
+    },
+    boxShadow: state.isFocused ? 0 : 0,
   }),
   input: (styles) => ({
     ...styles,
@@ -53,6 +61,12 @@ const getSelectFieldStyles = (themeColors, timestamp) => ({
     ...styles,
     backgroundColor: themeColors.base02,
     color: themeColors.fg,
+    "&:hover": {
+      backgroundColor: Color(themeColors.bg).darken(0.2).string(),
+    },
+    "&:focus": {
+      backgroundColor: Color(themeColors.bg).darken(0.2).string(),
+    },
   }),
   singleValue: (styles) => ({
     ...styles,
@@ -104,6 +118,7 @@ export const Toolbar = ({
 
   const onSelectCreateTool = useEventCallback(() => setToolMode("create"))
   const onSelectPanTool = useEventCallback(() => setToolMode("pan"))
+  const onSelectZoomTool = useEventCallback(() => setToolMode("zoom"))
   const onSelectCloseTool = useEventCallback(() => setToolMode("delete"))
   const toggleTheme = useEventCallback(() =>
     setTheme(themeColors.dark ? "light" : "dark")
@@ -167,7 +182,7 @@ export const Toolbar = ({
           />
         ) : null}
       </Box>
-      <Box display="block" flexGrow={1} paddingRight={2}>
+      <Box display="block" height={40} flexGrow={1} paddingRight={2}>
         {(selectedTimestamp || selectedDuration) && (
           <CreatableSelect
             isClearable
@@ -191,6 +206,12 @@ export const Toolbar = ({
           className={classnames({ active: mode === "pan" })}
         >
           <PanToolIcon />
+        </Button>
+        <Button
+          onClick={onSelectZoomTool}
+          className={classnames({ active: mode === "zoom" })}
+        >
+          <ZoomInIcon />
         </Button>
         <Button
           onClick={onSelectCloseTool}
