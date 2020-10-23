@@ -132,7 +132,9 @@ export const Toolbar = ({
   const selectedDuration =
     typeof selectedDurationGroupIndex === "number" &&
     typeof selectedDurationIndex === "number"
-      ? durationGroups[selectedDurationGroupIndex][selectedDurationIndex]
+      ? durationGroups?.[selectedDurationGroupIndex]?.durations?.[
+          selectedDurationIndex
+        ]
       : null
 
   const selectedItemValue = useMemo(() => {

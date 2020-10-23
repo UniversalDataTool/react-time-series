@@ -1,5 +1,6 @@
 import React from "react"
 import DurationBox from "./"
+import { solarized } from "../../hooks/use-colors"
 
 export default {
   title: "DurationBox",
@@ -10,20 +11,21 @@ export default {
 export const Primary = () => (
   <div>
     <DurationBox
-      color="#f00"
+      color={solarized.red}
       width={500}
       durations={[
         { start: 0, end: 100 },
         {
           start: 500,
           end: 800,
+          label: "party time",
         },
       ]}
       visibleTimeStart={0}
       visibleTimeEnd={1000}
     />
     <DurationBox
-      color="#0f0"
+      color={solarized.blue}
       active
       width={500}
       durations={[
@@ -37,7 +39,7 @@ export const Primary = () => (
       visibleTimeEnd={1000}
     />
     <DurationBox
-      color="#00f"
+      color={solarized.green}
       width={500}
       durations={[
         { start: 200, end: 400 },

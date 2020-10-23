@@ -2,6 +2,7 @@ import React from "react"
 import { styled } from "@material-ui/core/styles"
 import LocationOnIcon from "@material-ui/icons/LocationOn"
 import Color from "color"
+import useEventCallback from "use-event-callback"
 
 export const Container = styled("div")(
   ({ left, color, textColor, hasIcon }) => ({
@@ -50,10 +51,20 @@ export const Container = styled("div")(
   })
 )
 
-export const TimeStamp = ({ left, color, label, onClick }) => {
+export const TimeStamp = ({ left, color, label, onClick, onRemove }) => {
+  const onMouseUp = useEventCallback((e) => {
+    if (e.button === 2 || e.button === 1) {
+      onRemove()
+    }
+  })
+  const onContextMenu = useEventCallback((e) => {
+    e.preventDefault()
+  })
   return (
     <Container
       onClick={onClick}
+      onMouseUp={onMouseUp}
+      onContextMenu={onContextMenu}
       left={left}
       color={color}
       hasIcon={!Boolean(label)}

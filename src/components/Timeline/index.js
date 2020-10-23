@@ -52,6 +52,7 @@ export const Timeline = ({
   timestamps = [],
   gridLineMetrics,
   onClickTimestamp,
+  onRemoveTimestamp,
 }) => {
   const themeColors = useColors()
   const visibleDuration = visibleTimeEnd - visibleTimeStart
@@ -102,6 +103,7 @@ export const Timeline = ({
             left={left}
             {...timestamp}
             onClick={() => onClickTimestamp(timestamp, i)}
+            onRemove={() => onRemoveTimestamp(timestamp, i)}
           />
         )
       })}

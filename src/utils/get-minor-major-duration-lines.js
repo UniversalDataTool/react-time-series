@@ -5,27 +5,27 @@ const weeks = 7 * days
 const months = 30 * days
 const years = 12 * months
 const timeIntervals = [
-  1,
-  5,
-  50,
-  500,
-  1000,
-  10000,
-  mins,
-  30 * mins,
-  hours,
-  8 * hours,
-  days,
-  weeks,
-  months,
-  months * 3,
-  years,
+  ["1 ms", 1],
+  ["5 ms", 5],
+  ["50 ms", 50],
+  ["500 ms", 500],
+  ["1s", 1000],
+  ["10s", 10000],
+  ["1 min", mins],
+  ["30 min", 30 * mins],
+  ["1 hr", hours],
+  ["8 hrs", 8 * hours],
+  ["1 day", days],
+  ["1 week", weeks],
+  ["1 month", months],
+  ["3 months", months * 3],
+  ["1 year", years],
 ]
 
-const findReasonableGridDuration = (duration) => {
+export const findReasonableGridDuration = (duration) => {
   let bestFittingIntervalIndex = 0
   let bestFittingIntervalScore = -Infinity
-  for (const [i, timeInterval] of Object.entries(timeIntervals)) {
+  for (const [i, [, timeInterval]] of Object.entries(timeIntervals)) {
     const timeIntervalScore = -1 * Math.abs(duration / timeInterval - 20)
     if (timeIntervalScore > bestFittingIntervalScore) {
       bestFittingIntervalIndex = i
@@ -44,9 +44,10 @@ export default (transformMatrix, graphWidth) => {
     .inverse()
     .applyToPoint(graphWidth, 0)
 
-  const [majorDuration, minorDuration] = findReasonableGridDuration(
-    endTimeOnGraph - startTimeOnGraph
-  )
+  const [
+    [majorDurationLabel, majorDuration],
+    [minorDurationLabel, minorDuration],
+  ] = findReasonableGridDuration(endTimeOnGraph - startTimeOnGraph)
 
   const numberOfMajorGridLines = Math.ceil(
     (endTimeOnGraph - startTimeOnGraph) / majorDuration
@@ -82,7 +83,9 @@ export default (transformMatrix, graphWidth) => {
     startTimeOnGraph,
     endTimeOnGraph,
     majorDuration,
+    majorDurationLabel,
     minorDuration,
+    minorDurationLabel,
     numberOfMajorGridLines,
     numberOfMinorGridLines,
     majorGridLinePixelOffset,

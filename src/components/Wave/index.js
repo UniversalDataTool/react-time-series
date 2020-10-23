@@ -76,21 +76,22 @@ export const Wave = ({
             </Fragment>
           )
         })}
-        {range(numberOfMinorGridLines).map((i) => {
-          const lineX =
-            minorGridLinePixelOffset + minorGridLinePixelDistance * i
-          return (
-            <line
-              key={i}
-              opacity={0.25}
-              stroke={colors.base01}
-              x1={lineX}
-              x2={lineX}
-              y1={0}
-              y2={height}
-            />
-          )
-        })}
+        {numberOfMajorGridLines < 12 &&
+          range(numberOfMinorGridLines).map((i) => {
+            const lineX =
+              minorGridLinePixelOffset + minorGridLinePixelDistance * i
+            return (
+              <line
+                key={i}
+                opacity={0.25}
+                stroke={colors.base01}
+                x1={lineX}
+                x2={lineX}
+                y1={0}
+                y2={height}
+              />
+            )
+          })}
         {durationGroups.flatMap(({ durations, color }, dgi) => {
           return durations.map((duration, di) => {
             const { x: startX } = transformMatrix.applyToPoint(

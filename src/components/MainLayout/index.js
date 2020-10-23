@@ -4,7 +4,7 @@ import useTimeRange from "../../hooks/use-time-range.js"
 import ControllableWave from "../ControllableWave"
 import DurationBox from "../DurationBox"
 import useEventCallback from "use-event-callback"
-import { setIn } from "seamless-immutable"
+import { setIn, getIn } from "seamless-immutable"
 import useColors from "../../hooks/use-colors"
 import Timeline from "../Timeline"
 import getMinorMajorDurationLines from "../../utils/get-minor-major-duration-lines"
@@ -32,6 +32,7 @@ export const MainLayout = ({
   const width = 500
   const [activeDurationGroup, setActiveDurationGroup] = useState(null)
   const [draggedDurationIndex, setDraggedDurationIndex] = useState(null)
+  const [selectedDurationIndex, setSelectedDurationIndex] = useState(null)
   const [selectedTimestampIndex, setSelectedTimestampIndex] = useState(null)
 
   const [topLevelMatrix, setTopLevelMatrix] = useState(() =>
@@ -96,12 +97,36 @@ export const MainLayout = ({
 
   const getRandomColorUsingHash = useGetRandomColorUsingHash()
   const onChangeSelectedItemLabel = useEventCallback(({ label, color }) => {
-    onChangeTimestamps(
-      setIn(timestamps, [selectedTimestampIndex, "label"], label).setIn(
-        [selectedTimestampIndex, "color"],
-        color || getRandomColorUsingHash(label)
+    if (selectedTimestampIndex !== null) {
+      onChangeTimestamps(
+        setIn(timestamps, [selectedTimestampIndex, "label"], label).setIn(
+          [selectedTimestampIndex, "color"],
+          color || getRandomColorUsingHash(label)
+        )
       )
-    )
+    } else if (selectedDurationIndex !== null) {
+      const pathToDuration = [
+        activeDurationGroup,
+        "durations",
+        selectedDurationIndex,
+      ]
+      onChangeDurationGroups(
+        setIn(durationGroups, pathToDuration, {
+          ...getIn(durationGroups, pathToDuration),
+          label,
+          ...(getIn(durationGroups, [activeDurationGroup, "color"])
+            ? {}
+            : { color: color || getRandomColorUsingHash(label) }),
+        })
+      )
+    }
+  })
+
+  const onRemoveTimestamp = useEventCallback((ts, tsi) => {
+    onChangeTimestamps([
+      ...timestamps.slice(0, tsi),
+      ...timestamps.slice(tsi + 1),
+    ])
   })
 
   const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, 500)
@@ -112,6 +137,9 @@ export const MainLayout = ({
         timestamps={timestamps}
         selectedTimestampIndex={selectedTimestampIndex}
         onChangeSelectedItemLabel={onChangeSelectedItemLabel}
+        selectedDurationGroupIndex={activeDurationGroup}
+        selectedDurationIndex={selectedDurationIndex}
+        durationGroups={durationGroups}
       />
       <Timeline
         timeFormat={timeFormat}
@@ -121,11 +149,16 @@ export const MainLayout = ({
         timestamps={timestamps}
         gridLineMetrics={gridLineMetrics}
         onClickTimestamp={onClickTimestamp}
+        onRemoveTimestamp={onRemoveTimestamp}
       />
       {durationGroups.map((dg, i) => {
         return (
           <DurationBox
             onClick={() => setActiveDurationGroup(i)}
+            onClickBox={(di) => {
+              setSelectedDurationIndex(di)
+              setSelectedTimestampIndex(null)
+            }}
             onRemoveBox={(boxIndex) => onRemoveDurationBox(i, boxIndex)}
             key={i}
             active={i === activeDurationGroup}

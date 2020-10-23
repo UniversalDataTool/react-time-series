@@ -19,9 +19,15 @@ const Box = styled("div")(({ x, width, color }) => ({
   position: "absolute",
   left: x,
   width,
+  overflow: "hidden",
   opacity: 0.8,
   backgroundColor: color,
   height: 20,
+  "& span": {
+    paddingLeft: 4,
+    mixBlendMode: "hardlight",
+    color: "#fff",
+  },
 }))
 const Label = styled("div")(({ colors }) => ({
   position: "absolute",
@@ -44,6 +50,7 @@ export const DurationBox = ({
   visibleTimeEnd,
   onClick,
   onRemoveBox,
+  onClickBox,
   label = "testing label",
 }) => {
   const colors = useColors()
@@ -51,30 +58,35 @@ export const DurationBox = ({
 
   return (
     <Container onClick={onClick} width={width} color={color} active={active}>
-      {durations.map(({ start: startTime, end: endTime }, i) => {
-        const startX =
-          ((startTime - visibleTimeStart) / visibleDuration) * width
-        const endX = ((endTime - visibleTimeStart) / visibleDuration) * width
+      {durations.map(
+        ({ start: startTime, end: endTime, label: durationLabel }, i) => {
+          const startX =
+            ((startTime - visibleTimeStart) / visibleDuration) * width
+          const endX = ((endTime - visibleTimeStart) / visibleDuration) * width
 
-        if (endX < 0) return null
-        if (isNaN(startX) || isNaN(endX)) return null
+          if (endX < 0) return null
+          if (isNaN(startX) || isNaN(endX)) return null
 
-        return (
-          <Box
-            color={color}
-            x={startX}
-            width={endX - startX}
-            onMouseUp={(e) => {
-              if (e.button === 2) {
-                onRemoveBox(i)
-              }
-            }}
-            onContextMenu={(e) => {
-              e.preventDefault()
-            }}
-          />
-        )
-      })}
+          return (
+            <Box
+              color={color}
+              x={startX}
+              width={endX - startX}
+              onClick={() => onClickBox(i)}
+              onMouseUp={(e) => {
+                if (e.button === 2 || e.button === 1) {
+                  onRemoveBox(i)
+                }
+              }}
+              onContextMenu={(e) => {
+                e.preventDefault()
+              }}
+            >
+              <span>{durationLabel}</span>
+            </Box>
+          )
+        }
+      )}
       {label && (
         <Label colors={colors} key="label">
           {label}
