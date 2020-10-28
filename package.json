@@ -1,5 +1,5 @@
 {
-  "name": "react-timeseries",
+  "name": "react-time-series",
   "version": "0.1.0",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
