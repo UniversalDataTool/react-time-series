@@ -1,6 +1,6 @@
-# React Timeseries Editor
+# React Time Series Editor
 
-React component for labeling time series data with durations and timestamps.
+React component for labeling time series data with durations and timestamps. Label audio, video, CSV or JSON formatted time series data.
 
 > If you just want to edit timeseries data, it's easier to just use the [Universal Data Tool (MIT)](https://github.com/UniversalDataTool/universal-data-tool). This library is a module of the Universal Data Tool for use in custom react applications.
 
