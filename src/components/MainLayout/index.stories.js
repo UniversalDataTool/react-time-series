@@ -61,3 +61,36 @@ export const Primary = () => {
     />
   )
 }
+
+export const ExampleMiscLayer = () => {
+  const [durationGroups, setDurationGroups] = useState([
+    {
+      color: solarized.cyan,
+      durations: [
+        {
+          start: 1537416000000 - 1000 * 60 * 60 * 24 * 40,
+          end: 1539316800000 - 1000 * 60 * 60 * 24 * 40,
+          label: "one",
+        },
+        {
+          start: 1537416000000,
+          end: 1539316800000,
+          label: "two",
+        },
+      ],
+    },
+  ])
+  return (
+    <MainLayout
+      timeFormat="dates"
+      curveGroups={[[{ data: tesla.curve2018, color: solarized.yellow }]]}
+      timestamps={[]}
+      durationGroups={durationGroups}
+      onChangeTimestamps={() => null}
+      onChangeDurationGroups={(newDurationGroups) => {
+        console.log(newDurationGroups.asMutable())
+        setDurationGroups(newDurationGroups)
+      }}
+    />
+  )
+}

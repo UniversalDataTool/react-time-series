@@ -20,6 +20,7 @@
     "recoil": "^0.0.13",
     "seamless-immutable": "^7.1.4",
     "transformation-matrix-js": "^2.7.6",
+    "use-async-memo": "^1.2.2",
     "use-event-callback": "^0.1.0"
   },
   "scripts": {

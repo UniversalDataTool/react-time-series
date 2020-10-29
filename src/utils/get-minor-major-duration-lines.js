@@ -5,6 +5,8 @@ const weeks = 7 * days
 const months = 30 * days
 const years = 12 * months
 const timeIntervals = [
+  ["1 ns", 0.000001],
+  ["1 us", 0.001],
   ["1 ms", 1],
   ["5 ms", 5],
   ["50 ms", 50],

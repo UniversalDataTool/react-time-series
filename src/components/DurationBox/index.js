@@ -33,6 +33,7 @@ const Box = styled("div")(({ x, width, color }) => ({
 }))
 const Label = styled("div")(({ colors }) => ({
   position: "absolute",
+  pointerEvents: "none",
   left: 4,
   top: 0,
   ...(colors.dark
@@ -53,7 +54,7 @@ export const DurationBox = ({
   onClick,
   onRemoveBox,
   onClickBox,
-  label = "testing label",
+  label = "",
 }) => {
   const [toolMode] = useToolMode()
   const colors = useColors()

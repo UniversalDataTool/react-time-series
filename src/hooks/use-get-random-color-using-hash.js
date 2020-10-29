@@ -20,7 +20,6 @@ export default () => {
     for (let i = 0; i < label.length; i++) {
       hashNumber += label.charCodeAt(i)
     }
-
-    return colorsToCycle[hashNumber % colorsToCycle.length]
+    return themeColors[colorsToCycle[hashNumber % colorsToCycle.length]]
   })
 }

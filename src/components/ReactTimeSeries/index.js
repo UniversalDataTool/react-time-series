@@ -1,5 +1,9 @@
 import React, { useState, useMemo } from "react"
+import { setIn } from "seamless-immutable"
 import useEventCallback from "use-event-callback"
+import { useAsyncMemo } from "use-async-memo"
+import { RecoilRoot } from "recoil"
+import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash"
 
 import MainLayout from "../MainLayout"
 
@@ -17,12 +21,15 @@ const defaultEnabledTools = [
 ]
 const defaultGraphs = [{ keyName: "value" }]
 
-export const ReactTimeSeries = ({
+export const ReactTimeSeriesWithoutContext = ({
   corsProxy = defaultCorsProxy,
   interface: iface,
   sample,
   onModifySample,
 }) => {
+  if (!iface) throw new Error(`"interface" is a required prop`)
+  if (!sample) throw new Error(`"sample" is a required prop`)
+  const getRandomColorUsingHash = useGetRandomColorUsingHash()
   const {
     timeFormat,
     enabledTools = defaultEnabledTools,
@@ -33,27 +40,137 @@ export const ReactTimeSeries = ({
   } = iface
   let { timeData: sampleTimeData, audioUrl, csvUrl, annotation } = sample
 
-  const timeData = useMemo(() => {
-    if (sampleTimeData) return sampleTimeData
-    // TODO load audioUrl
-    // TODO load csvUrl
-  }, [sampleTimeData, audioUrl, csvUrl])
+  const timeDataAvailable = [sampleTimeData, audioUrl, csvUrl].some(Boolean)
 
-  const curveGroups = useMemo(() => {}, [timeData, graphs])
+  const timeData = useAsyncMemo(
+    async () => {
+      if (sampleTimeData) return sampleTimeData
+      // TODO load audioUrl
+      // TODO load csvUrl
+    },
+    [sampleTimeData, audioUrl, csvUrl],
+    null
+  )
 
-  const [timestamps, setTimestamps] = useState(() => {
+  const timeDataLoading = !timeData && timeDataAvailable
+
+  const curveGroups = useMemo(() => {
+    if (!timeData) return []
+    const anonRows = []
+    const namedRows = {}
+    for (const graph of graphs) {
+      const curveData = timeData
+        .filter(
+          (a) => a[graph.keyName] !== undefined && a[graph.keyName] !== null
+        )
+        .map((a) => [a.time, a[graph.keyName]])
+      if (graph.row === undefined || graph.row === null) {
+        const curveGroup = [
+          {
+            data: curveData,
+            color: graph.color || getRandomColorUsingHash(graph.keyName),
+          },
+        ]
+        anonRows.push(curveGroup)
+      } else {
+        if (!namedRows[graph.row]) {
+          namedRows[graph.row] = []
+        }
+        namedRows[graph.row].push({
+          data: curveData,
+          color: graph.color || getRandomColorUsingHash(graph.keyName),
+        })
+      }
+    }
+    return anonRows.concat(
+      Object.entries(namedRows).sort((a, b) => a[0].localeCompare(b[0]))
+    )
+  }, [timeData, graphs, getRandomColorUsingHash])
+
+  const timestamps = useMemo(() => {
     if (!annotation?.timestamps) return []
-    // TODO derive timestamps
-    return []
-  })
-  const [durationGroups, setDurationGroups] = useState(() => {
+    return annotation?.timestamps.map((ts) => ({
+      time: ts.time,
+      label: ts.label,
+      color: ts.color || getRandomColorUsingHash(ts.label),
+    }))
+    // eslint-disable-next-line
+  }, [annotation?.timestamps, getRandomColorUsingHash])
+
+  const durationGroups = useMemo(() => {
     if (!annotation?.durations) return []
-    // TODO derive timestamps
-    return []
+
+    const availableLabels = Array.from(
+      new Set(
+        annotation.durations.flatMap((d) => [d.label, d.layer]).filter(Boolean)
+      )
+    )
+    availableLabels.sort()
+
+    // TODO no more than 5 layers, after 5 layers start reusing layers
+
+    let durationGroups = availableLabels
+      .map((label) => {
+        return {
+          label,
+          color: getRandomColorUsingHash(label),
+          durations: annotation.durations
+            .filter((d) => d.label === label)
+            .map((d) => ({
+              start: d.start,
+              end: d.end,
+              label: d.label,
+            })),
+        }
+      })
+      .filter((dg) => dg.durations.length > 0)
+
+    durationGroups.push({
+      color: "#888888",
+      misc: true,
+      durations: durationGroups
+        .filter((dg) => dg.durations.length === 1)
+        .flatMap((dg) => dg.durations)
+        .concat(annotation.durations.filter((d) => !d.label))
+        .map((d) => ({ ...d, color: getRandomColorUsingHash(d.label) })),
+    })
+    durationGroups = durationGroups.filter(
+      (dg) => dg.misc || dg.durations.length > 1
+    )
+
+    return durationGroups
+    // eslint-disable-next-line
+  }, [annotation?.durations])
+
+  const onChangeDurationGroups = useEventCallback((newDurationGroups) => {
+    onModifySample(
+      setIn(
+        sample,
+        ["annotation", "durations"],
+        newDurationGroups.flatMap((dg) =>
+          dg.durations.map((d) => ({
+            ...(d.label && dg.label !== d.label ? {} : { label: dg.label }),
+            ...d,
+          }))
+        )
+      )
+    )
+  })
+  const onChangeTimestamps = useEventCallback((newTimestamps) => {
+    onModifySample(setIn(sample, ["annotation", "timestamps"], newTimestamps))
   })
 
-  const onChangeDurationGroups = useEventCallback(() => {})
-  const onChangeTimestamps = useEventCallback(() => {})
+  if (timeDataLoading) return "loading" // TODO real loader
+
+  if (!timeData) {
+    throw new Error(
+      `No time data provided. Try sample={{timeData: [{time: 0, value: 1}, ...]}} or sample={{audioUrl:"https://..."}}`
+    )
+  }
+
+  if (curveGroups.length === 0) {
+    throw new Error(`For some reason, no curves are able to be displayed.`)
+  }
 
   return (
     <MainLayout
@@ -64,6 +181,14 @@ export const ReactTimeSeries = ({
       timestamps={timestamps}
       onChangeTimestamps={onChangeTimestamps}
     />
+  )
+}
+
+export const ReactTimeSeries = (props) => {
+  return (
+    <RecoilRoot>
+      <ReactTimeSeriesWithoutContext {...props} />
+    </RecoilRoot>
   )
 }
 
