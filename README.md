@@ -14,7 +14,7 @@ React component for labeling time series data with durations and timestamps. Lab
 - View multiple waveforms (lines) on the same plot
 - Light/dark theme
 
-## Screenies
+## Screenshots
 
 ![](https://user-images.githubusercontent.com/1910070/97049707-2821d080-154a-11eb-8a58-fa6446e38ef6.png)
 ![](https://user-images.githubusercontent.com/1910070/97049705-2821d080-154a-11eb-87eb-97e3506d6e1b.png)
