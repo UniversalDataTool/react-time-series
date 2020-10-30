@@ -58,6 +58,9 @@ export const MouseTransformHandler = ({
   })
 
   const onWheel = useEventCallback((e) => {
+    if (e && e.preventDefault) {
+      e.preventDefault()
+    }
     const { deltaY } = e
     const scroll = -Math.sign(deltaY) / 10
     const { px, py } = mousePosition.current
