@@ -1,0 +1,20 @@
+@import url(https://rsms.me/inter/inter.css);
+body {
+  margin: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+html {
+  font-family: "Inter", sans-serif;
+}
+@supports (font-variation-settings: normal) {
+  html {
+    font-family: "Inter var", sans-serif;
+  }
+}
+
+
+/*# sourceMappingURL=main.e678a3d5.chunk.css.map*/
