@@ -26,5 +26,10 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           npx semantic-release
+      - name: Deploy Github Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+        run: |
           npm run build-storybook
-          npm run deploy
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/UniversalDataTool/react-time-series.git
+          npm run gh-pages -- -u "github-actions-bot <support+actions@github.com>"
