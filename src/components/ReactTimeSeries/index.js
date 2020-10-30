@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react"
+import React, { useMemo } from "react"
 import { setIn } from "seamless-immutable"
 import useEventCallback from "use-event-callback"
 import { useAsyncMemo } from "use-async-memo"
@@ -22,6 +22,7 @@ const defaultEnabledTools = [
 const defaultGraphs = [{ keyName: "value" }]
 
 export const ReactTimeSeriesWithoutContext = ({
+  // eslint-disable-next-line
   corsProxy = defaultCorsProxy,
   interface: iface,
   sample,
@@ -32,10 +33,14 @@ export const ReactTimeSeriesWithoutContext = ({
   const getRandomColorUsingHash = useGetRandomColorUsingHash()
   const {
     timeFormat,
+    // eslint-disable-next-line
     enabledTools = defaultEnabledTools,
+    // eslint-disable-next-line
     durationLabels = emptyAr,
+    // eslint-disable-next-line
     timestampLabels = emptyAr,
     graphs = defaultGraphs,
+    // eslint-disable-next-line
     allowCustomLabels,
   } = iface
   let { timeData: sampleTimeData, audioUrl, csvUrl, annotation } = sample

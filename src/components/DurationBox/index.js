@@ -73,6 +73,7 @@ export const DurationBox = ({
 
           return (
             <Box
+              key={i}
               color={color}
               x={startX}
               width={endX - startX}
