@@ -19,6 +19,7 @@ export const ControllableWave = ({
   timestamps,
   gridLineMetrics,
   timeFormat,
+  showValues,
 }) => {
   let [matrix, setMatrix] = useRafState(() => {
     const mat = new Matrix()
@@ -61,6 +62,7 @@ export const ControllableWave = ({
         gridLineMetrics={gridLineMetrics}
         timestamps={timestamps}
         durationGroups={durationGroups}
+        showValues={showValues}
       />
     </MouseTransformHandler>
   )

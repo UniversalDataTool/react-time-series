@@ -4,6 +4,7 @@ import { styled } from "@material-ui/core/styles"
 import colorAlpha from "color-alpha"
 import useColors from "../../hooks/use-colors"
 import { formatTime } from "../../utils/format-time"
+import HighlightValueLabels from "../HighlightValueLabels"
 
 const userSelectOffStyle = {
   userSelect: "none",
@@ -62,6 +63,7 @@ export const Wave = ({
   durationGroups = [],
   timestamps = [],
   gridLineMetrics,
+  showValues = false,
 }) => {
   const colors = useColors()
 
@@ -86,9 +88,11 @@ export const Wave = ({
           startTimeOnGraph,
           visibleDuration,
           width
-        ).map(([t, y]) => {
-          return transformMatrix.applyToPoint(t, y)
-        })
+        ).map(([t, y]) => ({
+          ...transformMatrix.applyToPoint(t, y),
+          t,
+          value: y,
+        }))
       )
     }
     return visibleTransformedPointsOnCurves
@@ -200,6 +204,12 @@ export const Wave = ({
           />
         )
       })}
+      {showValues && (
+        <HighlightValueLabels
+          visibleTransformedPointsOnCurves={visibleTransformedPointsOnCurves}
+          curveColors={curves.map((c) => c.color)}
+        />
+      )}
     </svg>
   )
 }

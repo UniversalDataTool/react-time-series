@@ -41,6 +41,7 @@ export const MainLayout = ({
   graphHeight = 300,
   onChangeTimestamps,
   enabledTools = defaultEnabledTools,
+  showValues = false,
 }) => {
   const themeColors = useColors()
   const [activeDurationGroup, setActiveDurationGroup] = useState(null)
@@ -207,6 +208,7 @@ export const MainLayout = ({
       {curveGroups.map((curves, i) => (
         <ControllableWave
           key={i}
+          showValues={showValues}
           durations={durationGroups[activeDurationGroup]}
           onDragDuration={onDragDuration}
           onDragDurationStart={onDragDurationStart}

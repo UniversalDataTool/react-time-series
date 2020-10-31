@@ -35,15 +35,17 @@ export const ReactTimeSeriesWithoutContext = ({
   if (!iface) throw new Error(`"interface" is a required prop`)
   if (!sample) throw new Error(`"sample" is a required prop`)
   const getRandomColorUsingHash = useGetRandomColorUsingHash()
-  const {
+  let {
     timeFormat,
     enabledTools = defaultEnabledTools,
     durationLabels = emptyAr,
     timestampLabels = emptyAr,
     graphs = defaultGraphs,
     allowCustomLabels,
+    showValues,
   } = iface
   let { timeData: sampleTimeData, audioUrl, csvUrl, annotation } = sample
+  if (showValues === undefined && !audioUrl) showValues = true
 
   const timeDataAvailable = [sampleTimeData, audioUrl, csvUrl].some(Boolean)
 
@@ -210,6 +212,7 @@ export const ReactTimeSeriesWithoutContext = ({
             durationLabels={durationLabels}
             allowCustomLabels={allowCustomLabels}
             enabledTools={enabledTools}
+            showValues={showValues}
           />
         </div>
       )}
