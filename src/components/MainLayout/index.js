@@ -17,6 +17,8 @@ const Container = styled("div")(({ themeColors, width }) => ({
   display: "flex",
   flexDirection: "column",
   backgroundColor: themeColors.bg,
+  padding: 16,
+  boxSizing: "border-box",
 }))
 
 const defaultEnabledTools = [

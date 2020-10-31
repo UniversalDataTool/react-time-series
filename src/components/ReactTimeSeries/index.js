@@ -105,13 +105,15 @@ export const ReactTimeSeriesWithoutContext = ({
 
   const durationGroups = useMemo(() => {
     if (!annotation?.durations)
-      return [
-        {
-          color: "#888888",
-          misc: true,
-          durations: [],
-        },
-      ]
+      return !enabledTools.includes("create-durations")
+        ? []
+        : [
+            {
+              color: "#888888",
+              misc: true,
+              durations: [],
+            },
+          ]
 
     const availableLabels = Array.from(
       new Set(
@@ -138,15 +140,18 @@ export const ReactTimeSeriesWithoutContext = ({
       })
       .filter((dg) => dg.durations.length > 0)
 
-    durationGroups.push({
-      color: "#888888",
-      misc: true,
-      durations: durationGroups
-        .filter((dg) => dg.durations.length === 1)
-        .flatMap((dg) => dg.durations)
-        .concat(annotation.durations.filter((d) => !d.label))
-        .map((d) => ({ ...d, color: getRandomColorUsingHash(d.label) })),
-    })
+    if (enabledTools.includes("create-durations")) {
+      durationGroups.push({
+        color: "#888888",
+        misc: true,
+        durations: durationGroups
+          .filter((dg) => dg.durations.length === 1)
+          .flatMap((dg) => dg.durations)
+          .concat(annotation.durations.filter((d) => !d.label))
+          .map((d) => ({ ...d, color: getRandomColorUsingHash(d.label) })),
+      })
+    }
+
     durationGroups = durationGroups.filter(
       (dg) => dg.misc || dg.durations.length > 1
     )
@@ -154,6 +159,8 @@ export const ReactTimeSeriesWithoutContext = ({
     return durationGroups
     // eslint-disable-next-line
   }, [annotation?.durations])
+
+  console.log({ durationGroups })
 
   const onChangeDurationGroups = useEventCallback((newDurationGroups) => {
     onModifySample(
