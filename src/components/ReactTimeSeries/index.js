@@ -9,6 +9,9 @@ import Measure from "react-measure"
 import MainLayout from "../MainLayout"
 
 import fetchAudioData from "../../utils/fetch-audio-data"
+import fetchCSVData from "../../utils/fetch-csv-data"
+
+import validateTimeData from "../../utils/validate-time-data"
 
 const emptyAr = []
 
@@ -51,9 +54,10 @@ export const ReactTimeSeriesWithoutContext = ({
 
   const timeData = useAsyncMemo(
     async () => {
-      if (sampleTimeData) return sampleTimeData
-      return await fetchAudioData(audioUrl)
-      // TODO load audioUrl
+      if (sampleTimeData) return validateTimeData(sampleTimeData)
+      if (audioUrl) return validateTimeData(await fetchAudioData(audioUrl))
+      if (csvUrl) return validateTimeData(await fetchCSVData(csvUrl))
+      return []
       // TODO load csvUrl
     },
     [sampleTimeData, audioUrl, csvUrl],
