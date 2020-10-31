@@ -160,8 +160,6 @@ export const ReactTimeSeriesWithoutContext = ({
     // eslint-disable-next-line
   }, [annotation?.durations])
 
-  console.log({ durationGroups })
-
   const onChangeDurationGroups = useEventCallback((newDurationGroups) => {
     onModifySample(
       setIn(
