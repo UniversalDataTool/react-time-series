@@ -24,6 +24,9 @@ export const MainLayout = ({
   timeFormat,
   durationGroups,
   onChangeDurationGroups,
+  timestampLabels = [],
+  durationLabels = [],
+  allowCustomLabels,
   timestamps,
   width = 500,
   graphHeight = 300,
@@ -147,11 +150,14 @@ export const MainLayout = ({
     <Container width={width} themeColors={themeColors}>
       <Toolbar
         timestamps={timestamps}
+        timestampLabels={timestampLabels}
+        durationLabels={durationLabels}
         selectedTimestampIndex={selectedTimestampIndex}
         onChangeSelectedItemLabel={onChangeSelectedItemLabel}
         selectedDurationGroupIndex={activeDurationGroup}
         selectedDurationIndex={selectedDurationIndex}
         durationGroups={durationGroups}
+        allowCustomLabels={allowCustomLabels}
       />
       <Timeline
         timeFormat={timeFormat}

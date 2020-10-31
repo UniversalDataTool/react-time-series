@@ -14,6 +14,7 @@ import useEventCallback from "use-event-callback"
 import { useSetRecoilState } from "recoil"
 import { themeAtom } from "../../hooks/use-colors"
 import CreatableSelect from "react-select/creatable"
+import NormalSelect from "react-select"
 import LocationOnIcon from "@material-ui/icons/LocationOn"
 import TimelapseIcon from "@material-ui/icons/Timelapse"
 import ZoomInIcon from "@material-ui/icons/ZoomIn"
@@ -89,22 +90,20 @@ export const Toolbar = ({
   timestamps = [],
   selectedTimestampIndex,
   durationGroups = [],
+  durationLabels = [],
+  timestampLabels = [],
   selectedDurationGroupIndex,
   selectedDurationIndex,
   onChangeSelectedItemLabel,
+  allowCustomLabels = false,
 }) => {
   const themeColors = useColors()
   const [mode, setToolMode] = useToolMode()
   const setTheme = useSetRecoilState(themeAtom)
 
-  const [labelSet, labelColorMap] = useMemo(() => {
-    const labelSet = new Set()
+  const [durationLabelSet, durationLabelColorMap] = useMemo(() => {
+    const labelSet = new Set(durationLabels)
     const labelColorMap = {}
-    for (const timestamp of timestamps) {
-      if (!timestamp.label) continue
-      labelSet.add(timestamp.label)
-      labelColorMap[timestamp.label] = timestamp.color
-    }
     for (const dg of durationGroups) {
       for (const duration of dg.durations) {
         if (!duration.label) continue
@@ -116,7 +115,18 @@ export const Toolbar = ({
       labelColorMap[dg.label] = dg.color
     }
     return [labelSet, labelColorMap]
-  }, [timestamps, durationGroups])
+  }, [timestamps, durationGroups, durationLabels])
+
+  const [timestampLabelSet, timestampLabelColorMap] = useMemo(() => {
+    const labelSet = new Set(timestampLabels)
+    const labelColorMap = {}
+    for (const timestamp of timestamps) {
+      if (!timestamp.label) continue
+      labelSet.add(timestamp.label)
+      labelColorMap[timestamp.label] = timestamp.color
+    }
+    return [labelSet, labelColorMap]
+  }, [timestamps, durationGroups, timestampLabels])
 
   const onSelectCreateTool = useEventCallback(() => setToolMode("create"))
   const onSelectPanTool = useEventCallback(() => setToolMode("pan"))
@@ -134,12 +144,18 @@ export const Toolbar = ({
     const { label } = newValue || {}
     onChangeSelectedItemLabel({
       label,
-      color: labelColorMap[label],
+      color: durationLabelColorMap[label] || timestampLabelColorMap[label],
     })
   })
-  const creatableSelectOptions = useMemo(
-    () => Array.from(labelSet).map((label) => ({ label, value: label })),
-    [labelSet]
+  const timestampCreatableSelectOptions = useMemo(
+    () =>
+      Array.from(timestampLabelSet).map((label) => ({ label, value: label })),
+    [timestampLabelSet]
+  )
+  const durationCreatableSelectOptions = useMemo(
+    () =>
+      Array.from(durationLabelSet).map((label) => ({ label, value: label })),
+    [durationLabelSet]
   )
 
   const selectedTimestamp =
@@ -158,6 +174,8 @@ export const Toolbar = ({
     const label = selectedTimestamp?.label || selectedDuration?.label
     return { label, value: label }
   }, [selectedTimestamp, selectedDuration])
+
+  const SelectComponent = allowCustomLabels ? CreatableSelect : NormalSelect
 
   return (
     <Container themeColors={themeColors}>
@@ -186,13 +204,17 @@ export const Toolbar = ({
       </Box>
       <Box display="block" height={40} flexGrow={1} paddingRight={2}>
         {(selectedTimestamp || selectedDuration) && (
-          <CreatableSelect
+          <SelectComponent
             isClearable
             value={selectedItemValue}
             formatCreateLabel={formatCreateLabel}
             styles={selectFieldStyles}
             onChange={onChangeSelectedLabel}
-            options={creatableSelectOptions}
+            options={
+              selectedTimestamp
+                ? timestampCreatableSelectOptions
+                : durationCreatableSelectOptions
+            }
           />
         )}
       </Box>

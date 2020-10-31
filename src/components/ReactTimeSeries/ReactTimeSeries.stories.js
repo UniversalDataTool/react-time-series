@@ -24,7 +24,7 @@ export const SimpleTimeSeries = () => {
   })
   return (
     <ReactTimeSeries
-      interface={{}}
+      interface={{ allowCustomLabels: true }}
       sample={sample}
       onModifySample={setSample}
     />
@@ -38,7 +38,7 @@ export const WithAudioURL = () => {
   })
   return (
     <ReactTimeSeries
-      interface={{}}
+      interface={{ allowCustomLabels: true }}
       sample={sample}
       onModifySample={setSample}
     />
@@ -48,7 +48,7 @@ export const WithAudioURL = () => {
 export const ReallySimple = () => {
   return (
     <ReactTimeSeries
-      interface={{}}
+      interface={{ allowCustomLabels: true }}
       sample={{
         timeData: [
           { time: 0, value: 0 },
@@ -66,6 +66,7 @@ export const SmallValues = () => {
     <ReactTimeSeries
       interface={{
         timeFormat: "none",
+        allowCustomLabels: true,
       }}
       sample={{
         timeData: [
@@ -75,6 +76,23 @@ export const SmallValues = () => {
         ],
       }}
       onModifySample={() => null}
+    />
+  )
+}
+
+export const PredefinedLabelsOnly = () => {
+  const [sample, setSample] = useState({
+    audioUrl:
+      "https://s3.amazonaws.com/datasets.workaround.online/voice-samples/001/voice.mp3",
+  })
+  return (
+    <ReactTimeSeries
+      interface={{
+        durationLabels: ["duration1", "duration2"],
+        timestampLabels: ["ts1", "ts2"],
+      }}
+      sample={sample}
+      onModifySample={setSample}
     />
   )
 }

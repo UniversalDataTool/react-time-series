@@ -39,12 +39,9 @@ export const ReactTimeSeriesWithoutContext = ({
     timeFormat,
     // eslint-disable-next-line
     enabledTools = defaultEnabledTools,
-    // eslint-disable-next-line
     durationLabels = emptyAr,
-    // eslint-disable-next-line
     timestampLabels = emptyAr,
     graphs = defaultGraphs,
-    // eslint-disable-next-line
     allowCustomLabels,
   } = iface
   let { timeData: sampleTimeData, audioUrl, csvUrl, annotation } = sample
@@ -205,6 +202,9 @@ export const ReactTimeSeriesWithoutContext = ({
             onChangeDurationGroups={onChangeDurationGroups}
             timestamps={timestamps}
             onChangeTimestamps={onChangeTimestamps}
+            timestampLabels={timestampLabels}
+            durationLabels={durationLabels}
+            allowCustomLabels={allowCustomLabels}
           />
         </div>
       )}
