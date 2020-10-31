@@ -4,8 +4,8 @@ import useEventCallback from "use-event-callback"
 import useToolMode from "../../hooks/use-tool-mode"
 
 const Container = styled("div")({
-  width: 500,
-  height: 200,
+  // width: 500,
+  // height: 200,
 })
 
 export const MouseTransformHandler = ({

@@ -1,9 +1,10 @@
 import React from "react"
 import range from "lodash/range"
 import { styled } from "@material-ui/core/styles"
-import moment from "moment"
 import useColors from "../../hooks/use-colors"
 import TimeStamp from "../TimeStamp"
+
+import { formatTime } from "../../utils/format-time"
 
 const Container = styled("div")(({ width, themeColors }) => ({
   width,
@@ -14,7 +15,7 @@ const Container = styled("div")(({ width, themeColors }) => ({
   color: themeColors.fg,
 }))
 
-const TimeText = styled("div")(({ x }) => ({
+const TimeText = styled("div")(({ x, faded }) => ({
   display: "inline-block",
   width: 80,
   fontSize: 12,
@@ -24,6 +25,7 @@ const TimeText = styled("div")(({ x }) => ({
   borderLeft: "1px solid rgba(255,255,255,0.5)",
   paddingLeft: 4,
   whiteSpace: "wrap",
+  opacity: faded ? 0.5 : 1,
 }))
 
 const Svg = styled("svg")({
@@ -31,25 +33,6 @@ const Svg = styled("svg")({
   left: 0,
   bottom: 0,
 })
-
-export const formatTime = (time, format, visibleDuration) => {
-  const lessThan3DaysShown = visibleDuration < 1000 * 60 * 60 * 24 * 3
-  if (format === "none") return time
-  if (format === "dates") {
-    return (
-      moment(time).format("L") +
-      (!lessThan3DaysShown ? "" : "\n" + moment(time).format("h:mm:ss a"))
-    )
-  }
-  if (time < 0) return ""
-  const deciSecs = Math.floor((time % 1000) / 10)
-  const secs = Math.floor((time / 1000) % 60)
-  const mins = Math.floor((time / 60000) % 60)
-  const hours = Math.floor(time / (60000 * 60))
-  return [hours, mins, secs, deciSecs]
-    .map((t) => t.toString().padStart(2, "0"))
-    .join(":")
-}
 
 export const Timeline = ({
   timeFormat,
@@ -81,6 +64,7 @@ export const Timeline = ({
         <TimeText
           key={timeTextIndex}
           x={(timeTextIndex / timeTextCount) * width}
+          faded={timeTextTimes[timeTextIndex] < 0}
         >
           {formatTime(
             timeTextTimes[timeTextIndex],

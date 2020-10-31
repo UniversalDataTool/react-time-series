@@ -44,3 +44,37 @@ export const WithAudioURL = () => {
     />
   )
 }
+
+export const ReallySimple = () => {
+  return (
+    <ReactTimeSeries
+      interface={{}}
+      sample={{
+        timeData: [
+          { time: 0, value: 0 },
+          { time: 500, value: 500 },
+          { time: 1000, value: 1000 },
+        ],
+      }}
+      onModifySample={() => null}
+    />
+  )
+}
+
+export const SmallValues = () => {
+  return (
+    <ReactTimeSeries
+      interface={{
+        timeFormat: "none",
+      }}
+      sample={{
+        timeData: [
+          { time: 0, value: 0 },
+          { time: 0.02, value: 500 },
+          { time: 0.05, value: 1000 },
+        ],
+      }}
+      onModifySample={() => null}
+    />
+  )
+}

@@ -1,9 +1,10 @@
-import React, { useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import { setIn } from "seamless-immutable"
 import useEventCallback from "use-event-callback"
 import { useAsyncMemo } from "use-async-memo"
 import { RecoilRoot } from "recoil"
 import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash"
+import Measure from "react-measure"
 
 import MainLayout from "../MainLayout"
 
@@ -28,6 +29,7 @@ export const ReactTimeSeriesWithoutContext = ({
   corsProxy = defaultCorsProxy,
   interface: iface,
   sample,
+  width: widthProp,
   onModifySample,
 }) => {
   if (!iface) throw new Error(`"interface" is a required prop`)
@@ -174,6 +176,10 @@ export const ReactTimeSeriesWithoutContext = ({
   const onChangeTimestamps = useEventCallback((newTimestamps) => {
     onModifySample(setIn(sample, ["annotation", "timestamps"], newTimestamps))
   })
+  const [width, setWidth] = useState(widthProp)
+  const onResize = useEventCallback(({ bounds }) => {
+    if (!widthProp) setWidth(bounds.width)
+  })
 
   if (timeDataLoading) return "loading" // TODO real loader
 
@@ -188,14 +194,21 @@ export const ReactTimeSeriesWithoutContext = ({
   }
 
   return (
-    <MainLayout
-      curveGroups={curveGroups}
-      timeFormat={timeFormat}
-      durationGroups={durationGroups}
-      onChangeDurationGroups={onChangeDurationGroups}
-      timestamps={timestamps}
-      onChangeTimestamps={onChangeTimestamps}
-    />
+    <Measure bounds onResize={onResize}>
+      {({ measureRef }) => (
+        <div ref={measureRef}>
+          <MainLayout
+            width={width}
+            curveGroups={curveGroups}
+            timeFormat={timeFormat}
+            durationGroups={durationGroups}
+            onChangeDurationGroups={onChangeDurationGroups}
+            timestamps={timestamps}
+            onChangeTimestamps={onChangeTimestamps}
+          />
+        </div>
+      )}
+    </Measure>
   )
 }
 

@@ -3,7 +3,7 @@ import range from "lodash/range"
 import { styled } from "@material-ui/core/styles"
 import colorAlpha from "color-alpha"
 import useColors from "../../hooks/use-colors"
-import { formatTime } from "../Timeline"
+import { formatTime } from "../../utils/format-time"
 
 const userSelectOffStyle = { userSelect: "none" }
 

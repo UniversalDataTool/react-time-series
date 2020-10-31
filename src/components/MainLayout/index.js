@@ -17,7 +17,6 @@ const Container = styled("div")(({ themeColors, width }) => ({
   display: "flex",
   flexDirection: "column",
   backgroundColor: themeColors.bg,
-  padding: 16,
 }))
 
 export const MainLayout = ({
@@ -26,10 +25,11 @@ export const MainLayout = ({
   durationGroups,
   onChangeDurationGroups,
   timestamps,
+  width = 500,
+  graphHeight = 300,
   onChangeTimestamps,
 }) => {
   const themeColors = useColors()
-  const width = 500
   const [activeDurationGroup, setActiveDurationGroup] = useState(null)
   const [draggedDurationIndex, setDraggedDurationIndex] = useState(null)
   const [selectedDurationIndex, setSelectedDurationIndex] = useState(null)
@@ -38,7 +38,10 @@ export const MainLayout = ({
   const [topLevelMatrix, setTopLevelMatrix] = useState(() =>
     initTopLevelMatrix({ curveGroups, width })
   )
-  const { visibleTimeStart, visibleTimeEnd } = useTimeRange(topLevelMatrix, 500)
+  const { visibleTimeStart, visibleTimeEnd } = useTimeRange(
+    topLevelMatrix,
+    width
+  )
 
   const onDragDuration = useEventCallback((startTime, endTime) => {
     if (activeDurationGroup === null) return
@@ -137,7 +140,7 @@ export const MainLayout = ({
     ])
   })
 
-  const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, 500)
+  const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, width)
 
   return (
     <Container width={width} themeColors={themeColors}>
@@ -191,7 +194,7 @@ export const MainLayout = ({
           timestamps={timestamps}
           curves={curves}
           width={width}
-          height={200}
+          height={graphHeight}
           gridLineMetrics={gridLineMetrics}
           topLevelMatrix={topLevelMatrix}
           setTopLevelMatrix={setTopLevelMatrix}
