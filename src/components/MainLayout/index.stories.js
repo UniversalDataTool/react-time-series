@@ -88,7 +88,6 @@ export const ExampleMiscLayer = () => {
       durationGroups={durationGroups}
       onChangeTimestamps={() => null}
       onChangeDurationGroups={(newDurationGroups) => {
-        console.log(newDurationGroups.asMutable())
         setDurationGroups(newDurationGroups)
       }}
     />

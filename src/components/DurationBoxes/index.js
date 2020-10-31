@@ -79,7 +79,6 @@ export const DurationBox = ({
 
           if (endX < 0) return null
           if (isNaN(startX) || isNaN(endX)) return null
-          console.log({ durationColor, color })
 
           return (
             <Box
