@@ -96,3 +96,39 @@ export const PredefinedLabelsOnly = () => {
     />
   )
 }
+
+export const CreateTimestampsOnly = () => {
+  const [sample, setSample] = useState({
+    audioUrl:
+      "https://s3.amazonaws.com/datasets.workaround.online/voice-samples/001/voice.mp3",
+  })
+  return (
+    <ReactTimeSeries
+      interface={{
+        durationLabels: ["duration1", "duration2"],
+        timestampLabels: ["ts1", "ts2"],
+        enabledTools: ["create-timestamps"],
+      }}
+      sample={sample}
+      onModifySample={setSample}
+    />
+  )
+}
+
+export const CreateDurationsOnly = () => {
+  const [sample, setSample] = useState({
+    audioUrl:
+      "https://s3.amazonaws.com/datasets.workaround.online/voice-samples/001/voice.mp3",
+  })
+  return (
+    <ReactTimeSeries
+      interface={{
+        durationLabels: ["duration1", "duration2"],
+        timestampLabels: ["ts1", "ts2"],
+        enabledTools: ["create-durations"],
+      }}
+      sample={sample}
+      onModifySample={setSample}
+    />
+  )
+}

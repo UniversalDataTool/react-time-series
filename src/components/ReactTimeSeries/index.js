@@ -37,7 +37,6 @@ export const ReactTimeSeriesWithoutContext = ({
   const getRandomColorUsingHash = useGetRandomColorUsingHash()
   const {
     timeFormat,
-    // eslint-disable-next-line
     enabledTools = defaultEnabledTools,
     durationLabels = emptyAr,
     timestampLabels = emptyAr,
@@ -205,6 +204,7 @@ export const ReactTimeSeriesWithoutContext = ({
             timestampLabels={timestampLabels}
             durationLabels={durationLabels}
             allowCustomLabels={allowCustomLabels}
+            enabledTools={enabledTools}
           />
         </div>
       )}

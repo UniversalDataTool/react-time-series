@@ -19,6 +19,13 @@ const Container = styled("div")(({ themeColors, width }) => ({
   backgroundColor: themeColors.bg,
 }))
 
+const defaultEnabledTools = [
+  "create-durations",
+  "label-durations",
+  "create-timestamps",
+  "label-timestamps",
+]
+
 export const MainLayout = ({
   curveGroups,
   timeFormat,
@@ -31,6 +38,7 @@ export const MainLayout = ({
   width = 500,
   graphHeight = 300,
   onChangeTimestamps,
+  enabledTools = defaultEnabledTools,
 }) => {
   const themeColors = useColors()
   const [activeDurationGroup, setActiveDurationGroup] = useState(null)
@@ -47,6 +55,7 @@ export const MainLayout = ({
   )
 
   const onDragDuration = useEventCallback((startTime, endTime) => {
+    if (!enabledTools.includes("create-durations")) return
     if (activeDurationGroup === null) return
     ;[startTime, endTime] =
       startTime < endTime ? [startTime, endTime] : [endTime, startTime]
@@ -66,6 +75,7 @@ export const MainLayout = ({
     )
   })
   const onDragDurationStart = useEventCallback((startTime) => {
+    if (!enabledTools.includes("create-durations")) return
     if (activeDurationGroup === null) return
     const lastIndex = durationGroups[activeDurationGroup].durations.length
     setDraggedDurationIndex(lastIndex)
@@ -77,10 +87,12 @@ export const MainLayout = ({
     )
   })
   const onDragDurationEnd = useEventCallback(() => {
+    if (!enabledTools.includes("create-durations")) return
     setSelectedDurationIndex(draggedDurationIndex)
     setDraggedDurationIndex(null)
   })
   const onCreateTimestamp = useEventCallback((time) => {
+    if (!enabledTools.includes("create-timestamps")) return
     onChangeTimestamps(
       timestamps.concat([
         {

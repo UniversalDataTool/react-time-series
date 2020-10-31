@@ -3,10 +3,7 @@ import { styled } from "@material-ui/core/styles"
 import useEventCallback from "use-event-callback"
 import useToolMode from "../../hooks/use-tool-mode"
 
-const Container = styled("div")({
-  // width: 500,
-  // height: 200,
-})
+const Container = styled("div")({})
 
 export const MouseTransformHandler = ({
   children,
