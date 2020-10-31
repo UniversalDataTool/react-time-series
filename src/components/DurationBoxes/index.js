@@ -54,6 +54,7 @@ export const DurationBox = ({
   onClick,
   onRemoveBox,
   onClickBox,
+  isMiscLayer = false,
   label = "",
 }) => {
   const [toolMode] = useToolMode()
@@ -63,18 +64,27 @@ export const DurationBox = ({
   return (
     <Container onClick={onClick} width={width} color={color} active={active}>
       {durations.map(
-        ({ start: startTime, end: endTime, label: durationLabel }, i) => {
+        (
+          {
+            start: startTime,
+            end: endTime,
+            label: durationLabel,
+            color: durationColor,
+          },
+          i
+        ) => {
           const startX =
             ((startTime - visibleTimeStart) / visibleDuration) * width
           const endX = ((endTime - visibleTimeStart) / visibleDuration) * width
 
           if (endX < 0) return null
           if (isNaN(startX) || isNaN(endX)) return null
+          console.log({ durationColor, color })
 
           return (
             <Box
               key={i}
-              color={color}
+              color={durationColor || color}
               x={startX}
               width={endX - startX}
               onClick={() => onClickBox(i)}
@@ -92,9 +102,11 @@ export const DurationBox = ({
           )
         }
       )}
-      {label && (
+      {(label || (isMiscLayer && durations.length === 0)) && (
         <Label colors={colors} key="label">
-          {label}
+          {isMiscLayer && durations.length === 0
+            ? "click to create durations"
+            : label}
         </Label>
       )}
     </Container>

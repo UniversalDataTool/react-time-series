@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { styled } from "@material-ui/core/styles"
 import useTimeRange from "../../hooks/use-time-range.js"
 import ControllableWave from "../ControllableWave"
-import DurationBox from "../DurationBox"
+import DurationBoxes from "../DurationBoxes"
 import useEventCallback from "use-event-callback"
 import { setIn, getIn } from "seamless-immutable"
 import useColors from "../../hooks/use-colors"
@@ -74,6 +74,7 @@ export const MainLayout = ({
     )
   })
   const onDragDurationEnd = useEventCallback(() => {
+    setSelectedDurationIndex(draggedDurationIndex)
     setDraggedDurationIndex(null)
   })
   const onCreateTimestamp = useEventCallback((time) => {
@@ -81,7 +82,7 @@ export const MainLayout = ({
       timestamps.concat([
         {
           time,
-          color: "#f00",
+          color: "#888",
         },
       ])
     )
@@ -164,7 +165,7 @@ export const MainLayout = ({
       />
       {durationGroups.map((dg, i) => {
         return (
-          <DurationBox
+          <DurationBoxes
             onClick={() => setActiveDurationGroup(i)}
             onClickBox={(di) => {
               setSelectedDurationIndex(di)
@@ -176,6 +177,7 @@ export const MainLayout = ({
             color={dg.color}
             width={width}
             label={dg.label}
+            isMiscLayer={dg.misc}
             durations={dg.durations}
             visibleTimeStart={visibleTimeStart}
             visibleTimeEnd={visibleTimeEnd}

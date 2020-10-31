@@ -13,7 +13,7 @@ const userSelectOffStyle = {
 
 const Container = styled("div")({})
 
-const reduceForVisibleDuration = (data, startTime, visibleDuration) => {
+const reduceForVisibleDuration = (data, startTime, visibleDuration, width) => {
   const firstInnerIndex = data.findIndex(([t]) => t >= startTime)
   let visibleSamples = data
     .slice(firstInnerIndex)
@@ -24,7 +24,7 @@ const reduceForVisibleDuration = (data, startTime, visibleDuration) => {
 
   data = data.slice(Math.max(0, firstInnerIndex - 1), lastInnerIndex + 1)
 
-  const minDistance = visibleDuration / 200
+  const minDistance = visibleDuration / (width / 4)
   const points = [data[0]]
   let lastAddedPointIndex = 0
   for (let i = 1; i < data.length; i++) {
@@ -143,7 +143,7 @@ export const Wave = ({
               />
             )
           })}
-        {durationGroups.flatMap(({ durations, color }, dgi) => {
+        {durationGroups.flatMap(({ durations, color: dgColor }, dgi) => {
           return durations.map((duration, di) => {
             const { x: startX } = transformMatrix.applyToPoint(
               duration.start,
@@ -154,7 +154,7 @@ export const Wave = ({
             return (
               <rect
                 key={`${dgi},${di}`}
-                fill={colorAlpha(color, 0.2)}
+                fill={colorAlpha(duration.color || dgColor, 0.2)}
                 x={startX}
                 y={0}
                 width={endX - startX}
@@ -171,7 +171,8 @@ export const Wave = ({
             points={reduceForVisibleDuration(
               curve.data,
               startTimeOnGraph,
-              visibleDuration
+              visibleDuration,
+              width
             )
               .map(([t, y]) => {
                 const p = transformMatrix.applyToPoint(t, y)

@@ -15,7 +15,7 @@ const colorsToCycle = [
 export default () => {
   const themeColors = useColors()
   return useEventCallback((label) => {
-    if (!label) return colorsToCycle[0]
+    if (!label) return themeColors.fg
     let hashNumber = 0
     for (let i = 0; i < label.length; i++) {
       hashNumber += label.charCodeAt(i)
