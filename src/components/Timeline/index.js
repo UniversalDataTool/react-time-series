@@ -24,8 +24,8 @@ const TimeText = styled("div")(({ x, faded }) => ({
   left: x,
   borderLeft: "1px solid rgba(255,255,255,0.5)",
   paddingLeft: 4,
-  whiteSpace: "wrap",
-  opacity: faded ? 0.5 : 1,
+  whiteSpace: "pre-wrap",
+  opacity: faded ? 0.25 : 0.75,
 }))
 
 const Svg = styled("svg")({

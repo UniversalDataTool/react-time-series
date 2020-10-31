@@ -32,7 +32,7 @@ export const findReasonableGridDuration = (duration) => {
   let bestFittingIntervalIndex = 0
   let bestFittingIntervalScore = -Infinity
   for (const [i, [, timeInterval]] of Object.entries(timeIntervals)) {
-    const timeIntervalScore = -1 * Math.abs(duration / timeInterval - 20)
+    const timeIntervalScore = -1 * Math.abs(duration / timeInterval - 5)
     if (timeIntervalScore > bestFittingIntervalScore) {
       bestFittingIntervalIndex = i
       bestFittingIntervalScore = timeIntervalScore

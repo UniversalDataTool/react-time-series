@@ -12,13 +12,18 @@ export const formatTime = (time, format, visibleDuration) => {
       (!lessThan3DaysShown ? "" : "\n" + moment(time).format("h:mm:ss a"))
     )
   }
-  if (time < 0) return "< 00:00:00"
-  const deciSecs = Math.floor((time % 1000) / 10)
+  const showNs = visibleDuration < 5
+  const showMs = visibleDuration < 5000
+  const ns = Math.floor((time * 1000) % 1000)
+  const ms = Math.floor(time % 1000)
   const secs = Math.floor((time / 1000) % 60)
   const mins = Math.floor((time / 60000) % 60)
   const hours = Math.floor(time / (60000 * 60))
-  return [hours, mins, secs, deciSecs]
-    .map((t) => t.toString().padStart(2, "0"))
-    .join(":")
+  if (time < 0) return "< 00:00:00"
+  return (
+    [hours, mins, secs].map((t) => t.toString().padStart(2, "0")).join(":") +
+    (showMs ? `.${ms.toString().padStart(3, "0")}` : "") +
+    (showNs ? `\n+${ns.toString()} ns` : "")
+  )
 }
 export default formatTime

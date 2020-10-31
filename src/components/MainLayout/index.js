@@ -198,6 +198,7 @@ export const MainLayout = ({
           gridLineMetrics={gridLineMetrics}
           topLevelMatrix={topLevelMatrix}
           setTopLevelMatrix={setTopLevelMatrix}
+          timeFormat={timeFormat}
         />
       ))}
     </Container>

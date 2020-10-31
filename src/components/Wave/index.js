@@ -5,7 +5,11 @@ import colorAlpha from "color-alpha"
 import useColors from "../../hooks/use-colors"
 import { formatTime } from "../../utils/format-time"
 
-const userSelectOffStyle = { userSelect: "none" }
+const userSelectOffStyle = {
+  userSelect: "none",
+  whiteSpace: "pre",
+  fontVariantNumeric: "tabular-nums",
+}
 
 const Container = styled("div")({})
 
@@ -53,6 +57,7 @@ export const Wave = ({
   width,
   height,
   transformMatrix,
+  timeFormat,
   durationGroups = [],
   timestamps = [],
   gridLineMetrics,
@@ -85,10 +90,10 @@ export const Wave = ({
           const globalTimelineIndex = Math.floor(timeAtLine / majorDuration)
 
           let textElm = null
-          if (globalTimelineIndex % 7 === 0) {
+          if (globalTimelineIndex % 1 === 0) {
             const timeLines = formatTime(
               timeAtLine,
-              "dates",
+              timeFormat,
               visibleDuration
             ).split("\n")
             textElm = timeLines.map((tl, i) => (

@@ -18,6 +18,7 @@ export const ControllableWave = ({
   durationGroups,
   timestamps,
   gridLineMetrics,
+  timeFormat,
 }) => {
   let [matrix, setMatrix] = useRafState(() => {
     const mat = new Matrix()
@@ -54,6 +55,7 @@ export const ControllableWave = ({
         curves={curves}
         width={width}
         height={height}
+        timeFormat={timeFormat}
         transformMatrix={matrix}
         gridLineMetrics={gridLineMetrics}
         timestamps={timestamps}
