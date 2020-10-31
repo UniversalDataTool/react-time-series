@@ -7,6 +7,8 @@ import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-h
 
 import MainLayout from "../MainLayout"
 
+import fetchAudioData from "../../utils/fetch-audio-data"
+
 const emptyAr = []
 
 // This is a cloudflare CORs proxy from the project maintainer @seveibar
@@ -50,6 +52,7 @@ export const ReactTimeSeriesWithoutContext = ({
   const timeData = useAsyncMemo(
     async () => {
       if (sampleTimeData) return sampleTimeData
+      return await fetchAudioData(audioUrl)
       // TODO load audioUrl
       // TODO load csvUrl
     },
@@ -103,7 +106,14 @@ export const ReactTimeSeriesWithoutContext = ({
   }, [annotation?.timestamps, getRandomColorUsingHash])
 
   const durationGroups = useMemo(() => {
-    if (!annotation?.durations) return []
+    if (!annotation?.durations)
+      return [
+        {
+          color: "#888888",
+          misc: true,
+          durations: [],
+        },
+      ]
 
     const availableLabels = Array.from(
       new Set(

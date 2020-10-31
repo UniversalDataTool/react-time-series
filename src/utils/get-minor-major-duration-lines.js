@@ -6,7 +6,11 @@ const months = 30 * days
 const years = 12 * months
 const timeIntervals = [
   ["1 ns", 0.000001],
+  ["10 ns", 0.00001],
+  ["100 ns", 0.0001],
   ["1 us", 0.001],
+  ["10 us", 0.01],
+  ["100 us", 0.1],
   ["1 ms", 1],
   ["5 ms", 5],
   ["50 ms", 50],

@@ -9,6 +9,45 @@ const userSelectOffStyle = { userSelect: "none" }
 
 const Container = styled("div")({})
 
+const reduceForVisibleDuration = (data, startTime, visibleDuration) => {
+  const firstInnerIndex = data.findIndex(([t]) => t >= startTime)
+  let visibleSamples = data
+    .slice(firstInnerIndex)
+    .findIndex(([t]) => t >= startTime + visibleDuration)
+  visibleSamples =
+    visibleSamples === -1 ? data.length - firstInnerIndex : visibleSamples
+  const lastInnerIndex = firstInnerIndex + visibleSamples
+
+  data = data.slice(Math.max(0, firstInnerIndex - 1), lastInnerIndex + 1)
+
+  const minDistance = visibleDuration / 200
+  const points = [data[0]]
+  let lastAddedPointIndex = 0
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] - points[points.length - 1][0] > minDistance) {
+      // points.push(data[i])
+      const timeSinceLastPoint = data[i][0] - points[points.length - 1][0]
+
+      points.push([
+        data[i][0] - timeSinceLastPoint / 2,
+        Math.max(
+          ...data.slice(lastAddedPointIndex + 1, i + 1).map(([, v]) => v)
+        ),
+      ])
+
+      points.push([
+        data[i][0],
+        Math.min(
+          ...data.slice(lastAddedPointIndex + 1, i + 1).map(([, v]) => v)
+        ),
+      ])
+
+      lastAddedPointIndex = i
+    }
+  }
+  return points
+}
+
 export const Wave = ({
   curves,
   width,
@@ -124,7 +163,11 @@ export const Wave = ({
             key={i}
             stroke={curve.color}
             fill="transparent"
-            points={curve.data
+            points={reduceForVisibleDuration(
+              curve.data,
+              startTimeOnGraph,
+              visibleDuration
+            )
               .map(([t, y]) => {
                 const p = transformMatrix.applyToPoint(t, y)
                 return `${p.x},${p.y}`

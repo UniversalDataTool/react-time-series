@@ -6,7 +6,7 @@ export default {
   component: ReactTimeSeries,
 }
 
-export const Primary = () => {
+export const SimpleTimeSeries = () => {
   const [sample, setSample] = useState({
     timeData: [
       { time: 0, value: 0 },
@@ -21,6 +21,20 @@ export const Primary = () => {
         { start: 800, end: 1000, label: "byeeee" },
       ],
     },
+  })
+  return (
+    <ReactTimeSeries
+      interface={{}}
+      sample={sample}
+      onModifySample={setSample}
+    />
+  )
+}
+
+export const WithAudioURL = () => {
+  const [sample, setSample] = useState({
+    audioUrl:
+      "https://s3.amazonaws.com/datasets.workaround.online/voice-samples/001/voice.mp3",
   })
   return (
     <ReactTimeSeries
