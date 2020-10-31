@@ -52,7 +52,7 @@ export const ReallySimple = () => {
       sample={{
         timeData: [
           { time: 0, value: 0 },
-          { time: 500, value: 500 },
+          { time: 500, value: 750 },
           { time: 1000, value: 1000 },
         ],
       }}
@@ -119,6 +119,24 @@ export const CreateDurationsOnly = () => {
   const [sample, setSample] = useState({
     audioUrl:
       "https://s3.amazonaws.com/datasets.workaround.online/voice-samples/001/voice.mp3",
+  })
+  return (
+    <ReactTimeSeries
+      interface={{
+        durationLabels: ["duration1", "duration2"],
+        timestampLabels: ["ts1", "ts2"],
+        enabledTools: ["create-durations"],
+      }}
+      sample={sample}
+      onModifySample={setSample}
+    />
+  )
+}
+
+export const TimeDataFromCSV = () => {
+  const [sample, setSample] = useState({
+    csvUrl:
+      "https://gist.githubusercontent.com/philaturner/644b3e8bd17641766d90f38d475edcc6/raw/a6c35e97a89eda49098def90fe2e750ceb898f79/tesla.csv",
   })
   return (
     <ReactTimeSeries

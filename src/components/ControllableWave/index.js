@@ -26,9 +26,10 @@ export const ControllableWave = ({
     const minY = Math.min(...curves[0].data.map(([, y]) => y))
 
     return mat
+      .scale(1, -1)
       .scale(1, height)
       .scale(1, 1 / (maxY - minY))
-      .translate(0, -minY)
+      .translate(0, -maxY)
   })
 
   matrix = matrix

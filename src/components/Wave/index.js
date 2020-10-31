@@ -31,20 +31,23 @@ const reduceForVisibleDuration = (data, startTime, visibleDuration, width) => {
     if (data[i][0] - points[points.length - 1][0] > minDistance) {
       // points.push(data[i])
       const timeSinceLastPoint = data[i][0] - points[points.length - 1][0]
+      if (i - lastAddedPointIndex === 1) {
+        points.push(data[i])
+      } else {
+        points.push([
+          data[i][0] - timeSinceLastPoint / 2,
+          Math.max(
+            ...data.slice(lastAddedPointIndex + 1, i + 1).map(([, v]) => v)
+          ),
+        ])
 
-      points.push([
-        data[i][0] - timeSinceLastPoint / 2,
-        Math.max(
-          ...data.slice(lastAddedPointIndex + 1, i + 1).map(([, v]) => v)
-        ),
-      ])
-
-      points.push([
-        data[i][0],
-        Math.min(
-          ...data.slice(lastAddedPointIndex + 1, i + 1).map(([, v]) => v)
-        ),
-      ])
+        points.push([
+          data[i][0],
+          Math.min(
+            ...data.slice(lastAddedPointIndex + 1, i + 1).map(([, v]) => v)
+          ),
+        ])
+      }
 
       lastAddedPointIndex = i
     }
