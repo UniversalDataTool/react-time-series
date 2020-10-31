@@ -11,7 +11,7 @@ import MainLayout from "../MainLayout"
 import fetchAudioData from "../../utils/fetch-audio-data"
 import fetchCSVData from "../../utils/fetch-csv-data"
 
-import validateTimeData from "../../utils/validate-time-data"
+import fixTimeData from "../../utils/fix-time-data"
 
 const emptyAr = []
 
@@ -52,13 +52,18 @@ export const ReactTimeSeriesWithoutContext = ({
 
   const timeDataAvailable = [sampleTimeData, audioUrl, csvUrl].some(Boolean)
 
+  const [error, setError] = useState(null)
   const timeData = useAsyncMemo(
     async () => {
-      if (sampleTimeData) return validateTimeData(sampleTimeData)
-      if (audioUrl) return validateTimeData(await fetchAudioData(audioUrl))
-      if (csvUrl) return validateTimeData(await fetchCSVData(csvUrl))
-      return []
-      // TODO load csvUrl
+      try {
+        if (sampleTimeData) return fixTimeData(sampleTimeData, graphs)
+        if (audioUrl) return fixTimeData(await fetchAudioData(audioUrl), graphs)
+        if (csvUrl) return fixTimeData(await fetchCSVData(csvUrl), graphs)
+        return []
+      } catch (e) {
+        setError(e)
+        return []
+      }
     },
     [sampleTimeData, audioUrl, csvUrl],
     null
@@ -198,6 +203,10 @@ export const ReactTimeSeriesWithoutContext = ({
 
   if (curveGroups.length === 0) {
     throw new Error(`For some reason, no curves are able to be displayed.`)
+  }
+
+  if (error) {
+    throw error
   }
 
   return (
