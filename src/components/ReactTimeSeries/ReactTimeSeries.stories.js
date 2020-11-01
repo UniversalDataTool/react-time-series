@@ -152,3 +152,23 @@ export const TimeDataFromCSV = () => {
     />
   )
 }
+
+export const LargeTimeNoneFormat = () => {
+  return (
+    <ReactTimeSeries
+      interface={{
+        timeFormat: "none",
+        allowCustomLabels: true,
+      }}
+      sample={{
+        timeData: [
+          { time: 0, value: 0 },
+          { time: 200, value: 500 },
+          { time: 1000, value: 1000 },
+          { time: 10000, value: 500 },
+        ],
+      }}
+      onModifySample={() => null}
+    />
+  )
+}

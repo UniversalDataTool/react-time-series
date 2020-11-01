@@ -4,7 +4,7 @@ export const formatTime = (time, format, visibleDuration) => {
   const lessThan3DaysShown = visibleDuration < 1000 * 60 * 60 * 24 * 3
   if (format === "none")
     return visibleDuration > 10
-      ? Math.round(time)
+      ? Math.round(time).toString()
       : time.toFixed(2 - Math.log(visibleDuration) / Math.log(10))
   if (format === "dates") {
     return (
