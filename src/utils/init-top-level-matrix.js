@@ -6,6 +6,9 @@ export default ({ curveGroups, width }) => {
   const allTimes = curveGroups
     .flatMap((curveGroup) => curveGroup)
     .flatMap((curve) => curve.data.map(([t]) => t))
+
+  if (allTimes.length === 0) return mat
+
   const minT = Math.min(...allTimes)
   const maxT = Math.max(...allTimes)
 

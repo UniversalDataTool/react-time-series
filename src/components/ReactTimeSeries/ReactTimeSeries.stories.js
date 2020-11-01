@@ -141,9 +141,11 @@ export const TimeDataFromCSV = () => {
   return (
     <ReactTimeSeries
       interface={{
+        timeFormat: "dates",
         durationLabels: ["duration1", "duration2"],
         timestampLabels: ["ts1", "ts2"],
         enabledTools: ["create-durations"],
+        graphs: [{ keyName: "high" }, { keyName: "low" }],
       }}
       sample={sample}
       onModifySample={setSample}

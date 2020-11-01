@@ -59,7 +59,9 @@ export const ReactTimeSeriesWithoutContext = ({
         if (sampleTimeData) return fixTimeData(sampleTimeData, graphs)
         if (audioUrl) return fixTimeData(await fetchAudioData(audioUrl), graphs)
         if (csvUrl) return fixTimeData(await fetchCSVData(csvUrl), graphs)
-        return []
+        throw new Error(
+          `No timeData, no audioUrl, no csvUrl, no time data provided.`
+        )
       } catch (e) {
         setError(e)
         return []

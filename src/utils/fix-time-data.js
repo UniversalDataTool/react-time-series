@@ -27,6 +27,9 @@ export default (timeData, graphs) => {
       const v = sample[graph.keyName]
       if (v !== undefined && v !== null && isNaN(v))
         throw new Error(`Bad value for "${graph.keyName}": "${v}"`)
+      if (typeof v === "string") {
+        sample[graph.keyName] = parseFloat(v)
+      }
       pointsDefined++
     }
 
