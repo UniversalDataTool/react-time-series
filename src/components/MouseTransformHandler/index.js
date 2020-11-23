@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect, useCallback } from "react"
 import { styled } from "@material-ui/core/styles"
 import useEventCallback from "use-event-callback"
 import useToolMode from "../../hooks/use-tool-mode"
@@ -146,14 +146,20 @@ export const MouseTransformHandler = ({
     e.preventDefault()
   })
 
-  // TODO
+  const containerMountCallback = useCallback((ref) => {
+    if (ref === null) {
+      containerRef.current.removeEventListener("wheel", onWheel)
+    }
+    containerRef.current = ref
+    ref.addEventListener("wheel", onWheel, { passive: false })
+  }, [])
+
   return (
     <Container
-      ref={containerRef}
+      ref={containerMountCallback}
       onMouseMove={onMouseMove}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
-      onWheel={onWheel}
       onContextMenu={onContextMenu}
     >
       {children}
