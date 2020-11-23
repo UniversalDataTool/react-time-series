@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect, useCallback } from "react"
 import { styled } from "@material-ui/core/styles"
 import useEventCallback from "use-event-callback"
 import useToolMode from "../../hooks/use-tool-mode"
@@ -57,6 +57,7 @@ export const MouseTransformHandler = ({
   const onWheel = useEventCallback((e) => {
     if (e && e.preventDefault) {
       e.preventDefault()
+      console.log("i prevented default!")
     }
     const { deltaY } = e
     const scroll = -Math.sign(deltaY) / 10
@@ -146,14 +147,20 @@ export const MouseTransformHandler = ({
     e.preventDefault()
   })
 
-  // TODO
+  const containerMountCallback = useCallback((ref) => {
+    if (ref === null) {
+      ref.removeEventListener("wheel", onWheel)
+    }
+    containerRef.current = ref
+    ref.addEventListener("wheel", onWheel, { passive: false })
+  }, [])
+
   return (
     <Container
-      ref={containerRef}
+      ref={containerMountCallback}
       onMouseMove={onMouseMove}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
-      onWheel={onWheel}
       onContextMenu={onContextMenu}
     >
       {children}
