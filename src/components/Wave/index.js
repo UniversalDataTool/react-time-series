@@ -4,6 +4,7 @@ import { styled } from "@material-ui/core/styles"
 import colorAlpha from "color-alpha"
 import useColors from "../../hooks/use-colors"
 import { formatTime } from "../../utils/format-time"
+import { useTimeCursorTime } from "../../hooks/use-time-cursor-time"
 import HighlightValueLabels from "../HighlightValueLabels"
 
 const userSelectOffStyle = {
@@ -67,6 +68,11 @@ export const Wave = ({
   showValues = false,
 }) => {
   const colors = useColors()
+
+  const recoilTimeCursorTime = useTimeCursorTime()
+
+  timeCursorTime =
+    timeCursorTime === undefined ? recoilTimeCursorTime : timeCursorTime
 
   const {
     visibleDuration,

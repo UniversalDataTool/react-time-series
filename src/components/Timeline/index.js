@@ -41,7 +41,7 @@ const TimeCursor = styled("div")(({ left, themeColors }) => ({
   width: 0,
   height: 0,
   top: 0,
-  left,
+  left: left - 6,
   borderLeft: "8px solid transparent",
   borderRight: "8px solid transparent",
   borderTop: `12px solid ${themeColors.green}`,
