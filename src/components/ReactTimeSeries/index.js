@@ -200,14 +200,15 @@ export const ReactTimeSeriesWithoutContext = ({
 
   const audioSource = useRef()
 
+  const [, setRootAudioElm] = useRootAudioElm()
+  const setTimeCursorTime = useSetTimeCursorTime()
+
   useEffect(() => {
     if (audioUrl) {
       audioSource.current = new Audio(audioUrl)
+      setTimeCursorTime(0)
     }
   }, [])
-
-  const [, setRootAudioElm] = useRootAudioElm()
-  const setTimeCursorTime = useSetTimeCursorTime()
 
   const onAudioTimeChanged = useEventCallback(() => {
     setTimeCursorTime(audioSource.current.currentTime * 1000)
