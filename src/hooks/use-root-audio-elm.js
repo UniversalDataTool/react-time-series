@@ -4,4 +4,6 @@ export const rootAudioElmAtom = atom({
   key: "rootAudioElmAtom",
 })
 
-export const useRootAudioEle = useRecoilState(rootAudioElmAtom)
+export const useRootAudioElm = () => useRecoilState(rootAudioElmAtom)
+
+export default useRootAudioElm

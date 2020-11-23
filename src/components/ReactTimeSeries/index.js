@@ -6,7 +6,7 @@ import { RecoilRoot } from "recoil"
 import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash"
 import Measure from "react-measure"
 import { useSetTimeCursorTime } from "../../hooks/use-time-cursor-time"
-import { useRootAudioElm } from "../../hooks/use-root-audio-elm"
+import useRootAudioElm from "../../hooks/use-root-audio-elm"
 
 import MainLayout from "../MainLayout"
 
@@ -206,7 +206,7 @@ export const ReactTimeSeriesWithoutContext = ({
     }
   }, [])
 
-  // const [, setRootAudioElm] = useRootAudioElm()
+  const [, setRootAudioElm] = useRootAudioElm()
   const setTimeCursorTime = useSetTimeCursorTime()
 
   const onAudioTimeChanged = useEventCallback(() => {
@@ -223,7 +223,7 @@ export const ReactTimeSeriesWithoutContext = ({
       audioSource.current.play()
       audioSource.current.addEventListener("timeupdate", onAudioTimeChanged)
       audioSource.current.addEventListener("pause", onAudioPaused)
-      // setRootAudioElm(audioSource.current)
+      setRootAudioElm(audioSource.current)
     }
   })
 

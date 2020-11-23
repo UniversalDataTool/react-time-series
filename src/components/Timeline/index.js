@@ -1,9 +1,12 @@
-import React from "react"
+import React, { useRef } from "react"
 import range from "lodash/range"
 import { styled } from "@material-ui/core/styles"
 import useColors from "../../hooks/use-colors"
 import TimeStamp from "../TimeStamp"
-import { useTimeCursorTime } from "../../hooks/use-time-cursor-time"
+import {
+  useTimeCursorTime,
+  useSetTimeCursorTime,
+} from "../../hooks/use-time-cursor-time"
 import useRootAudioElm from "../../hooks/use-root-audio-elm"
 import useEventCallback from "use-event-callback"
 
@@ -14,6 +17,7 @@ const Container = styled("div")(({ width, themeColors }) => ({
   overflow: "hidden",
   position: "relative",
   height: 64,
+  cursor: "pointer",
   borderBottom: `1px solid ${themeColors.Selection}`,
   color: themeColors.fg,
 }))
@@ -41,7 +45,6 @@ const TimeCursor = styled("div")(({ left, themeColors }) => ({
   borderLeft: "8px solid transparent",
   borderRight: "8px solid transparent",
   borderTop: `12px solid ${themeColors.green}`,
-  transition: "left 200ms linear",
 }))
 
 const Svg = styled("svg")({
@@ -69,7 +72,8 @@ export const Timeline = ({
     (i) => visibleTimeStart + (visibleDuration / timeTextCount) * i
   )
   const recoilTimeCursorTime = useTimeCursorTime()
-  // const [rootAudioElm] = useRootAudioElm()
+  const setTimeCursorTime = useSetTimeCursorTime()
+  const [rootAudioElm] = useRootAudioElm()
   const timeCursorTime =
     timeCursorTimeProp === undefined ? recoilTimeCursorTime : timeCursorTimeProp
 
@@ -79,16 +83,26 @@ export const Timeline = ({
     majorGridLinePixelDistance,
   } = gridLineMetrics
 
+  const containerRef = useRef()
+
   const onClickTimeline = useEventCallback((e) => {
-    const { clientX } = e.target
-    console.log({ clientX })
+    if (!rootAudioElm) return
+    const { clientX } = e
+    const pxDistanceFromStart =
+      clientX - containerRef.current.getBoundingClientRect().left
+    const time =
+      (pxDistanceFromStart / width) * (visibleTimeEnd - visibleTimeStart) +
+      visibleTimeStart
+    rootAudioElm.currentTime = time / 1000
+    setTimeCursorTime(time)
   })
 
   return (
     <Container
+      ref={containerRef}
       themeColors={themeColors}
       width={width}
-      onClick={onClickTimeline}
+      onClick={rootAudioElm ? onClickTimeline : undefined}
     >
       {range(timeTextCount).map((timeTextIndex) => (
         <TimeText
