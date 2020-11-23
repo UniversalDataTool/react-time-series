@@ -3,6 +3,9 @@ import range from "lodash/range"
 import { styled } from "@material-ui/core/styles"
 import useColors from "../../hooks/use-colors"
 import TimeStamp from "../TimeStamp"
+import { useTimeCursorTime } from "../../hooks/use-time-cursor-time"
+import useRootAudioElm from "../../hooks/use-root-audio-elm"
+import useEventCallback from "use-event-callback"
 
 import { formatTime } from "../../utils/format-time"
 
@@ -21,11 +24,24 @@ const TimeText = styled("div")(({ x, faded }) => ({
   fontSize: 12,
   fontVariantNumeric: "tabular-nums",
   position: "absolute",
+  top: 16,
   left: x,
   borderLeft: "1px solid rgba(255,255,255,0.5)",
   paddingLeft: 4,
   whiteSpace: "pre-wrap",
   opacity: faded ? 0.25 : 0.75,
+}))
+
+const TimeCursor = styled("div")(({ left, themeColors }) => ({
+  position: "absolute",
+  width: 0,
+  height: 0,
+  top: 0,
+  left,
+  borderLeft: "8px solid transparent",
+  borderRight: "8px solid transparent",
+  borderTop: `12px solid ${themeColors.green}`,
+  transition: "left 200ms linear",
 }))
 
 const Svg = styled("svg")({
@@ -43,6 +59,7 @@ export const Timeline = ({
   gridLineMetrics,
   onClickTimestamp,
   onRemoveTimestamp,
+  timeCursorTime: timeCursorTimeProp,
 }) => {
   const themeColors = useColors()
   const visibleDuration = visibleTimeEnd - visibleTimeStart
@@ -51,6 +68,10 @@ export const Timeline = ({
   const timeTextTimes = range(timeTextCount).map(
     (i) => visibleTimeStart + (visibleDuration / timeTextCount) * i
   )
+  const recoilTimeCursorTime = useTimeCursorTime()
+  // const [rootAudioElm] = useRootAudioElm()
+  const timeCursorTime =
+    timeCursorTimeProp === undefined ? recoilTimeCursorTime : timeCursorTimeProp
 
   const {
     numberOfMajorGridLines,
@@ -58,8 +79,17 @@ export const Timeline = ({
     majorGridLinePixelDistance,
   } = gridLineMetrics
 
+  const onClickTimeline = useEventCallback((e) => {
+    const { clientX } = e.target
+    console.log({ clientX })
+  })
+
   return (
-    <Container themeColors={themeColors} width={width}>
+    <Container
+      themeColors={themeColors}
+      width={width}
+      onClick={onClickTimeline}
+    >
       {range(timeTextCount).map((timeTextIndex) => (
         <TimeText
           key={timeTextIndex}
@@ -102,6 +132,12 @@ export const Timeline = ({
           />
         )
       })}
+      {timeCursorTime !== undefined && (
+        <TimeCursor
+          themeColors={themeColors}
+          left={((timeCursorTime - visibleTimeStart) / visibleDuration) * width}
+        />
+      )}
     </Container>
   )
 }

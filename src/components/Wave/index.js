@@ -63,6 +63,7 @@ export const Wave = ({
   durationGroups = [],
   timestamps = [],
   gridLineMetrics,
+  timeCursorTime,
   showValues = false,
 }) => {
   const colors = useColors()
@@ -78,6 +79,11 @@ export const Wave = ({
     majorGridLinePixelDistance,
     minorGridLinePixelDistance,
   } = gridLineMetrics
+
+  const timeCursorXPosition =
+    timeCursorTime !== undefined
+      ? transformMatrix.applyToPoint(timeCursorTime, 0).x
+      : undefined
 
   const visibleTransformedPointsOnCurves = useMemo(() => {
     const visibleTransformedPointsOnCurves = []
@@ -204,6 +210,16 @@ export const Wave = ({
           />
         )
       })}
+      {timeCursorTime !== undefined && (
+        <line
+          x1={timeCursorXPosition}
+          x2={timeCursorXPosition}
+          y1={0}
+          y2={height}
+          stroke={colors.green}
+          strokeWidth={1}
+        />
+      )}
       {showValues && (
         <HighlightValueLabels
           visibleTransformedPointsOnCurves={visibleTransformedPointsOnCurves}

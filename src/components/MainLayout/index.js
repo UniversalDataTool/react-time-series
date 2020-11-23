@@ -42,6 +42,9 @@ export const MainLayout = ({
   onChangeTimestamps,
   enabledTools = defaultEnabledTools,
   showValues = false,
+  onStartPlayback,
+  onStopPlayback,
+  isPlayingMedia,
 }) => {
   const themeColors = useColors()
   const [activeDurationGroup, setActiveDurationGroup] = useState(null)
@@ -173,6 +176,9 @@ export const MainLayout = ({
         selectedDurationIndex={selectedDurationIndex}
         durationGroups={durationGroups}
         allowCustomLabels={allowCustomLabels}
+        onStartPlayback={onStartPlayback}
+        onStopPlayback={onStopPlayback}
+        isPlayingMedia={isPlayingMedia}
       />
       <Timeline
         timeFormat={timeFormat}

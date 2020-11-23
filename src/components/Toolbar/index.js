@@ -18,6 +18,8 @@ import NormalSelect from "react-select"
 import LocationOnIcon from "@material-ui/icons/LocationOn"
 import TimelapseIcon from "@material-ui/icons/Timelapse"
 import ZoomInIcon from "@material-ui/icons/ZoomIn"
+import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline"
+import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
 import Color from "color"
 
 const Container = styled("div")(({ themeColors }) => ({
@@ -96,6 +98,9 @@ export const Toolbar = ({
   selectedDurationIndex,
   onChangeSelectedItemLabel,
   allowCustomLabels = false,
+  onStartPlayback,
+  onStopPlayback,
+  isPlayingMedia = false,
 }) => {
   const themeColors = useColors()
   const [mode, setToolMode] = useToolMode()
@@ -219,6 +224,22 @@ export const Toolbar = ({
         )}
       </Box>
       <ButtonGroup size="small">
+        {onStartPlayback && !isPlayingMedia && (
+          <Button
+            onClick={onStartPlayback}
+            className={classnames({ active: isPlayingMedia })}
+          >
+            <PlayCircleOutlineIcon />
+          </Button>
+        )}
+        {onStopPlayback && isPlayingMedia && (
+          <Button
+            onClick={onStopPlayback}
+            className={classnames({ active: isPlayingMedia })}
+          >
+            <PauseCircleOutlineIcon />
+          </Button>
+        )}
         <Button
           onClick={onSelectCreateTool}
           className={classnames({ active: mode === "create" })}

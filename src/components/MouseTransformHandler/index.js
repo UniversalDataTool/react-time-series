@@ -57,7 +57,6 @@ export const MouseTransformHandler = ({
   const onWheel = useEventCallback((e) => {
     if (e && e.preventDefault) {
       e.preventDefault()
-      console.log("i prevented default!")
     }
     const { deltaY } = e
     const scroll = -Math.sign(deltaY) / 10
@@ -149,7 +148,7 @@ export const MouseTransformHandler = ({
 
   const containerMountCallback = useCallback((ref) => {
     if (ref === null) {
-      ref.removeEventListener("wheel", onWheel)
+      containerRef.current.removeEventListener("wheel", onWheel)
     }
     containerRef.current = ref
     ref.addEventListener("wheel", onWheel, { passive: false })

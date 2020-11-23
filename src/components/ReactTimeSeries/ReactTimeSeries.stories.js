@@ -172,3 +172,19 @@ export const LargeTimeNoneFormat = () => {
     />
   )
 }
+
+export const AudioPlayback = () => {
+  return (
+    <ReactTimeSeries
+      interface={{
+        timeFormat: "none",
+        allowCustomLabels: true,
+      }}
+      sample={{
+        audioUrl:
+          "https://s3.amazonaws.com/datasets.workaround.online/voice-samples/001/voice.mp3",
+      }}
+      onModifySample={() => null}
+    />
+  )
+}

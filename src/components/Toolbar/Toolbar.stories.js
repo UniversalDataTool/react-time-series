@@ -41,6 +41,9 @@ export const Primary = () => {
           )
         )
       }}
+      onStartPlayback={() => null}
+      onStopPlayback={() => null}
+      isPlayingMedia={false}
     />
   )
 }

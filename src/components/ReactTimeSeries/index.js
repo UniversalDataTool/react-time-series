@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from "react"
+import React, { useMemo, useState, useEffect, useRef } from "react"
 import { setIn } from "seamless-immutable"
 import useEventCallback from "use-event-callback"
 import { useAsyncMemo } from "use-async-memo"
 import { RecoilRoot } from "recoil"
 import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash"
 import Measure from "react-measure"
+import { useSetTimeCursorTime } from "../../hooks/use-time-cursor-time"
+import { useRootAudioElm } from "../../hooks/use-root-audio-elm"
 
 import MainLayout from "../MainLayout"
 
@@ -52,6 +54,7 @@ export const ReactTimeSeriesWithoutContext = ({
 
   const timeDataAvailable = [sampleTimeData, audioUrl, csvUrl].some(Boolean)
 
+  const [isPlayingMedia, setIsPlayingMedia] = useState(false)
   const [error, setError] = useState(null)
   const timeData = useAsyncMemo(
     async () => {
@@ -195,6 +198,42 @@ export const ReactTimeSeriesWithoutContext = ({
     if (!widthProp) setWidth(bounds.width)
   })
 
+  const audioSource = useRef()
+
+  useEffect(() => {
+    if (audioUrl) {
+      audioSource.current = new Audio(audioUrl)
+    }
+  }, [])
+
+  // const [, setRootAudioElm] = useRootAudioElm()
+  const setTimeCursorTime = useSetTimeCursorTime()
+
+  const onAudioTimeChanged = useEventCallback(() => {
+    setTimeCursorTime(audioSource.current.currentTime * 1000)
+  })
+  const onAudioPaused = useEventCallback(() => {
+    audioSource.current.removeEventListener("timeupdate", onAudioTimeChanged)
+    audioSource.current.removeEventListener("pause", onAudioPaused)
+  })
+
+  const onStartPlayback = useEventCallback(() => {
+    setIsPlayingMedia(true)
+    if (audioSource.current) {
+      audioSource.current.play()
+      audioSource.current.addEventListener("timeupdate", onAudioTimeChanged)
+      audioSource.current.addEventListener("pause", onAudioPaused)
+      // setRootAudioElm(audioSource.current)
+    }
+  })
+
+  const onStopPlayback = useEventCallback(() => {
+    setIsPlayingMedia(false)
+    if (audioSource.current) {
+      audioSource.current.pause()
+    }
+  })
+
   if (timeDataLoading) return "loading" // TODO real loader
 
   if (!timeData) {
@@ -228,6 +267,9 @@ export const ReactTimeSeriesWithoutContext = ({
             allowCustomLabels={allowCustomLabels}
             enabledTools={enabledTools}
             showValues={showValues}
+            onStartPlayback={onStartPlayback}
+            onStopPlayback={onStopPlayback}
+            isPlayingMedia={isPlayingMedia}
           />
         </div>
       )}

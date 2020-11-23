@@ -1,6 +1,7 @@
 import React from "react"
 import range from "lodash/range"
 import Matrix from "immutable-transform-matrix"
+import getMinorMajorDurationLines from "../../utils/get-minor-major-duration-lines"
 
 import Wave from "./"
 
@@ -20,11 +21,15 @@ const curve2 = {
   data: range(500).map((i) => [i, Math.cos(i / 40) * 100]),
 }
 
+const topLevelMatrix = new Matrix().translate(0, 100)
+const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, 500)
+
 export const SingleCurve = () => (
   <Wave
     curves={[curve1]}
     width={500}
     height={200}
+    gridLineMetrics={gridLineMetrics}
     transformMatrix={new Matrix().translate(0, 100)}
   />
 )
@@ -34,6 +39,7 @@ export const DoubleCurve = () => (
     curves={[curve1, curve2]}
     width={500}
     height={200}
+    gridLineMetrics={gridLineMetrics}
     transformMatrix={new Matrix().translate(0, 100)}
   />
 )
@@ -44,6 +50,7 @@ export const DoubleCurveWithDuration = () => (
     width={500}
     height={200}
     transformMatrix={new Matrix().translate(0, 100)}
+    gridLineMetrics={gridLineMetrics}
     durationGroups={[
       {
         color: "#f00",
@@ -59,11 +66,23 @@ export const DoubleCurveWithTimestamp = () => (
     width={500}
     height={200}
     transformMatrix={new Matrix().translate(0, 100)}
+    gridLineMetrics={gridLineMetrics}
     timestamps={[
       {
         time: 250,
         color: "#f00",
       },
     ]}
+  />
+)
+
+export const DoubleCurveWithTimeCursor = () => (
+  <Wave
+    curves={[curve1, curve2]}
+    width={500}
+    height={200}
+    transformMatrix={new Matrix().translate(0, 100)}
+    gridLineMetrics={gridLineMetrics}
+    timeCursorTime={250}
   />
 )

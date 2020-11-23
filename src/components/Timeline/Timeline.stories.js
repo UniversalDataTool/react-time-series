@@ -75,3 +75,22 @@ export const TimeWithTextMarkers = (args) => {
     />
   )
 }
+
+export const TimeWithCurrentTimeCursor = (args) => {
+  const colors = useColors()
+  return (
+    <Timeline
+      {...args}
+      timeFormat="timecolons"
+      width={500}
+      visibleTimeStart={0}
+      visibleTimeEnd={60000 * 80}
+      timeCursorTime={20 * 60000}
+      timestamps={[
+        { time: 10 * 60000, color: colors.cyan, label: "Timestamp 1" },
+        { time: 50 * 60000, color: colors.red, label: "Another Timestamp" },
+      ]}
+      gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
+    />
+  )
+}

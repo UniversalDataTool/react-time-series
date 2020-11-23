@@ -93,3 +93,32 @@ export const ExampleMiscLayer = () => {
     />
   )
 }
+
+export const AudioPlayback = () => {
+  const [durationGroups, setDurationGroups] = useState([])
+
+  const [timestamps, setTimestamps] = useState([])
+
+  const [isPlayingMedia, setIsPlayingMedia] = useState(false)
+
+  return (
+    <MainLayout
+      timeFormat="dates"
+      curveGroups={[
+        [
+          {
+            data: tesla.curve2017.sort((a, b) => a[0] - b[0]),
+            color: solarized.green,
+          },
+        ],
+      ]}
+      durationGroups={durationGroups}
+      timestamps={timestamps}
+      onChangeTimestamps={setTimestamps}
+      onChangeDurationGroups={setDurationGroups}
+      onStartPlayback={() => setIsPlayingMedia(true)}
+      onStopPlayback={() => setIsPlayingMedia(false)}
+      isPlayingMedia={isPlayingMedia}
+    />
+  )
+}
