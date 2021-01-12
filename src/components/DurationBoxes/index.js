@@ -1,8 +1,8 @@
-import React from "react"
-import { styled } from "@material-ui/core/styles"
-import colorAlpha from "color-alpha"
-import useColors from "../../hooks/use-colors"
-import useToolMode from "../../hooks/use-tool-mode"
+import React from "react";
+import { styled } from "@material-ui/core/styles";
+import colorAlpha from "color-alpha";
+import useColors from "../../hooks/use-colors";
+import useToolMode from "../../hooks/use-tool-mode";
 
 const Container = styled("div")(({ width, active, color }) => ({
   width,
@@ -15,7 +15,7 @@ const Container = styled("div")(({ width, active, color }) => ({
   "&:hover": {
     backgroundColor: "rgba(0,0,0,0.2)",
   },
-}))
+}));
 const Box = styled("div")(({ x, width, color }) => ({
   position: "absolute",
   left: x,
@@ -30,7 +30,7 @@ const Box = styled("div")(({ x, width, color }) => ({
     whiteSpace: "pre",
     color: "#fff",
   },
-}))
+}));
 const Label = styled("div")(({ colors }) => ({
   position: "absolute",
   pointerEvents: "none",
@@ -42,7 +42,7 @@ const Label = styled("div")(({ colors }) => ({
         mixBlendMode: "multiply",
         color: "#888",
       }),
-}))
+}));
 
 export const DurationBox = ({
   width,
@@ -57,12 +57,16 @@ export const DurationBox = ({
   isMiscLayer = false,
   label = "",
 }) => {
-  const [toolMode] = useToolMode()
-  const colors = useColors()
-  const visibleDuration = visibleTimeEnd - visibleTimeStart
-
+  const [toolMode] = useToolMode();
+  const colors = useColors();
+  const visibleDuration = visibleTimeEnd - visibleTimeStart;
   return (
-    <Container onClick={onClick} width={width} color={color} active={active}>
+    <Container
+      onClick={onClick}
+      width={width}
+      color={color}
+      active={active.toString()}
+    >
       {durations.map(
         (
           {
@@ -74,11 +78,11 @@ export const DurationBox = ({
           i
         ) => {
           const startX =
-            ((startTime - visibleTimeStart) / visibleDuration) * width
-          const endX = ((endTime - visibleTimeStart) / visibleDuration) * width
+            ((startTime - visibleTimeStart) / visibleDuration) * width;
+          const endX = ((endTime - visibleTimeStart) / visibleDuration) * width;
 
-          if (endX < 0) return null
-          if (isNaN(startX) || isNaN(endX)) return null
+          if (endX < 0) return null;
+          if (isNaN(startX) || isNaN(endX)) return null;
 
           return (
             <Box
@@ -89,16 +93,16 @@ export const DurationBox = ({
               onClick={() => onClickBox(i)}
               onMouseUp={(e) => {
                 if (toolMode === "delete" || e.button === 2 || e.button === 1) {
-                  onRemoveBox(i)
+                  onRemoveBox(i);
                 }
               }}
               onContextMenu={(e) => {
-                e.preventDefault()
+                e.preventDefault();
               }}
             >
               <div>{durationLabel}</div>
             </Box>
-          )
+          );
         }
       )}
       {(label || (isMiscLayer && durations.length === 0)) && (
@@ -109,7 +113,7 @@ export const DurationBox = ({
         </Label>
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default DurationBox
+export default DurationBox;

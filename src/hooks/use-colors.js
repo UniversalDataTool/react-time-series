@@ -1,9 +1,9 @@
-import { atom, useRecoilValue } from "recoil"
+import { atom, useRecoilValue } from "recoil";
 
 export const themeAtom = atom({
   key: "themeAtom",
   default: "dark",
-})
+});
 
 export const solarized = {
   base03: "#002b36",
@@ -23,9 +23,9 @@ export const solarized = {
   cyan: "#2aa198",
   green: "#859900",
   dark: true,
-}
-solarized.fg = solarized.base3
-solarized.bg = solarized.base03
+};
+solarized.fg = solarized.base3;
+solarized.bg = solarized.base03;
 
 const invertedSolarized = {
   ...solarized,
@@ -40,7 +40,7 @@ const invertedSolarized = {
   base2: solarized.base02,
   base3: solarized.base03,
   dark: false,
-}
+};
 
 // Current Line -> base02
 const dracula = {
@@ -61,9 +61,9 @@ const dracula = {
   red: "#ff5555",
   yellow: "#f1fa8c",
   dark: true,
-}
-dracula.fg = dracula.base2
-dracula.bg = dracula.base03
+};
+dracula.fg = dracula.base2;
+dracula.bg = dracula.base03;
 //
 // export const draculaTheme = {
 //   bg: "#282a36",
@@ -81,8 +81,8 @@ dracula.bg = dracula.base03
 // }
 
 export default () => {
-  const themeName = useRecoilValue(themeAtom)
+  const themeName = useRecoilValue(themeAtom);
   // TODO switch between light and dark theme
   // Dracula
-  return themeName === "dark" ? dracula : invertedSolarized
-}
+  return themeName === "dark" ? dracula : invertedSolarized;
+};

@@ -1,59 +1,59 @@
-import React, { Fragment, useMemo } from "react"
-import range from "lodash/range"
-import { styled } from "@material-ui/core/styles"
-import colorAlpha from "color-alpha"
-import useColors from "../../hooks/use-colors"
-import { formatTime } from "../../utils/format-time"
-import { useTimeCursorTime } from "../../hooks/use-time-cursor-time"
-import HighlightValueLabels from "../HighlightValueLabels"
+import React, { Fragment, useMemo } from "react";
+import range from "lodash/range";
+import { styled } from "@material-ui/core/styles";
+import colorAlpha from "color-alpha";
+import useColors from "../../hooks/use-colors";
+import { formatTime } from "../../utils/format-time";
+import { useTimeCursorTime } from "../../hooks/use-time-cursor-time";
+import HighlightValueLabels from "../HighlightValueLabels";
 
 const userSelectOffStyle = {
   userSelect: "none",
   whiteSpace: "pre",
   fontVariantNumeric: "tabular-nums",
-}
+};
 
 const reduceForVisibleDuration = (data, startTime, visibleDuration, width) => {
-  const firstInnerIndex = data.findIndex(([t]) => t >= startTime)
+  const firstInnerIndex = data.findIndex(([t]) => t >= startTime);
   let visibleSamples = data
     .slice(firstInnerIndex)
-    .findIndex(([t]) => t >= startTime + visibleDuration)
+    .findIndex(([t]) => t >= startTime + visibleDuration);
   visibleSamples =
-    visibleSamples === -1 ? data.length - firstInnerIndex : visibleSamples
-  const lastInnerIndex = firstInnerIndex + visibleSamples
+    visibleSamples === -1 ? data.length - firstInnerIndex : visibleSamples;
+  const lastInnerIndex = firstInnerIndex + visibleSamples;
 
-  data = data.slice(Math.max(0, firstInnerIndex - 1), lastInnerIndex + 1)
+  data = data.slice(Math.max(0, firstInnerIndex - 1), lastInnerIndex + 1);
 
-  const minDistance = visibleDuration / (width / 4)
-  const points = [data[0]]
-  let lastAddedPointIndex = 0
+  const minDistance = visibleDuration / (width / 4);
+  const points = [data[0]];
+  let lastAddedPointIndex = 0;
   for (let i = 1; i < data.length; i++) {
     if (data[i][0] - points[points.length - 1][0] > minDistance) {
       // points.push(data[i])
-      const timeSinceLastPoint = data[i][0] - points[points.length - 1][0]
+      const timeSinceLastPoint = data[i][0] - points[points.length - 1][0];
       if (i - lastAddedPointIndex === 1) {
-        points.push(data[i])
+        points.push(data[i]);
       } else {
         points.push([
           data[i][0] - timeSinceLastPoint / 2,
           Math.max(
             ...data.slice(lastAddedPointIndex + 1, i + 1).map(([, v]) => v)
           ),
-        ])
+        ]);
 
         points.push([
           data[i][0],
           Math.min(
             ...data.slice(lastAddedPointIndex + 1, i + 1).map(([, v]) => v)
           ),
-        ])
+        ]);
       }
 
-      lastAddedPointIndex = i
+      lastAddedPointIndex = i;
     }
   }
-  return points
-}
+  return points;
+};
 
 export const Wave = ({
   curves,
@@ -67,12 +67,12 @@ export const Wave = ({
   timeCursorTime,
   showValues = false,
 }) => {
-  const colors = useColors()
+  const colors = useColors();
 
-  const recoilTimeCursorTime = useTimeCursorTime()
+  const recoilTimeCursorTime = useTimeCursorTime();
 
   timeCursorTime =
-    timeCursorTime === undefined ? recoilTimeCursorTime : timeCursorTime
+    timeCursorTime === undefined ? recoilTimeCursorTime : timeCursorTime;
 
   const {
     visibleDuration,
@@ -84,15 +84,15 @@ export const Wave = ({
     minorGridLinePixelOffset,
     majorGridLinePixelDistance,
     minorGridLinePixelDistance,
-  } = gridLineMetrics
+  } = gridLineMetrics;
 
   const timeCursorXPosition =
     timeCursorTime !== undefined
       ? transformMatrix.applyToPoint(timeCursorTime, 0).x
-      : undefined
+      : undefined;
 
   const visibleTransformedPointsOnCurves = useMemo(() => {
-    const visibleTransformedPointsOnCurves = []
+    const visibleTransformedPointsOnCurves = [];
     for (const curve of curves) {
       visibleTransformedPointsOnCurves.push(
         reduceForVisibleDuration(
@@ -105,29 +105,29 @@ export const Wave = ({
           t,
           value: y,
         }))
-      )
+      );
     }
-    return visibleTransformedPointsOnCurves
-  }, [transformMatrix, curves, startTimeOnGraph, visibleDuration, width])
+    return visibleTransformedPointsOnCurves;
+  }, [transformMatrix, curves, startTimeOnGraph, visibleDuration, width]);
 
   return (
     <svg width={width} height={height}>
       {range(-5, numberOfMajorGridLines + 1).map((i) => {
         const timeAtLine =
           Math.floor(startTimeOnGraph / majorDuration) * majorDuration +
-          majorDuration * i
+          majorDuration * i;
 
-        const lineX = majorGridLinePixelOffset + majorGridLinePixelDistance * i
+        const lineX = majorGridLinePixelOffset + majorGridLinePixelDistance * i;
 
-        const globalTimelineIndex = Math.floor(timeAtLine / majorDuration)
+        const globalTimelineIndex = Math.floor(timeAtLine / majorDuration);
 
-        let textElm = null
+        let textElm = null;
         if (globalTimelineIndex % 1 === 0) {
           const timeLines = formatTime(
             timeAtLine,
             timeFormat,
             visibleDuration
-          ).split("\n")
+          ).split("\n");
           textElm = timeLines.map((tl, i) => (
             <text
               key={i}
@@ -140,7 +140,7 @@ export const Wave = ({
             >
               {tl}
             </text>
-          ))
+          ));
         }
 
         return (
@@ -157,12 +157,12 @@ export const Wave = ({
             )}
             {textElm}
           </Fragment>
-        )
+        );
       })}
       {numberOfMajorGridLines < 12 &&
         range(numberOfMinorGridLines).map((i) => {
           const lineX =
-            minorGridLinePixelOffset + minorGridLinePixelDistance * i
+            minorGridLinePixelOffset + minorGridLinePixelDistance * i;
           return (
             <line
               key={i}
@@ -173,13 +173,13 @@ export const Wave = ({
               y1={0}
               y2={height}
             />
-          )
+          );
         })}
       {durationGroups.flatMap(({ durations, color: dgColor }, dgi) => {
         return durations.map((duration, di) => {
-          const { x: startX } = transformMatrix.applyToPoint(duration.start, 0)
-          const { x: endX } = transformMatrix.applyToPoint(duration.end, 0)
-          if (isNaN(startX) || isNaN(endX)) return null
+          const { x: startX } = transformMatrix.applyToPoint(duration.start, 0);
+          const { x: endX } = transformMatrix.applyToPoint(duration.end, 0);
+          if (isNaN(startX) || isNaN(endX)) return null;
           return (
             <rect
               key={`${dgi},${di}`}
@@ -189,8 +189,8 @@ export const Wave = ({
               width={endX - startX}
               height={height}
             />
-          )
-        })
+          );
+        });
       })}
       {curves.map((curve, i) => (
         <polyline
@@ -203,7 +203,7 @@ export const Wave = ({
         />
       ))}
       {timestamps.map((ts, i) => {
-        const { x } = transformMatrix.applyToPoint(ts.time, 0)
+        const { x } = transformMatrix.applyToPoint(ts.time, 0);
         return (
           <line
             key={i}
@@ -214,7 +214,7 @@ export const Wave = ({
             stroke={ts.color}
             strokeWidth={1}
           />
-        )
+        );
       })}
       {timeCursorTime !== undefined && (
         <line
@@ -233,7 +233,7 @@ export const Wave = ({
         />
       )}
     </svg>
-  )
-}
+  );
+};
 
-export default Wave
+export default Wave;

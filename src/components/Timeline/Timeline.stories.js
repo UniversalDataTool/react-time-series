@@ -1,9 +1,9 @@
-import React from "react"
+import React from "react";
 
-import useColors from "../../hooks/use-colors"
-import Timeline from "./"
-import getMinorMajorDurationLines from "../../utils/get-minor-major-duration-lines"
-import Matrix from "immutable-transform-matrix"
+import useColors from "../../hooks/use-colors";
+import Timeline from "./";
+import getMinorMajorDurationLines from "../../utils/get-minor-major-duration-lines";
+import Matrix from "immutable-transform-matrix";
 
 export default {
   title: "Timeline",
@@ -12,7 +12,7 @@ export default {
     width: "number",
     onClickTimestamp: { action: "onClickTimestamp" },
   },
-}
+};
 
 export const TimeWithColons = (args) => {
   return (
@@ -24,8 +24,8 @@ export const TimeWithColons = (args) => {
       visibleTimeEnd={60000 * 80}
       gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />
-  )
-}
+  );
+};
 
 export const Dates = (args) => {
   return (
@@ -37,11 +37,11 @@ export const Dates = (args) => {
       visibleTimeEnd={60000 * 60 * 24 * 400}
       gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />
-  )
-}
+  );
+};
 
 export const TimeWithTimestamps = (args) => {
-  const colors = useColors()
+  const colors = useColors();
   return (
     <Timeline
       {...args}
@@ -55,11 +55,11 @@ export const TimeWithTimestamps = (args) => {
       ]}
       gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />
-  )
-}
+  );
+};
 
 export const TimeWithTextMarkers = (args) => {
-  const colors = useColors()
+  const colors = useColors();
   return (
     <Timeline
       {...args}
@@ -73,11 +73,11 @@ export const TimeWithTextMarkers = (args) => {
       ]}
       gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />
-  )
-}
+  );
+};
 
 export const TimeWithCurrentTimeCursor = (args) => {
-  const colors = useColors()
+  const colors = useColors();
   return (
     <Timeline
       {...args}
@@ -92,5 +92,5 @@ export const TimeWithCurrentTimeCursor = (args) => {
       ]}
       gridLineMetrics={getMinorMajorDurationLines(new Matrix(), 500)}
     />
-  )
-}
+  );
+};

@@ -1,10 +1,10 @@
-import React, { useState } from "react"
-import ReactTimeSeries from "./"
+import React, { useState } from "react";
+import ReactTimeSeries from "./";
 
 export default {
   title: "ReactTimeSeries",
   component: ReactTimeSeries,
-}
+};
 
 export const SimpleTimeSeries = () => {
   const [sample, setSample] = useState({
@@ -21,29 +21,29 @@ export const SimpleTimeSeries = () => {
         { start: 800, end: 1000, label: "byeeee" },
       ],
     },
-  })
+  });
   return (
     <ReactTimeSeries
       interface={{ allowCustomLabels: true }}
       sample={sample}
       onModifySample={setSample}
     />
-  )
-}
+  );
+};
 
 export const WithAudioURL = () => {
   const [sample, setSample] = useState({
     audioUrl:
       "https://s3.amazonaws.com/datasets.workaround.online/voice-samples/001/voice.mp3",
-  })
+  });
   return (
     <ReactTimeSeries
       interface={{ allowCustomLabels: true }}
       sample={sample}
       onModifySample={setSample}
     />
-  )
-}
+  );
+};
 
 export const ReallySimple = () => {
   return (
@@ -58,8 +58,8 @@ export const ReallySimple = () => {
       }}
       onModifySample={() => null}
     />
-  )
-}
+  );
+};
 
 export const SmallValues = () => {
   return (
@@ -77,14 +77,14 @@ export const SmallValues = () => {
       }}
       onModifySample={() => null}
     />
-  )
-}
+  );
+};
 
 export const PredefinedLabelsOnly = () => {
   const [sample, setSample] = useState({
     audioUrl:
       "https://s3.amazonaws.com/datasets.workaround.online/voice-samples/001/voice.mp3",
-  })
+  });
   return (
     <ReactTimeSeries
       interface={{
@@ -94,14 +94,14 @@ export const PredefinedLabelsOnly = () => {
       sample={sample}
       onModifySample={setSample}
     />
-  )
-}
+  );
+};
 
 export const CreateTimestampsOnly = () => {
   const [sample, setSample] = useState({
     audioUrl:
       "https://s3.amazonaws.com/datasets.workaround.online/voice-samples/001/voice.mp3",
-  })
+  });
   return (
     <ReactTimeSeries
       interface={{
@@ -112,14 +112,14 @@ export const CreateTimestampsOnly = () => {
       sample={sample}
       onModifySample={setSample}
     />
-  )
-}
+  );
+};
 
 export const CreateDurationsOnly = () => {
   const [sample, setSample] = useState({
     audioUrl:
       "https://s3.amazonaws.com/datasets.workaround.online/voice-samples/001/voice.mp3",
-  })
+  });
   return (
     <ReactTimeSeries
       interface={{
@@ -130,14 +130,14 @@ export const CreateDurationsOnly = () => {
       sample={sample}
       onModifySample={setSample}
     />
-  )
-}
+  );
+};
 
 export const TimeDataFromCSV = () => {
   const [sample, setSample] = useState({
     csvUrl:
       "https://gist.githubusercontent.com/philaturner/644b3e8bd17641766d90f38d475edcc6/raw/a6c35e97a89eda49098def90fe2e750ceb898f79/tesla.csv",
-  })
+  });
   return (
     <ReactTimeSeries
       interface={{
@@ -150,8 +150,8 @@ export const TimeDataFromCSV = () => {
       sample={sample}
       onModifySample={setSample}
     />
-  )
-}
+  );
+};
 
 export const LargeTimeNoneFormat = () => {
   return (
@@ -170,8 +170,8 @@ export const LargeTimeNoneFormat = () => {
       }}
       onModifySample={() => null}
     />
-  )
-}
+  );
+};
 
 export const AudioPlayback = () => {
   return (
@@ -186,5 +186,5 @@ export const AudioPlayback = () => {
       }}
       onModifySample={() => null}
     />
-  )
-}
+  );
+};

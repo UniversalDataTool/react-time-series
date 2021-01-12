@@ -1,7 +1,7 @@
-import React from "react"
-import { RecoilRoot } from "recoil"
-import "../src/index.css"
-import BackgroundContainer from "../src/components/BackgroundContainer"
+import React from "react";
+import { RecoilRoot } from "recoil";
+import "../src/index.css";
+import BackgroundContainer from "../src/components/BackgroundContainer";
 
 export const decorators = [
   (Story) => (
@@ -18,8 +18,8 @@ export const decorators = [
       </div>
     </RecoilRoot>
   ),
-]
+];
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
-}
+};
