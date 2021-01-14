@@ -12,15 +12,6 @@ import initTopLevelMatrix from "../../utils/init-top-level-matrix"
 import Toolbar from "../Toolbar"
 import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash"
 
-const Container = styled("div")(({ themecolors, width }) => ({
-  width: width,
-  display: "flex",
-  flexDirection: "column",
-  backgroundColor: themecolors.bg,
-  padding: 16,
-  boxSizing: "border-box",
-}))
-
 const defaultEnabledTools = [
   "create-durations",
   "label-durations",
@@ -46,7 +37,7 @@ export const MainLayout = ({
   onStopPlayback,
   isPlayingMedia,
 }) => {
-  const themecolors = useColors()
+  const themeColors = useColors()
   const [activeDurationGroup, setActiveDurationGroup] = useState(null)
   const [draggedDurationIndex, setDraggedDurationIndex] = useState(null)
   const [selectedDurationIndex, setSelectedDurationIndex] = useState(null)
@@ -164,8 +155,17 @@ export const MainLayout = ({
 
   const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, width)
 
+  const Container = styled("div")(() => ({
+    width: width,
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: themeColors.bg,
+    padding: 16,
+    boxSizing: "border-box",
+  }))
+
   return (
-    <Container width={width} themecolors={themecolors}>
+    <Container>
       <Toolbar
         timestamps={timestamps}
         timestampLabels={timestampLabels}

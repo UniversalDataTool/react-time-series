@@ -12,16 +12,6 @@ import useEventCallback from "use-event-callback"
 
 import { formatTime } from "../../utils/format-time"
 
-const Container = styled("div")(({ width, themecolors }) => ({
-  width,
-  overflow: "hidden",
-  position: "relative",
-  height: 64,
-  cursor: "pointer",
-  borderBottom: `1px solid ${themecolors.Selection}`,
-  color: themecolors.fg,
-}))
-
 const TimeText = styled("div")(({ x, faded }) => ({
   display: "inline-block",
   width: 80,
@@ -34,17 +24,6 @@ const TimeText = styled("div")(({ x, faded }) => ({
   paddingLeft: 4,
   whiteSpace: "pre-wrap",
   opacity: faded ? 0.25 : 0.75,
-}))
-
-const TimeCursor = styled("div")(({ left, themecolors }) => ({
-  position: "absolute",
-  width: 0,
-  height: 0,
-  top: 0,
-  left: left - 6,
-  borderLeft: "8px solid transparent",
-  borderRight: "8px solid transparent",
-  borderTop: `12px solid ${themecolors.green}`,
 }))
 
 const Svg = styled("svg")({
@@ -64,7 +43,7 @@ export const Timeline = ({
   onRemoveTimestamp,
   timeCursorTime: timeCursorTimeProp,
 }) => {
-  const themecolors = useColors()
+  const themeColors = useColors()
   const visibleDuration = visibleTimeEnd - visibleTimeStart
   // TODO compute tick count using width
   const timeTextCount = Math.ceil(width / 100)
@@ -96,12 +75,28 @@ export const Timeline = ({
     rootAudioElm.currentTime = time / 1000
     setTimeCursorTime(time)
   })
-
+  const Container = styled("div")(() => ({
+    width,
+    overflow: "hidden",
+    position: "relative",
+    height: 64,
+    cursor: "pointer",
+    borderBottom: `1px solid ${themeColors.Selection}`,
+    color: themeColors.fg,
+  }))
+  const TimeCursor = styled("div")(() => ({
+    position: "absolute",
+    width: 0,
+    height: 0,
+    top: 0,
+    left: ((timeCursorTime - visibleTimeStart) / visibleDuration) * width - 6,
+    borderLeft: "8px solid transparent",
+    borderRight: "8px solid transparent",
+    borderTop: `12px solid ${themeColors.green}`,
+  }))
   return (
     <Container
       ref={containerRef}
-      themecolors={themecolors}
-      width={width}
       onClick={rootAudioElm ? onClickTimeline : undefined}
     >
       {range(timeTextCount).map((timeTextIndex) => (
@@ -128,7 +123,7 @@ export const Timeline = ({
               x2={x}
               y1={0}
               y2={12}
-              stroke={themecolors.base01}
+              stroke={themeColors.base01}
             />
           )
         })}
@@ -146,12 +141,7 @@ export const Timeline = ({
           />
         )
       })}
-      {timeCursorTime !== undefined && (
-        <TimeCursor
-          themecolors={themecolors}
-          left={((timeCursorTime - visibleTimeStart) / visibleDuration) * width}
-        />
-      )}
+      {timeCursorTime !== undefined && <TimeCursor />}
     </Container>
   )
 }

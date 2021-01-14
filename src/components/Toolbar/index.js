@@ -22,64 +22,42 @@ import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline"
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
 import Color from "color"
 
-const Container = styled("div")(({ themecolors }) => ({
-  display: "flex",
-  paddingBottom: 16,
-  "&&& .MuiButtonBase-root": {
-    borderColor: themecolors.fg,
-  },
-  "&&& .MuiButton-label": {
-    color: themecolors.fg,
-    textTransform: "none",
-  },
-  "&&& .active.MuiButtonBase-root": {
-    backgroundColor: themecolors.fg,
-  },
-  "&&& .active .MuiButton-label": {
-    color: themecolors.bg,
-  },
-  "&&& .MuiSvgIcon-root": {
-    width: 16,
-    height: 16,
-  },
-}))
-
-const getSelectFieldStyles = (themecolors) => ({
+const getSelectFieldStyles = (themeColors) => ({
   control: (styles) => ({
     ...styles,
     border: `1px solid ${
-      themecolors.dark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)"
+      themeColors.dark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)"
     }`,
     boxShadow: "none",
-    backgroundColor: themecolors.bg,
-    borderColor: themecolors.base1,
+    backgroundColor: themeColors.bg,
+    borderColor: themeColors.base1,
     userSelect: "none",
     "&:hover": {
-      backgroundColor: Color(themecolors.bg).darken(0.2).string(),
+      backgroundColor: Color(themeColors.bg).darken(0.2).string(),
     },
   }),
   input: (styles) => ({
     ...styles,
-    color: themecolors.fg,
+    color: themeColors.fg,
   }),
   option: (styles) => ({
     ...styles,
-    backgroundColor: themecolors.base02,
-    color: themecolors.fg,
+    backgroundColor: themeColors.base02,
+    color: themeColors.fg,
     "&:hover": {
-      backgroundColor: Color(themecolors.bg).darken(0.2).string(),
+      backgroundColor: Color(themeColors.bg).darken(0.2).string(),
     },
     "&:focus": {
-      backgroundColor: Color(themecolors.bg).darken(0.2).string(),
+      backgroundColor: Color(themeColors.bg).darken(0.2).string(),
     },
   }),
   singleValue: (styles) => ({
     ...styles,
-    color: themecolors.fg,
+    color: themeColors.fg,
   }),
   menu: (styles) => ({
     ...styles,
-    backgroundColor: themecolors.base02,
+    backgroundColor: themeColors.base02,
   }),
 })
 
@@ -102,7 +80,7 @@ export const Toolbar = ({
   onStopPlayback,
   isPlayingMedia = false,
 }) => {
-  const themecolors = useColors()
+  const themeColors = useColors()
   const [mode, setToolMode] = useToolMode()
   const setTheme = useSetRecoilState(themeAtom)
 
@@ -138,11 +116,11 @@ export const Toolbar = ({
   const onSelectZoomTool = useEventCallback(() => setToolMode("zoom"))
   const onSelectCloseTool = useEventCallback(() => setToolMode("delete"))
   const toggleTheme = useEventCallback(() =>
-    setTheme(themecolors.dark ? "light" : "dark")
+    setTheme(themeColors.dark ? "light" : "dark")
   )
   const selectFieldStyles = useMemo(
-    () => getSelectFieldStyles(themecolors, selectedTimestampIndex),
-    [themecolors, selectedTimestampIndex]
+    () => getSelectFieldStyles(themeColors, selectedTimestampIndex),
+    [themeColors, selectedTimestampIndex]
   )
   const formatCreateLabel = useEventCallback((s) => `Add "${s}"`)
   const onChangeSelectedLabel = useEventCallback((newValue) => {
@@ -181,11 +159,31 @@ export const Toolbar = ({
   }, [selectedTimestamp, selectedDuration])
 
   const SelectComponent = allowCustomLabels ? CreatableSelect : NormalSelect
-
+  const Container = styled("div")(() => ({
+    display: "flex",
+    paddingBottom: 16,
+    "&&& .MuiButtonBase-root": {
+      borderColor: themeColors.fg,
+    },
+    "&&& .MuiButton-label": {
+      color: themeColors.fg,
+      textTransform: "none",
+    },
+    "&&& .active.MuiButtonBase-root": {
+      backgroundColor: themeColors.fg,
+    },
+    "&&& .active .MuiButton-label": {
+      color: themeColors.bg,
+    },
+    "&&& .MuiSvgIcon-root": {
+      width: 16,
+      height: 16,
+    },
+  }))
   return (
-    <Container themecolors={themecolors}>
+    <Container>
       <Box
-        color={themecolors.fg}
+        color={themeColors.fg}
         display="flex"
         alignItems="center"
         justifyContent="center"
@@ -195,14 +193,14 @@ export const Toolbar = ({
           <LocationOnIcon
             style={{
               ...iconStyle,
-              color: selectedTimestamp.color || themecolors.fg,
+              color: selectedTimestamp.color || themeColors.fg,
             }}
           />
         ) : selectedDuration ? (
           <TimelapseIcon
             style={{
               ...iconStyle,
-              color: selectedDuration.color || themecolors.fg,
+              color: selectedDuration.color || themeColors.fg,
             }}
           />
         ) : null}
