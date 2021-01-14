@@ -1,9 +1,9 @@
-import React from "react";
-import { styled } from "@material-ui/core/styles";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import Color from "color";
-import useEventCallback from "use-event-callback";
-import useToolMode from "../../hooks/use-tool-mode";
+import React from "react"
+import { styled } from "@material-ui/core/styles"
+import LocationOnIcon from "@material-ui/icons/LocationOn"
+import Color from "color"
+import useEventCallback from "use-event-callback"
+import useToolMode from "../../hooks/use-tool-mode"
 
 export const Container = styled("div")(({ left, color, hasIcon }) => ({
   position: "absolute",
@@ -49,18 +49,18 @@ export const Container = styled("div")(({ left, color, hasIcon }) => ({
         height: 2,
         backgroundColor: color,
       },
-}));
+}))
 
 export const TimeStamp = ({ left, color, label, onClick, onRemove }) => {
-  const [toolMode] = useToolMode();
+  const [toolMode] = useToolMode()
   const onMouseUp = useEventCallback((e) => {
     if (toolMode === "delete" || e.button === 2 || e.button === 1) {
-      onRemove();
+      onRemove()
     }
-  });
+  })
   const onContextMenu = useEventCallback((e) => {
-    e.preventDefault();
-  });
+    e.preventDefault()
+  })
   return (
     <Container
       onClick={onClick}
@@ -73,7 +73,7 @@ export const TimeStamp = ({ left, color, label, onClick, onRemove }) => {
       <div className="stem" />
       {label ? <span>{label}</span> : <LocationOnIcon className="icon" />}
     </Container>
-  );
-};
+  )
+}
 
-export default TimeStamp;
+export default TimeStamp

@@ -1,26 +1,26 @@
-import React, { useMemo } from "react";
-import { styled } from "@material-ui/core/styles";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import Button from "@material-ui/core/Button";
-import useColors from "../../hooks/use-colors";
-import CloseIcon from "@material-ui/icons/Close";
-import Brightness4Icon from "@material-ui/icons/Brightness4";
-import PanToolIcon from "@material-ui/icons/PanTool";
-import Box from "@material-ui/core/Box";
-import CreateIcon from "@material-ui/icons/Create";
-import classnames from "classnames";
-import useToolMode from "../../hooks/use-tool-mode";
-import useEventCallback from "use-event-callback";
-import { useSetRecoilState } from "recoil";
-import { themeAtom } from "../../hooks/use-colors";
-import CreatableSelect from "react-select/creatable";
-import NormalSelect from "react-select";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import TimelapseIcon from "@material-ui/icons/Timelapse";
-import ZoomInIcon from "@material-ui/icons/ZoomIn";
-import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
-import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
-import Color from "color";
+import React, { useMemo } from "react"
+import { styled } from "@material-ui/core/styles"
+import ButtonGroup from "@material-ui/core/ButtonGroup"
+import Button from "@material-ui/core/Button"
+import useColors from "../../hooks/use-colors"
+import CloseIcon from "@material-ui/icons/Close"
+import Brightness4Icon from "@material-ui/icons/Brightness4"
+import PanToolIcon from "@material-ui/icons/PanTool"
+import Box from "@material-ui/core/Box"
+import CreateIcon from "@material-ui/icons/Create"
+import classnames from "classnames"
+import useToolMode from "../../hooks/use-tool-mode"
+import useEventCallback from "use-event-callback"
+import { useSetRecoilState } from "recoil"
+import { themeAtom } from "../../hooks/use-colors"
+import CreatableSelect from "react-select/creatable"
+import NormalSelect from "react-select"
+import LocationOnIcon from "@material-ui/icons/LocationOn"
+import TimelapseIcon from "@material-ui/icons/Timelapse"
+import ZoomInIcon from "@material-ui/icons/ZoomIn"
+import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline"
+import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
+import Color from "color"
 
 const Container = styled("div")(({ themecolors }) => ({
   display: "flex",
@@ -42,7 +42,7 @@ const Container = styled("div")(({ themecolors }) => ({
     width: 16,
     height: 16,
   },
-}));
+}))
 
 const getSelectFieldStyles = (themecolors) => ({
   control: (styles) => ({
@@ -81,12 +81,12 @@ const getSelectFieldStyles = (themecolors) => ({
     ...styles,
     backgroundColor: themecolors.base02,
   }),
-});
+})
 
 const iconStyle = {
   width: 20,
   height: 20,
-};
+}
 
 export const Toolbar = ({
   timestamps = [],
@@ -102,85 +102,85 @@ export const Toolbar = ({
   onStopPlayback,
   isPlayingMedia = false,
 }) => {
-  const themecolors = useColors();
-  const [mode, setToolMode] = useToolMode();
-  const setTheme = useSetRecoilState(themeAtom);
+  const themecolors = useColors()
+  const [mode, setToolMode] = useToolMode()
+  const setTheme = useSetRecoilState(themeAtom)
 
   const [durationLabelSet, durationLabelColorMap] = useMemo(() => {
-    const labelSet = new Set(durationLabels);
-    const labelColorMap = {};
+    const labelSet = new Set(durationLabels)
+    const labelColorMap = {}
     for (const dg of durationGroups) {
       for (const duration of dg.durations) {
-        if (!duration.label) continue;
-        labelSet.add(duration.label);
-        labelColorMap[duration.label] = duration.color || dg.color;
+        if (!duration.label) continue
+        labelSet.add(duration.label)
+        labelColorMap[duration.label] = duration.color || dg.color
       }
-      if (!dg.label) continue;
-      labelSet.add(dg.label);
-      labelColorMap[dg.label] = dg.color;
+      if (!dg.label) continue
+      labelSet.add(dg.label)
+      labelColorMap[dg.label] = dg.color
     }
-    return [labelSet, labelColorMap];
-  }, [timestamps, durationGroups, durationLabels]);
+    return [labelSet, labelColorMap]
+  }, [timestamps, durationGroups, durationLabels])
 
   const [timestampLabelSet, timestampLabelColorMap] = useMemo(() => {
-    const labelSet = new Set(timestampLabels);
-    const labelColorMap = {};
+    const labelSet = new Set(timestampLabels)
+    const labelColorMap = {}
     for (const timestamp of timestamps) {
-      if (!timestamp.label) continue;
-      labelSet.add(timestamp.label);
-      labelColorMap[timestamp.label] = timestamp.color;
+      if (!timestamp.label) continue
+      labelSet.add(timestamp.label)
+      labelColorMap[timestamp.label] = timestamp.color
     }
-    return [labelSet, labelColorMap];
-  }, [timestamps, durationGroups, timestampLabels]);
+    return [labelSet, labelColorMap]
+  }, [timestamps, durationGroups, timestampLabels])
 
-  const onSelectCreateTool = useEventCallback(() => setToolMode("create"));
-  const onSelectPanTool = useEventCallback(() => setToolMode("pan"));
-  const onSelectZoomTool = useEventCallback(() => setToolMode("zoom"));
-  const onSelectCloseTool = useEventCallback(() => setToolMode("delete"));
+  const onSelectCreateTool = useEventCallback(() => setToolMode("create"))
+  const onSelectPanTool = useEventCallback(() => setToolMode("pan"))
+  const onSelectZoomTool = useEventCallback(() => setToolMode("zoom"))
+  const onSelectCloseTool = useEventCallback(() => setToolMode("delete"))
   const toggleTheme = useEventCallback(() =>
     setTheme(themecolors.dark ? "light" : "dark")
-  );
+  )
   const selectFieldStyles = useMemo(
     () => getSelectFieldStyles(themecolors, selectedTimestampIndex),
     [themecolors, selectedTimestampIndex]
-  );
-  const formatCreateLabel = useEventCallback((s) => `Add "${s}"`);
+  )
+  const formatCreateLabel = useEventCallback((s) => `Add "${s}"`)
   const onChangeSelectedLabel = useEventCallback((newValue) => {
-    const { label } = newValue || {};
+    const { label } = newValue || {}
     onChangeSelectedItemLabel({
       label,
       color: durationLabelColorMap[label] || timestampLabelColorMap[label],
-    });
-  });
+    })
+  })
   const timestampCreatableSelectOptions = useMemo(
     () =>
       Array.from(timestampLabelSet).map((label) => ({ label, value: label })),
     [timestampLabelSet]
-  );
+  )
   const durationCreatableSelectOptions = useMemo(
     () =>
       Array.from(durationLabelSet).map((label) => ({ label, value: label })),
     [durationLabelSet]
-  );
+  )
 
   const selectedTimestamp =
     typeof selectedTimestampIndex === "number"
       ? timestamps[selectedTimestampIndex]
-      : null;
+      : null
   const selectedDuration =
     typeof selectedDurationGroupIndex === "number" &&
     typeof selectedDurationIndex === "number"
       ? durationGroups?.[selectedDurationGroupIndex]?.durations?.[
           selectedDurationIndex
         ]
-      : null;
+      : null
 
   const selectedItemValue = useMemo(() => {
-    const label = selectedTimestamp?.label || selectedDuration?.label;
-    return { label, value: label };
-  }, [selectedTimestamp, selectedDuration]);
+    const label = selectedTimestamp?.label || selectedDuration?.label
+    return { label, value: label }
+  }, [selectedTimestamp, selectedDuration])
 
-  const SelectComponent = allowCustomLabels ? CreatableSelect : NormalSelect;
+  const SelectComponent = allowCustomLabels ? CreatableSelect : NormalSelect
 
   return (
     <Container themecolors={themecolors}>
@@ -273,7 +273,7 @@ export const Toolbar = ({
         </ButtonGroup>
       </Box>
     </Container>
-  );
-};
+  )
+}
 
-export default Toolbar;
+export default Toolbar

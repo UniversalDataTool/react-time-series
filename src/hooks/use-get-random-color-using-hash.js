@@ -1,5 +1,5 @@
-import useColors from "./use-colors";
-import useEventCallback from "use-event-callback";
+import useColors from "./use-colors"
+import useEventCallback from "use-event-callback"
 
 const colorsToCycle = [
   "red",
@@ -10,16 +10,16 @@ const colorsToCycle = [
   "blue",
   "cyan",
   "green",
-];
+]
 
 export default () => {
-  const themecolors = useColors();
+  const themecolors = useColors()
   return useEventCallback((label) => {
-    if (!label) return themecolors.fg;
-    let hashNumber = 0;
+    if (!label) return themecolors.fg
+    let hashNumber = 0
     for (let i = 0; i < label.length; i++) {
-      hashNumber += label.charCodeAt(i);
+      hashNumber += label.charCodeAt(i)
     }
-    return themecolors[colorsToCycle[hashNumber % colorsToCycle.length]];
-  });
-};
+    return themecolors[colorsToCycle[hashNumber % colorsToCycle.length]]
+  })
+}

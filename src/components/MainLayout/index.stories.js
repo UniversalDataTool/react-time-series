@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 
-import MainLayout from "./";
-import tesla from "./tesla.json";
-import { solarized } from "../../hooks/use-colors";
+import MainLayout from "./"
+import tesla from "./tesla.json"
+import { solarized } from "../../hooks/use-colors"
 
 export default {
   title: "MainLayout",
   component: MainLayout,
   argTypes: {},
-};
+}
 
 export const Primary = () => {
   const [durationGroups, setDurationGroups] = useState([
@@ -27,14 +27,14 @@ export const Primary = () => {
       color: solarized.magenta,
       durations: [],
     },
-  ]);
+  ])
 
   const [timestamps, setTimestamps] = useState([
     {
       color: solarized.red,
       time: 1520398800000,
     },
-  ]);
+  ])
 
   return (
     <MainLayout
@@ -59,8 +59,8 @@ export const Primary = () => {
       onChangeTimestamps={setTimestamps}
       onChangeDurationGroups={setDurationGroups}
     />
-  );
-};
+  )
+}
 
 export const ExampleMiscLayer = () => {
   const [durationGroups, setDurationGroups] = useState([
@@ -79,7 +79,7 @@ export const ExampleMiscLayer = () => {
         },
       ],
     },
-  ]);
+  ])
   return (
     <MainLayout
       timeFormat="dates"
@@ -88,18 +88,18 @@ export const ExampleMiscLayer = () => {
       durationGroups={durationGroups}
       onChangeTimestamps={() => null}
       onChangeDurationGroups={(newDurationGroups) => {
-        setDurationGroups(newDurationGroups);
+        setDurationGroups(newDurationGroups)
       }}
     />
-  );
-};
+  )
+}
 
 export const AudioPlayback = () => {
-  const [durationGroups, setDurationGroups] = useState([]);
+  const [durationGroups, setDurationGroups] = useState([])
 
-  const [timestamps, setTimestamps] = useState([]);
+  const [timestamps, setTimestamps] = useState([])
 
-  const [isPlayingMedia, setIsPlayingMedia] = useState(false);
+  const [isPlayingMedia, setIsPlayingMedia] = useState(false)
 
   return (
     <MainLayout
@@ -120,5 +120,5 @@ export const AudioPlayback = () => {
       onStopPlayback={() => setIsPlayingMedia(false)}
       isPlayingMedia={isPlayingMedia}
     />
-  );
-};
+  )
+}

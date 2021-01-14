@@ -1,9 +1,9 @@
-import React from "react";
-import MouseTransformHandler from "../MouseTransformHandler";
-import Matrix from "immutable-transform-matrix";
-import Wave from "../Wave";
-import useEventCallback from "use-event-callback";
-import useRafState from "react-use/lib/useRafState";
+import React from "react"
+import MouseTransformHandler from "../MouseTransformHandler"
+import Matrix from "immutable-transform-matrix"
+import Wave from "../Wave"
+import useEventCallback from "use-event-callback"
+import useRafState from "react-use/lib/useRafState"
 
 export const ControllableWave = ({
   curves,
@@ -22,27 +22,27 @@ export const ControllableWave = ({
   showValues,
 }) => {
   let [matrix, setMatrix] = useRafState(() => {
-    const mat = new Matrix();
-    const maxY = Math.max(...curves[0].data.map(([, y]) => y));
-    const minY = Math.min(...curves[0].data.map(([, y]) => y));
+    const mat = new Matrix()
+    const maxY = Math.max(...curves[0].data.map(([, y]) => y))
+    const minY = Math.min(...curves[0].data.map(([, y]) => y))
 
     return mat
       .scale(1, -1)
       .scale(1, height)
       .scale(1, 1 / (maxY - minY))
-      .translate(0, -maxY);
-  });
+      .translate(0, -maxY)
+  })
 
   matrix = matrix
     .set("a", topLevelMatrix.get("a"))
-    .set("e", topLevelMatrix.get("e"));
+    .set("e", topLevelMatrix.get("e"))
 
   const onChangeMatrix = useEventCallback((newMatrix) => {
-    setMatrix(newMatrix);
+    setMatrix(newMatrix)
     setTopLevelMatrix(
       topLevelMatrix.set("a", newMatrix.get("a")).set("e", newMatrix.get("e"))
-    );
-  });
+    )
+  })
 
   return (
     <MouseTransformHandler
@@ -65,7 +65,7 @@ export const ControllableWave = ({
         showValues={showValues}
       />
     </MouseTransformHandler>
-  );
-};
+  )
+}
 
-export default ControllableWave;
+export default ControllableWave

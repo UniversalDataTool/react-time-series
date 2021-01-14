@@ -1,16 +1,16 @@
-import React, { useRef } from "react";
-import range from "lodash/range";
-import { styled } from "@material-ui/core/styles";
-import useColors from "../../hooks/use-colors";
-import TimeStamp from "../TimeStamp";
+import React, { useRef } from "react"
+import range from "lodash/range"
+import { styled } from "@material-ui/core/styles"
+import useColors from "../../hooks/use-colors"
+import TimeStamp from "../TimeStamp"
 import {
   useTimeCursorTime,
   useSetTimeCursorTime,
-} from "../../hooks/use-time-cursor-time";
-import useRootAudioElm from "../../hooks/use-root-audio-elm";
-import useEventCallback from "use-event-callback";
+} from "../../hooks/use-time-cursor-time"
+import useRootAudioElm from "../../hooks/use-root-audio-elm"
+import useEventCallback from "use-event-callback"
 
-import { formatTime } from "../../utils/format-time";
+import { formatTime } from "../../utils/format-time"
 
 const Container = styled("div")(({ width, themecolors }) => ({
   width,
@@ -20,7 +20,7 @@ const Container = styled("div")(({ width, themecolors }) => ({
   cursor: "pointer",
   borderBottom: `1px solid ${themecolors.Selection}`,
   color: themecolors.fg,
-}));
+}))
 
 const TimeText = styled("div")(({ x, faded }) => ({
   display: "inline-block",
@@ -34,7 +34,7 @@ const TimeText = styled("div")(({ x, faded }) => ({
   paddingLeft: 4,
   whiteSpace: "pre-wrap",
   opacity: faded ? 0.25 : 0.75,
-}));
+}))
 
 const TimeCursor = styled("div")(({ left, themecolors }) => ({
   position: "absolute",
@@ -45,13 +45,13 @@ const TimeCursor = styled("div")(({ left, themecolors }) => ({
   borderLeft: "8px solid transparent",
   borderRight: "8px solid transparent",
   borderTop: `12px solid ${themecolors.green}`,
-}));
+}))
 
 const Svg = styled("svg")({
   position: "absolute",
   left: 0,
   bottom: 0,
-});
+})
 
 export const Timeline = ({
   timeFormat,
@@ -64,40 +64,38 @@ export const Timeline = ({
   onRemoveTimestamp,
   timeCursorTime: timeCursorTimeProp,
 }) => {
-  const themecolors = useColors();
-  const visibleDuration = visibleTimeEnd - visibleTimeStart;
+  const themecolors = useColors()
+  const visibleDuration = visibleTimeEnd - visibleTimeStart
   // TODO compute tick count using width
-  const timeTextCount = Math.ceil(width / 100);
+  const timeTextCount = Math.ceil(width / 100)
   const timeTextTimes = range(timeTextCount).map(
     (i) => visibleTimeStart + (visibleDuration / timeTextCount) * i
-  );
-  const recoilTimeCursorTime = useTimeCursorTime();
-  const setTimeCursorTime = useSetTimeCursorTime();
-  const [rootAudioElm] = useRootAudioElm();
+  )
+  const recoilTimeCursorTime = useTimeCursorTime()
+  const setTimeCursorTime = useSetTimeCursorTime()
+  const [rootAudioElm] = useRootAudioElm()
   const timeCursorTime =
-    timeCursorTimeProp === undefined
-      ? recoilTimeCursorTime
-      : timeCursorTimeProp;
+    timeCursorTimeProp === undefined ? recoilTimeCursorTime : timeCursorTimeProp
 
   const {
     numberOfMajorGridLines,
     majorGridLinePixelOffset,
     majorGridLinePixelDistance,
-  } = gridLineMetrics;
+  } = gridLineMetrics
 
-  const containerRef = useRef();
+  const containerRef = useRef()
 
   const onClickTimeline = useEventCallback((e) => {
-    if (!rootAudioElm) return;
-    const { clientX } = e;
+    if (!rootAudioElm) return
+    const { clientX } = e
     const pxDistanceFromStart =
-      clientX - containerRef.current.getBoundingClientRect().left;
+      clientX - containerRef.current.getBoundingClientRect().left
     const time =
       (pxDistanceFromStart / width) * (visibleTimeEnd - visibleTimeStart) +
-      visibleTimeStart;
-    rootAudioElm.currentTime = time / 1000;
-    setTimeCursorTime(time);
-  });
+      visibleTimeStart
+    rootAudioElm.currentTime = time / 1000
+    setTimeCursorTime(time)
+  })
 
   return (
     <Container
@@ -122,7 +120,7 @@ export const Timeline = ({
       <Svg width={width} height={12}>
         {range(numberOfMajorGridLines).map((tickIndex) => {
           const x =
-            majorGridLinePixelOffset + majorGridLinePixelDistance * tickIndex;
+            majorGridLinePixelOffset + majorGridLinePixelDistance * tickIndex
           return (
             <line
               key={tickIndex}
@@ -132,12 +130,12 @@ export const Timeline = ({
               y2={12}
               stroke={themecolors.base01}
             />
-          );
+          )
         })}
       </Svg>
       {timestamps.map((timestamp, i) => {
         const left =
-          ((timestamp.time - visibleTimeStart) / visibleDuration) * width;
+          ((timestamp.time - visibleTimeStart) / visibleDuration) * width
         return (
           <TimeStamp
             key={i}
@@ -146,7 +144,7 @@ export const Timeline = ({
             onClick={() => onClickTimestamp(timestamp, i)}
             onRemove={() => onRemoveTimestamp(timestamp, i)}
           />
-        );
+        )
       })}
       {timeCursorTime !== undefined && (
         <TimeCursor
@@ -155,7 +153,7 @@ export const Timeline = ({
         />
       )}
     </Container>
-  );
-};
+  )
+}
 
-export default Timeline;
+export default Timeline

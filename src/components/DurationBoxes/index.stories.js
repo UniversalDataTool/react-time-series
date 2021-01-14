@@ -1,12 +1,12 @@
-import React from "react";
-import DurationBox from "./";
-import { solarized } from "../../hooks/use-colors";
+import React from "react"
+import DurationBox from "./"
+import { solarized } from "../../hooks/use-colors"
 
 export default {
   title: "DurationBox",
   component: DurationBox,
   argTypes: {},
-};
+}
 
 export const Primary = () => (
   <div>
@@ -52,4 +52,4 @@ export const Primary = () => (
       visibleTimeEnd={1000}
     />
   </div>
-);
+)

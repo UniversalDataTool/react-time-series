@@ -1,33 +1,33 @@
-import React, { useMemo, useState, useEffect, useRef } from "react";
-import { setIn } from "seamless-immutable";
-import useEventCallback from "use-event-callback";
-import { useAsyncMemo } from "use-async-memo";
-import { RecoilRoot } from "recoil";
-import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash";
-import Measure from "react-measure";
-import { useSetTimeCursorTime } from "../../hooks/use-time-cursor-time";
-import useRootAudioElm from "../../hooks/use-root-audio-elm";
+import React, { useMemo, useState, useEffect, useRef } from "react"
+import { setIn } from "seamless-immutable"
+import useEventCallback from "use-event-callback"
+import { useAsyncMemo } from "use-async-memo"
+import { RecoilRoot } from "recoil"
+import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash"
+import Measure from "react-measure"
+import { useSetTimeCursorTime } from "../../hooks/use-time-cursor-time"
+import useRootAudioElm from "../../hooks/use-root-audio-elm"
 
-import MainLayout from "../MainLayout";
+import MainLayout from "../MainLayout"
 
-import fetchAudioData from "../../utils/fetch-audio-data";
-import fetchCSVData from "../../utils/fetch-csv-data";
+import fetchAudioData from "../../utils/fetch-audio-data"
+import fetchCSVData from "../../utils/fetch-csv-data"
 
-import fixTimeData from "../../utils/fix-time-data";
+import fixTimeData from "../../utils/fix-time-data"
 
-const emptyAr = [];
+const emptyAr = []
 
 // This is a cloudflare CORs proxy from the project maintainer @seveibar
 const defaultCorsProxy =
-  "https://corsproxy.seve.workers.dev/corsproxy/?apiurl={URL}";
+  "https://corsproxy.seve.workers.dev/corsproxy/?apiurl={URL}"
 
 const defaultEnabledTools = [
   "create-durations",
   "create-timestamps",
   "label-durations",
   "label-timestamps",
-];
-const defaultGraphs = [{ keyName: "value" }];
+]
+const defaultGraphs = [{ keyName: "value" }]
 
 export const ReactTimeSeriesWithoutContext = ({
   // eslint-disable-next-line
@@ -37,9 +37,9 @@ export const ReactTimeSeriesWithoutContext = ({
   width: widthProp,
   onModifySample,
 }) => {
-  if (!iface) throw new Error(`"interface" is a required prop`);
-  if (!sample) throw new Error(`"sample" is a required prop`);
-  const getRandomColorUsingHash = useGetRandomColorUsingHash();
+  if (!iface) throw new Error(`"interface" is a required prop`)
+  if (!sample) throw new Error(`"sample" is a required prop`)
+  const getRandomColorUsingHash = useGetRandomColorUsingHash()
   let {
     timeFormat,
     enabledTools = defaultEnabledTools,
@@ -48,77 +48,76 @@ export const ReactTimeSeriesWithoutContext = ({
     graphs = defaultGraphs,
     allowCustomLabels,
     showValues,
-  } = iface;
-  let { timeData: sampleTimeData, audioUrl, csvUrl, annotation } = sample;
-  if (showValues === undefined && !audioUrl) showValues = true;
+  } = iface
+  let { timeData: sampleTimeData, audioUrl, csvUrl, annotation } = sample
+  if (showValues === undefined && !audioUrl) showValues = true
 
-  const timeDataAvailable = [sampleTimeData, audioUrl, csvUrl].some(Boolean);
+  const timeDataAvailable = [sampleTimeData, audioUrl, csvUrl].some(Boolean)
 
-  const [isPlayingMedia, setIsPlayingMedia] = useState(false);
-  const [error, setError] = useState(null);
+  const [isPlayingMedia, setIsPlayingMedia] = useState(false)
+  const [error, setError] = useState(null)
   const timeData = useAsyncMemo(
     async () => {
       try {
-        if (sampleTimeData) return fixTimeData(sampleTimeData, graphs);
-        if (audioUrl)
-          return fixTimeData(await fetchAudioData(audioUrl), graphs);
-        if (csvUrl) return fixTimeData(await fetchCSVData(csvUrl), graphs);
+        if (sampleTimeData) return fixTimeData(sampleTimeData, graphs)
+        if (audioUrl) return fixTimeData(await fetchAudioData(audioUrl), graphs)
+        if (csvUrl) return fixTimeData(await fetchCSVData(csvUrl), graphs)
         throw new Error(
           `No timeData, no audioUrl, no csvUrl, no time data provided.`
-        );
+        )
       } catch (e) {
-        setError(e);
-        return [];
+        setError(e)
+        return []
       }
     },
     [sampleTimeData, audioUrl, csvUrl],
     null
-  );
+  )
 
-  const timeDataLoading = !timeData && timeDataAvailable;
+  const timeDataLoading = !timeData && timeDataAvailable
 
   const curveGroups = useMemo(() => {
-    if (!timeData) return [];
-    const anonRows = [];
-    const namedRows = {};
+    if (!timeData) return []
+    const anonRows = []
+    const namedRows = {}
     for (const graph of graphs) {
       const curveData = timeData
         .filter(
           (a) => a[graph.keyName] !== undefined && a[graph.keyName] !== null
         )
-        .map((a) => [a.time, a[graph.keyName]]);
+        .map((a) => [a.time, a[graph.keyName]])
       if (graph.row === undefined || graph.row === null) {
         const curveGroup = [
           {
             data: curveData,
             color: graph.color || getRandomColorUsingHash(graph.keyName),
           },
-        ];
-        anonRows.push(curveGroup);
+        ]
+        anonRows.push(curveGroup)
       } else {
         if (!namedRows[graph.row]) {
-          namedRows[graph.row] = [];
+          namedRows[graph.row] = []
         }
         namedRows[graph.row].push({
           data: curveData,
           color: graph.color || getRandomColorUsingHash(graph.keyName),
-        });
+        })
       }
     }
     return anonRows.concat(
       Object.entries(namedRows).sort((a, b) => a[0].localeCompare(b[0]))
-    );
-  }, [timeData, graphs, getRandomColorUsingHash]);
+    )
+  }, [timeData, graphs, getRandomColorUsingHash])
 
   const timestamps = useMemo(() => {
-    if (!annotation?.timestamps) return [];
+    if (!annotation?.timestamps) return []
     return annotation?.timestamps.map((ts) => ({
       time: ts.time,
       label: ts.label,
       color: ts.color || getRandomColorUsingHash(ts.label),
-    }));
+    }))
     // eslint-disable-next-line
-  }, [annotation?.timestamps, getRandomColorUsingHash]);
+  }, [annotation?.timestamps, getRandomColorUsingHash])
 
   const durationGroups = useMemo(() => {
     if (!annotation?.durations)
@@ -130,14 +129,14 @@ export const ReactTimeSeriesWithoutContext = ({
               misc: true,
               durations: [],
             },
-          ];
+          ]
 
     const availableLabels = Array.from(
       new Set(
         annotation.durations.flatMap((d) => [d.label, d.layer]).filter(Boolean)
       )
-    );
-    availableLabels.sort();
+    )
+    availableLabels.sort()
 
     // TODO no more than 5 layers, after 5 layers start reusing layers
 
@@ -153,9 +152,9 @@ export const ReactTimeSeriesWithoutContext = ({
               end: d.end,
               label: d.label,
             })),
-        };
+        }
       })
-      .filter((dg) => dg.durations.length > 0);
+      .filter((dg) => dg.durations.length > 0)
 
     if (enabledTools.includes("create-durations")) {
       durationGroups.push({
@@ -166,16 +165,16 @@ export const ReactTimeSeriesWithoutContext = ({
           .flatMap((dg) => dg.durations)
           .concat(annotation.durations.filter((d) => !d.label))
           .map((d) => ({ ...d, color: getRandomColorUsingHash(d.label) })),
-      });
+      })
     }
 
     durationGroups = durationGroups.filter(
       (dg) => dg.misc || dg.durations.length > 1
-    );
+    )
 
-    return durationGroups;
+    return durationGroups
     // eslint-disable-next-line
-  }, [annotation?.durations]);
+  }, [annotation?.durations])
 
   const onChangeDurationGroups = useEventCallback((newDurationGroups) => {
     onModifySample(
@@ -189,67 +188,67 @@ export const ReactTimeSeriesWithoutContext = ({
           }))
         )
       )
-    );
-  });
+    )
+  })
   const onChangeTimestamps = useEventCallback((newTimestamps) => {
-    onModifySample(setIn(sample, ["annotation", "timestamps"], newTimestamps));
-  });
-  const [width, setWidth] = useState(widthProp);
+    onModifySample(setIn(sample, ["annotation", "timestamps"], newTimestamps))
+  })
+  const [width, setWidth] = useState(widthProp)
   const onResize = useEventCallback(({ bounds }) => {
-    if (!widthProp) setWidth(bounds.width);
-  });
+    if (!widthProp) setWidth(bounds.width)
+  })
 
-  const audioSource = useRef();
+  const audioSource = useRef()
 
-  const [, setRootAudioElm] = useRootAudioElm();
-  const setTimeCursorTime = useSetTimeCursorTime();
+  const [, setRootAudioElm] = useRootAudioElm()
+  const setTimeCursorTime = useSetTimeCursorTime()
 
   useEffect(() => {
     if (audioUrl) {
-      audioSource.current = new Audio(audioUrl);
-      setTimeCursorTime(0);
+      audioSource.current = new Audio(audioUrl)
+      setTimeCursorTime(0)
     }
-  }, []);
+  }, [])
 
   const onAudioTimeChanged = useEventCallback(() => {
-    setTimeCursorTime(audioSource.current.currentTime * 1000);
-  });
+    setTimeCursorTime(audioSource.current.currentTime * 1000)
+  })
   const onAudioPaused = useEventCallback(() => {
-    audioSource.current.removeEventListener("timeupdate", onAudioTimeChanged);
-    audioSource.current.removeEventListener("pause", onAudioPaused);
-  });
+    audioSource.current.removeEventListener("timeupdate", onAudioTimeChanged)
+    audioSource.current.removeEventListener("pause", onAudioPaused)
+  })
 
   const onStartPlayback = useEventCallback(() => {
-    setIsPlayingMedia(true);
+    setIsPlayingMedia(true)
     if (audioSource.current) {
-      audioSource.current.play();
-      audioSource.current.addEventListener("timeupdate", onAudioTimeChanged);
-      audioSource.current.addEventListener("pause", onAudioPaused);
-      setRootAudioElm(audioSource.current);
+      audioSource.current.play()
+      audioSource.current.addEventListener("timeupdate", onAudioTimeChanged)
+      audioSource.current.addEventListener("pause", onAudioPaused)
+      setRootAudioElm(audioSource.current)
     }
-  });
+  })
 
   const onStopPlayback = useEventCallback(() => {
-    setIsPlayingMedia(false);
+    setIsPlayingMedia(false)
     if (audioSource.current) {
-      audioSource.current.pause();
+      audioSource.current.pause()
     }
-  });
+  })
 
-  if (timeDataLoading) return "loading"; // TODO real loader
+  if (timeDataLoading) return "loading" // TODO real loader
 
   if (!timeData) {
     throw new Error(
       `No time data provided. Try sample={{timeData: [{time: 0, value: 1}, ...]}} or sample={{audioUrl:"https://..."}}`
-    );
+    )
   }
 
   if (curveGroups.length === 0) {
-    throw new Error(`For some reason, no curves are able to be displayed.`);
+    throw new Error(`For some reason, no curves are able to be displayed.`)
   }
 
   if (error) {
-    throw error;
+    throw error
   }
 
   return (
@@ -276,15 +275,15 @@ export const ReactTimeSeriesWithoutContext = ({
         </div>
       )}
     </Measure>
-  );
-};
+  )
+}
 
 export const ReactTimeSeries = (props) => {
   return (
     <RecoilRoot>
       <ReactTimeSeriesWithoutContext {...props} />
     </RecoilRoot>
-  );
-};
+  )
+}
 
-export default ReactTimeSeries;
+export default ReactTimeSeries

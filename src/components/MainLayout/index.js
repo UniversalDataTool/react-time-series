@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { styled } from "@material-ui/core/styles";
-import useTimeRange from "../../hooks/use-time-range.js";
-import ControllableWave from "../ControllableWave";
-import DurationBoxes from "../DurationBoxes";
-import useEventCallback from "use-event-callback";
-import { setIn, getIn } from "seamless-immutable";
-import useColors from "../../hooks/use-colors";
-import Timeline from "../Timeline";
-import getMinorMajorDurationLines from "../../utils/get-minor-major-duration-lines";
-import initTopLevelMatrix from "../../utils/init-top-level-matrix";
-import Toolbar from "../Toolbar";
-import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash";
+import React, { useState } from "react"
+import { styled } from "@material-ui/core/styles"
+import useTimeRange from "../../hooks/use-time-range.js"
+import ControllableWave from "../ControllableWave"
+import DurationBoxes from "../DurationBoxes"
+import useEventCallback from "use-event-callback"
+import { setIn, getIn } from "seamless-immutable"
+import useColors from "../../hooks/use-colors"
+import Timeline from "../Timeline"
+import getMinorMajorDurationLines from "../../utils/get-minor-major-duration-lines"
+import initTopLevelMatrix from "../../utils/init-top-level-matrix"
+import Toolbar from "../Toolbar"
+import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash"
 
 const Container = styled("div")(({ themecolors, width }) => ({
   width: width,
@@ -19,14 +19,14 @@ const Container = styled("div")(({ themecolors, width }) => ({
   backgroundColor: themecolors.bg,
   padding: 16,
   boxSizing: "border-box",
-}));
+}))
 
 const defaultEnabledTools = [
   "create-durations",
   "label-durations",
   "create-timestamps",
   "label-timestamps",
-];
+]
 
 export const MainLayout = ({
   curveGroups,
@@ -46,28 +46,28 @@ export const MainLayout = ({
   onStopPlayback,
   isPlayingMedia,
 }) => {
-  const themecolors = useColors();
-  const [activeDurationGroup, setActiveDurationGroup] = useState(null);
-  const [draggedDurationIndex, setDraggedDurationIndex] = useState(null);
-  const [selectedDurationIndex, setSelectedDurationIndex] = useState(null);
-  const [selectedTimestampIndex, setSelectedTimestampIndex] = useState(null);
+  const themecolors = useColors()
+  const [activeDurationGroup, setActiveDurationGroup] = useState(null)
+  const [draggedDurationIndex, setDraggedDurationIndex] = useState(null)
+  const [selectedDurationIndex, setSelectedDurationIndex] = useState(null)
+  const [selectedTimestampIndex, setSelectedTimestampIndex] = useState(null)
 
   const [topLevelMatrix, setTopLevelMatrix] = useState(() =>
     initTopLevelMatrix({ curveGroups, width })
-  );
+  )
   const { visibleTimeStart, visibleTimeEnd } = useTimeRange(
     topLevelMatrix,
     width
-  );
+  )
 
   const onDragDuration = useEventCallback((startTime, endTime) => {
-    if (!enabledTools.includes("create-durations")) return;
-    if (activeDurationGroup === null) return;
-    [startTime, endTime] =
-      startTime < endTime ? [startTime, endTime] : [endTime, startTime];
+    if (!enabledTools.includes("create-durations")) return
+    if (activeDurationGroup === null) return
+    ;[startTime, endTime] =
+      startTime < endTime ? [startTime, endTime] : [endTime, startTime]
 
     if (selectedDurationIndex !== draggedDurationIndex)
-      setSelectedDurationIndex(selectedDurationIndex);
+      setSelectedDurationIndex(selectedDurationIndex)
 
     onChangeDurationGroups(
       setIn(
@@ -78,27 +78,27 @@ export const MainLayout = ({
           end: endTime,
         }
       )
-    );
-  });
+    )
+  })
   const onDragDurationStart = useEventCallback((startTime) => {
-    if (!enabledTools.includes("create-durations")) return;
-    if (activeDurationGroup === null) return;
-    const lastIndex = durationGroups[activeDurationGroup].durations.length;
-    setDraggedDurationIndex(lastIndex);
+    if (!enabledTools.includes("create-durations")) return
+    if (activeDurationGroup === null) return
+    const lastIndex = durationGroups[activeDurationGroup].durations.length
+    setDraggedDurationIndex(lastIndex)
     onChangeDurationGroups(
       setIn(durationGroups, [activeDurationGroup, "durations", lastIndex], {
         start: startTime,
         end: startTime,
       })
-    );
-  });
+    )
+  })
   const onDragDurationEnd = useEventCallback(() => {
-    if (!enabledTools.includes("create-durations")) return;
-    setSelectedDurationIndex(draggedDurationIndex);
-    setDraggedDurationIndex(null);
-  });
+    if (!enabledTools.includes("create-durations")) return
+    setSelectedDurationIndex(draggedDurationIndex)
+    setDraggedDurationIndex(null)
+  })
   const onCreateTimestamp = useEventCallback((time) => {
-    if (!enabledTools.includes("create-timestamps")) return;
+    if (!enabledTools.includes("create-timestamps")) return
     onChangeTimestamps(
       timestamps.concat([
         {
@@ -106,29 +106,29 @@ export const MainLayout = ({
           color: "#888",
         },
       ])
-    );
-    setSelectedTimestampIndex(timestamps.length);
-  });
+    )
+    setSelectedTimestampIndex(timestamps.length)
+  })
 
   const onRemoveDurationBox = useEventCallback((dgi, boxIndex) => {
-    const durations = durationGroups[dgi].durations;
+    const durations = durationGroups[dgi].durations
     onChangeDurationGroups(
       setIn(
         durationGroups,
         [dgi, "durations"],
         [...durations.slice(0, boxIndex), ...durations.slice(boxIndex + 1)]
       )
-    );
-    if (selectedTimestampIndex !== null) setSelectedTimestampIndex(null);
-    if (selectedDurationIndex !== null) setSelectedDurationIndex(null);
-  });
+    )
+    if (selectedTimestampIndex !== null) setSelectedTimestampIndex(null)
+    if (selectedDurationIndex !== null) setSelectedDurationIndex(null)
+  })
 
   const onClickTimestamp = useEventCallback((ts, tsi) => {
-    setSelectedTimestampIndex(tsi);
-    if (selectedDurationIndex !== null) setSelectedDurationIndex(null);
-  });
+    setSelectedTimestampIndex(tsi)
+    if (selectedDurationIndex !== null) setSelectedDurationIndex(null)
+  })
 
-  const getRandomColorUsingHash = useGetRandomColorUsingHash();
+  const getRandomColorUsingHash = useGetRandomColorUsingHash()
   const onChangeSelectedItemLabel = useEventCallback(({ label, color }) => {
     if (selectedTimestampIndex !== null) {
       onChangeTimestamps(
@@ -136,13 +136,13 @@ export const MainLayout = ({
           [selectedTimestampIndex, "color"],
           color || getRandomColorUsingHash(label)
         )
-      );
+      )
     } else if (selectedDurationIndex !== null) {
       const pathToDuration = [
         activeDurationGroup,
         "durations",
         selectedDurationIndex,
-      ];
+      ]
       onChangeDurationGroups(
         setIn(durationGroups, pathToDuration, {
           ...getIn(durationGroups, pathToDuration),
@@ -151,18 +151,18 @@ export const MainLayout = ({
             ? {}
             : { color: color || getRandomColorUsingHash(label) }),
         })
-      );
+      )
     }
-  });
+  })
 
   const onRemoveTimestamp = useEventCallback((ts, tsi) => {
     onChangeTimestamps([
       ...timestamps.slice(0, tsi),
       ...timestamps.slice(tsi + 1),
-    ]);
-  });
+    ])
+  })
 
-  const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, width);
+  const gridLineMetrics = getMinorMajorDurationLines(topLevelMatrix, width)
 
   return (
     <Container width={width} themecolors={themecolors}>
@@ -195,8 +195,8 @@ export const MainLayout = ({
           <DurationBoxes
             onClick={() => setActiveDurationGroup(i)}
             onClickBox={(di) => {
-              setSelectedDurationIndex(di);
-              setSelectedTimestampIndex(null);
+              setSelectedDurationIndex(di)
+              setSelectedTimestampIndex(null)
             }}
             onRemoveBox={(boxIndex) => onRemoveDurationBox(i, boxIndex)}
             key={i}
@@ -209,7 +209,7 @@ export const MainLayout = ({
             visibleTimeStart={visibleTimeStart}
             visibleTimeEnd={visibleTimeEnd}
           />
-        );
+        )
       })}
       {curveGroups.map((curves, i) => (
         <ControllableWave
@@ -232,7 +232,7 @@ export const MainLayout = ({
         />
       ))}
     </Container>
-  );
-};
+  )
+}
 
-export default MainLayout;
+export default MainLayout

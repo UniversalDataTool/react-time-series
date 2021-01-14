@@ -1,10 +1,10 @@
-import React, { Fragment, useState, useCallback } from "react";
+import React, { Fragment, useState, useCallback } from "react"
 
-const HOV_SIZE = 50;
+const HOV_SIZE = 50
 export const Point = ({ x, y, value, t, color, width }) => {
-  const [showPoint, setShowPoint] = useState(false);
-  const onShow = useCallback(() => setShowPoint(true), [setShowPoint]);
-  const onHide = useCallback(() => setShowPoint(false), [setShowPoint]);
+  const [showPoint, setShowPoint] = useState(false)
+  const onShow = useCallback(() => setShowPoint(true), [setShowPoint])
+  const onHide = useCallback(() => setShowPoint(false), [setShowPoint])
   return (
     <g onMouseEnter={onShow} onMouseLeave={onHide}>
       {showPoint && (
@@ -25,8 +25,8 @@ export const Point = ({ x, y, value, t, color, width }) => {
         // fill="rgba(0,0,0,0.5)"
       ></rect>
     </g>
-  );
-};
+  )
+}
 
 export const HighlightValueLabels = ({
   visibleTransformedPointsOnCurves = [],
@@ -49,7 +49,7 @@ export const HighlightValueLabels = ({
         ))
       )}
     </g>
-  );
-};
+  )
+}
 
-export default HighlightValueLabels;
+export default HighlightValueLabels

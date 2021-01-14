@@ -1,11 +1,11 @@
-import React from "react";
+import React from "react"
 
-import MouseTransformHandler from "./";
+import MouseTransformHandler from "./"
 
 export default {
   title: "MouseTransformHandler",
   component: MouseTransformHandler,
   argTypes: {},
-};
+}
 
-export const Primary = () => <MouseTransformHandler />;
+export const Primary = () => <MouseTransformHandler />

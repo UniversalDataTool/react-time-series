@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import Toolbar from "./";
-import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash";
-import { solarized } from "../../hooks/use-colors";
+import React, { useState } from "react"
+import Toolbar from "./"
+import useGetRandomColorUsingHash from "../../hooks/use-get-random-color-using-hash"
+import { solarized } from "../../hooks/use-colors"
 
 export default {
   title: "Toolbar",
   component: Toolbar,
-};
+}
 
 export const Primary = () => {
-  const selectedTimestampIndex = 0;
-  const getRandomColorUsingHash = useGetRandomColorUsingHash();
+  const selectedTimestampIndex = 0
+  const getRandomColorUsingHash = useGetRandomColorUsingHash()
   const [timestamps, setTimestamps] = useState([
     {
       color: solarized.red,
@@ -22,7 +22,7 @@ export const Primary = () => {
       time: 200,
       label: "mouse",
     },
-  ]);
+  ])
 
   return (
     <Toolbar
@@ -39,11 +39,11 @@ export const Primary = () => {
                   color: color ? color : getRandomColorUsingHash(label),
                 }
           )
-        );
+        )
       }}
       onStartPlayback={() => null}
       onStopPlayback={() => null}
       isPlayingMedia={false}
     />
-  );
-};
+  )
+}
