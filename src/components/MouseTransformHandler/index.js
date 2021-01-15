@@ -21,7 +21,6 @@ export const MouseTransformHandler = ({
   const [middleMouseDown, setMiddleMouseDown] = useState(false)
   const [toolMode] = useToolMode()
   const containerRef = useRef()
-
   useEffect(() => {
     const onKeyDown = (e) => {
       if (e.key === "Shift") {
@@ -149,9 +148,11 @@ export const MouseTransformHandler = ({
   const containerMountCallback = useCallback((ref) => {
     if (ref === null) {
       containerRef.current.removeEventListener("wheel", onWheel)
+      containerRef.current = ref
+    } else {
+      containerRef.current = ref
+      ref.addEventListener("wheel", onWheel, { passive: false })
     }
-    containerRef.current = ref
-    ref.addEventListener("wheel", onWheel, { passive: false })
   }, [])
 
   return (
