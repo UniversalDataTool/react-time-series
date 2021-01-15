@@ -103,7 +103,7 @@ export const Timeline = ({
         <TimeText
           key={timeTextIndex}
           x={(timeTextIndex / timeTextCount) * width}
-          faded={(timeTextTimes[timeTextIndex] < 0).toString()}
+          faded={timeTextTimes[timeTextIndex] < 0}
         >
           {formatTime(
             timeTextTimes[timeTextIndex],
