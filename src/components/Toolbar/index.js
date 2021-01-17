@@ -22,28 +22,6 @@ import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline"
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
 import Color from "color"
 
-const Container = styled("div")(({ themeColors }) => ({
-  display: "flex",
-  paddingBottom: 16,
-  "&&& .MuiButtonBase-root": {
-    borderColor: themeColors.fg,
-  },
-  "&&& .MuiButton-label": {
-    color: themeColors.fg,
-    textTransform: "none",
-  },
-  "&&& .active.MuiButtonBase-root": {
-    backgroundColor: themeColors.fg,
-  },
-  "&&& .active .MuiButton-label": {
-    color: themeColors.bg,
-  },
-  "&&& .MuiSvgIcon-root": {
-    width: 16,
-    height: 16,
-  },
-}))
-
 const getSelectFieldStyles = (themeColors) => ({
   control: (styles) => ({
     ...styles,
@@ -181,9 +159,29 @@ export const Toolbar = ({
   }, [selectedTimestamp, selectedDuration])
 
   const SelectComponent = allowCustomLabels ? CreatableSelect : NormalSelect
-
+  const Container = styled("div")(() => ({
+    display: "flex",
+    paddingBottom: 16,
+    "&&& .MuiButtonBase-root": {
+      borderColor: themeColors.fg,
+    },
+    "&&& .MuiButton-label": {
+      color: themeColors.fg,
+      textTransform: "none",
+    },
+    "&&& .active.MuiButtonBase-root": {
+      backgroundColor: themeColors.fg,
+    },
+    "&&& .active .MuiButton-label": {
+      color: themeColors.bg,
+    },
+    "&&& .MuiSvgIcon-root": {
+      width: 16,
+      height: 16,
+    },
+  }))
   return (
-    <Container themeColors={themeColors}>
+    <Container>
       <Box
         color={themeColors.fg}
         display="flex"

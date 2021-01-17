@@ -60,9 +60,13 @@ export const DurationBox = ({
   const [toolMode] = useToolMode()
   const colors = useColors()
   const visibleDuration = visibleTimeEnd - visibleTimeStart
-
   return (
-    <Container onClick={onClick} width={width} color={color} active={active}>
+    <Container
+      onClick={onClick}
+      width={width}
+      color={color}
+      active={active.toString()}
+    >
       {durations.map(
         (
           {

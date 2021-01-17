@@ -16,7 +16,10 @@ export default async (audioUrl) => {
       channel.slice(i, i + samplesPerBlock).reduce((acc, a) => acc + a, 0) /
       samplesPerBlock
 
-    timeData.push({ time: i * (1 / audioBuffer.sampleRate) * 1000, value: avg })
+    timeData.push({
+      time: i * (1 / audioBuffer.sampleRate) * 1000,
+      value: avg,
+    })
   }
 
   return timeData

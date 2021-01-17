@@ -12,16 +12,6 @@ import useEventCallback from "use-event-callback"
 
 import { formatTime } from "../../utils/format-time"
 
-const Container = styled("div")(({ width, themeColors }) => ({
-  width,
-  overflow: "hidden",
-  position: "relative",
-  height: 64,
-  cursor: "pointer",
-  borderBottom: `1px solid ${themeColors.Selection}`,
-  color: themeColors.fg,
-}))
-
 const TimeText = styled("div")(({ x, faded }) => ({
   display: "inline-block",
   width: 80,
@@ -34,17 +24,6 @@ const TimeText = styled("div")(({ x, faded }) => ({
   paddingLeft: 4,
   whiteSpace: "pre-wrap",
   opacity: faded ? 0.25 : 0.75,
-}))
-
-const TimeCursor = styled("div")(({ left, themeColors }) => ({
-  position: "absolute",
-  width: 0,
-  height: 0,
-  top: 0,
-  left: left - 6,
-  borderLeft: "8px solid transparent",
-  borderRight: "8px solid transparent",
-  borderTop: `12px solid ${themeColors.green}`,
 }))
 
 const Svg = styled("svg")({
@@ -96,12 +75,28 @@ export const Timeline = ({
     rootAudioElm.currentTime = time / 1000
     setTimeCursorTime(time)
   })
-
+  const Container = styled("div")(() => ({
+    width,
+    overflow: "hidden",
+    position: "relative",
+    height: 64,
+    cursor: "pointer",
+    borderBottom: `1px solid ${themeColors.Selection}`,
+    color: themeColors.fg,
+  }))
+  const TimeCursor = styled("div")(() => ({
+    position: "absolute",
+    width: 0,
+    height: 0,
+    top: 0,
+    left: ((timeCursorTime - visibleTimeStart) / visibleDuration) * width - 6,
+    borderLeft: "8px solid transparent",
+    borderRight: "8px solid transparent",
+    borderTop: `12px solid ${themeColors.green}`,
+  }))
   return (
     <Container
       ref={containerRef}
-      themeColors={themeColors}
-      width={width}
       onClick={rootAudioElm ? onClickTimeline : undefined}
     >
       {range(timeTextCount).map((timeTextIndex) => (
@@ -146,12 +141,7 @@ export const Timeline = ({
           />
         )
       })}
-      {timeCursorTime !== undefined && (
-        <TimeCursor
-          themeColors={themeColors}
-          left={((timeCursorTime - visibleTimeStart) / visibleDuration) * width}
-        />
-      )}
+      {timeCursorTime !== undefined && <TimeCursor />}
     </Container>
   )
 }

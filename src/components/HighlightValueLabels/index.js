@@ -1,5 +1,4 @@
 import React, { Fragment, useState, useCallback } from "react"
-import useThemeColors from "../../hooks/use-colors"
 
 const HOV_SIZE = 50
 export const Point = ({ x, y, value, t, color, width }) => {
